@@ -5,7 +5,8 @@ CREATE TYPE etat_c AS ENUM('normal', 'renvoye' /*, … */);
 
 CREATE TABLE personne(
                   
-                  id INT UNIQUE,
+                  id SERIAL UNIQUE,
+                  -- id INT UNIQUE,
 
                   prenom VARCHAR,
                   nom VARCHAR,
