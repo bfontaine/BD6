@@ -74,7 +74,9 @@ CREATE TABLE catalogue(
                 qualifiant qualif,
 
                 prix FLOAT,
-                poids FLOAT
+                poids FLOAT,
+
+                PRIMARY KEY(id)
 );
 
 CREATE TABLE commande(
@@ -87,7 +89,8 @@ CREATE TABLE commande(
 
                 frais FLOAT,
 
-                FOREIGN KEY(id_client) REFERENCES client(id)
+                FOREIGN KEY(id_client) REFERENCES client(id),
+                PRIMARY KEY(id)
 );
 
 CREATE TABLE commande_produits(
@@ -110,12 +113,16 @@ CREATE TABLE colis(
                 date_expedie DATE,
                 date_livraison DATE,
 
-                etat etat_c
+                etat etat_c,
+
+                PRIMARY KEY(id)
 );
 
 CREATE TABLE palette(
-                id INT UNIQUE
+                id INT UNIQUE,
                 /* … */
+
+                PRIMARY KEY(id)
 );
 
 CREATE TABLE palette_colis(
@@ -133,7 +140,8 @@ CREATE TABLE container(
                 id_transporteur INT,
                 id_emballeur INT,
 
-                FOREIGN KEY(id_transporteur) REFERENCES personne(id)
+                FOREIGN KEY(id_transporteur) REFERENCES personne(id),
+                PRIMARY KEY(id)
 );
 
 CREATE TABLE container_palettes(
