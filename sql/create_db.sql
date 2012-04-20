@@ -1,4 +1,4 @@
-CREATE DATABASE BD6;
+-- CREATE DATABASE BD6;
 CREATE TYPE type_p AS ENUM('client', 'gerant', 'douane', 'transporteur', 'emballeur');
 CREATE TYPE qualif AS ENUM('normal', 'fragile', 'dangereux');
 CREATE TYPE etat_c AS ENUM('normal', 'renvoye' /*, … */);
@@ -77,6 +77,11 @@ CREATE TABLE catalogue(
                 prix FLOAT,
                 poids FLOAT,
 
+                quantite_restante INT,
+
+                quantite_par_carton INT,
+                cartons_par_palette INT,
+
                 PRIMARY KEY(id)
 );
 
@@ -116,7 +121,10 @@ CREATE TABLE colis(
 
                 etat etat_c,
 
-                PRIMARY KEY(id)
+                id_commande INT,
+
+                PRIMARY KEY(id),
+                FOREIGN KEY(id_commande) REFERENCES commande(id)
 );
 
 CREATE TABLE palette(
