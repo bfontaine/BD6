@@ -22,7 +22,7 @@ Col      Description               |
 Type 20 -- Client (100 entrées)    |
 Col      Description               |
 1    	 20                        |
-2        Numéro du client          |  client.id   
+2        Numéro du client          |  client.login
 3        Nom de la société         |  personne.nom
 4        Suffixe de la société     |  personne.nom
 5        Adresse                   |  client.adresse
