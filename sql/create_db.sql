@@ -37,7 +37,7 @@ CREATE TABLE douane(
 
                   pays VARCHAR,
 
-                  FOREIGN KEY(id) REFERENCES personne
+                  FOREIGN KEY(id) REFERENCES personne(id)
 );
 
 /*
@@ -63,7 +63,7 @@ CREATE TABLE client(
                   
                   telephone VARCHAR,
 
-                  FOREIGN KEY(id) REFERENCES personne
+                  FOREIGN KEY(id) REFERENCES personne(id)
 );
 
 

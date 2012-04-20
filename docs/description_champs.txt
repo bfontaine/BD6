@@ -1,0 +1,72 @@
+Le fichier data.csv contient toutes les données.  Chaque ligne du fichier 
+correspond à une entrée.  Les colonnes sont délimitées par un "|".  La première 
+colonne indique le type d’entrée.  Il y a 6 valeurs : 10, 20, 30, 40, 50 et 60.
+  
+Les détails pour chaque type ce retrouve ci-dessous.
+
+Comme indiqué dans les instructions du projet, ces données ne doivent pas 
+servir comme modèle pour votre propre base de données.
+
+         data.csv                  |       BDD
+-----------------------------------|--------------------------------------
+                                   |
+Type 10 -- Emballeur (5 entrées)   | 
+Col      Description               | 
+1        10                        |
+2        Numéro d’emballeur        |  personne.login    
+3        Nom                       |  personne.nom
+4        Prénom                    |  personne.prenom
+5        Taux d’erreur             |  
+6        Mot de passe              |  personne.mot_de_passe
+                                   |
+Type 20 -- Client (100 entrées)    |
+Col      Description               |
+1    	 20                        |
+2        Numéro du client          |  client.id   
+3        Nom de la société         |  personne.nom
+4        Suffixe de la société     |  personne.nom
+5        Adresse                   |  client.adresse
+6        Ville                     |  client.ville
+7        Code postale              |  client.code_postal
+8        Pays                      |  client.pays
+9        Téléphone                 |  client.telephone
+10       Mot de passe              |  personne.mot_de_passe
+                                   |
+Type 30 -- Produit (2000 entrées)  |           
+Col      Description               |
+1        30                        |
+2        Numéro du produit         |  catalogue.id 
+3        Description du produit    |  catalogue.description
+4        Quantité par carton       |  catalogue.quantite_par_carton 
+5        Cartons par palette       |  catalogue.cartons_par_palette
+6        Qualifiant :              |  catalogue.qualifiant
+                    N : S/O        |     
+                    D : Dangereux  |           
+                    F : Fragile    |         
+7        Coût                      |  catalogue.prix
+8        Taux d’augmentation de prix             
+9        Poids                     |  catalogue.poids
+10       Réserve                   |  catalogue.quantite_restante
+                                   |
+Type 40 -- Transporteurs (10 entrées)
+Col      Description               |
+1        40                        |
+2        Code SCAC (ID unique)     |  personne.login
+3        Nom de transporteur       |  personne.nom 
+4        Mot de passe              |  personne.mot_de_passe
+                                   |
+Type 50 -- Douane (6 entrées)      |       
+Col      Description               |
+1        50                        |
+2        Pays                      |  douane.pays
+3        Taux de colis vérifié     |
+4        Login                     |  personne.login
+5        Mot de passe              |  personne.mot_de_passe
+                                   |
+Type 60 -- Gérant (1 entrée)       |      
+Col      Description               |
+1        60                        |
+2        Prénom                    |  personne.prenom
+3        Nom                       |  personne.nom
+4        Login                     |  personne.login
+5        Mot de passe              |  personne.mot_de_passe
