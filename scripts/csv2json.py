@@ -3,7 +3,7 @@
 
 import json
 
-INPUT_FILE = 'data.csv'
+INPUT_FILE = '../data/data.csv'
 OUTPUT_FILE = 'data.json'
 
 
