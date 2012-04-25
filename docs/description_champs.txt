@@ -35,7 +35,7 @@ Col      Description               |
 Type 30 -- Produit (2000 entrées)  |           
 Col      Description               |
 1        30                        |
-2        Numéro du produit         |  catalogue.id 
+2        Numéro du produit         |  catalogue.ref
 3        Description du produit    |  catalogue.description
 4        Quantité par carton       |  catalogue.quantite_par_carton 
 5        Cartons par palette       |  catalogue.cartons_par_palette
