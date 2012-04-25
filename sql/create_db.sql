@@ -71,7 +71,7 @@ CREATE TABLE client(
 CREATE TABLE catalogue(
 
                 ref VARCHAR UNIQUE,
-                nom VARCHAR,
+                -- nom VARCHAR,
                 description VARCHAR,
                 qualifiant qualif,
 
