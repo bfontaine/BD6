@@ -1,9 +1,9 @@
 #!  /usr/bin/python3.2
-# -*- coding: Utf8 -*-
+# -*- coding: UTF-8 -*-
 
 ###############################################
 # Programme : insertion data.csv ds bd6       #
-# auteur : david                              #
+# Auteur : David                              #
 #                                             #
 ###############################################
 
@@ -34,10 +34,19 @@ def insert(data):
 def check_len(liste, length, l):
     if (len(liste) != length):
         raise IndexError(("line %d: liste expected to be %d"
-                          +"length, actual is %d") % (l, length, len(liste)))
+                          +"length, got %d") % (l, length, len(liste)))
 
-def format_values(liste, indices):
+def format_values(liste, indices, replacements=None):
     values = [liste[i] for i in indices]
+    # si on doit remplacer des valeurs
+    if (replacements != None):
+        # on les parcourt toutes
+        for i,e in enumerate(values):
+            # si la valeur courante doit etre remplacee
+            if (e in replacements):
+                # on la remplace
+                values[i] = replacements[e]
+
     return "'" + "','".join([str(v) for v in values]) + "'"
 
 def insert_emballeur(liste, l):
@@ -49,12 +58,13 @@ def insert_client(liste, l):
     check_len(liste, 10, l)
     person_values = format_values(liste, (2,3,1,9))
     client_values = format_values(liste, (4,5,6,7,8))
-    return "INSERT INTO personne VALUES(NULL,NULL,%s,'client');\n"
-    +"INSERT INTO client VALUES (NULL,%s);\n" % (person_values, client_values)
+    return ("INSERT INTO personne VALUES(NULL,NULL,%s,'client');\n"
+    +"INSERT INTO client VALUES (NULL,%s);\n") % (person_values, client_values)
 
 def insert_produit(liste, l):
     check_len(liste, 10, l)
-    values = format_values(liste, (1,2,3,5,6,8,9,3,4))
+    replacements = {'F':'fragile', 'D':'dangereux', 'N':'normal'}
+    values = format_values(liste, (1,2,3,5,6,8,9,3,4), replacements)
     return "INSERT INTO catalogue VALUES (%s);\n" % values
 
 def insert_transporteur(liste, l):

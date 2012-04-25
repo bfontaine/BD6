@@ -6,7 +6,7 @@ CREATE TYPE etat_c AS ENUM('normal', 'renvoye' /*, … */);
 CREATE TABLE personne(
                   
                   id SERIAL UNIQUE,
-                  -- id INT UNIQUE,
+                  -- id INTEGER UNIQUE,
 
                   prenom VARCHAR,
                   nom VARCHAR,
@@ -26,7 +26,7 @@ CREATE TABLE personne(
 /*
 CREATE TABLE transporteur(
                   
-                  id INT UNIQUE,
+                  id INTEGER UNIQUE,
                   scac CHAR(4),
 
                   FOREIGN KEY(id) REFERENCES personne
@@ -34,7 +34,7 @@ CREATE TABLE transporteur(
 
 CREATE TABLE douane(
   
-                  id INT UNIQUE,
+                  id INTEGER UNIQUE,
 
                   pays VARCHAR,
 
@@ -44,7 +44,7 @@ CREATE TABLE douane(
 /*
 CREATE TABLE emballeur(
                   
-                  id INT UNIQUE,
+                  id INTEGER UNIQUE,
                   num CHAR(7),
 
                   FOREIGN KEY(id) REFERENCES personne
@@ -52,7 +52,7 @@ CREATE TABLE emballeur(
 
 CREATE TABLE client(
 
-                  id INT UNIQUE,
+                  id INTEGER UNIQUE,
                   
                   /* nom_societe VARCHAR,
                      suffixe_societe VARCHAR, -> fusionnés en 1 champ: personne.nom */
@@ -70,7 +70,7 @@ CREATE TABLE client(
 
 CREATE TABLE catalogue(
 
-                id INT UNIQUE,
+                ref VARCHAR UNIQUE,
                 nom VARCHAR,
                 description VARCHAR,
                 qualifiant qualif,
@@ -78,18 +78,18 @@ CREATE TABLE catalogue(
                 prix FLOAT,
                 poids FLOAT,
 
-                quantite_restante INT,
+                quantite_restante INTEGER,
 
-                quantite_par_carton INT,
-                cartons_par_palette INT,
+                quantite_par_carton INTEGER,
+                cartons_par_palette INTEGER,
 
-                PRIMARY KEY(id)
+                PRIMARY KEY(ref)
 );
 
 CREATE TABLE commande(
               
-                id INT UNIQUE,
-                id_client INT,
+                id INTEGER UNIQUE,
+                id_client INTEGER,
 
                 date_commande DATE,
                 date_prevue DATE,
@@ -102,18 +102,20 @@ CREATE TABLE commande(
 
 CREATE TABLE commande_produits(
 
-                id_commande INT,
-                id_produit INT,
-                quantite INT,
+                id_commande INTEGER,
+                ref_produit INTEGER,
+                quantite INTEGER,
 
                 FOREIGN KEY(id_commande) REFERENCES commande(id),
-                FOREIGN KEY(id_produit) REFERENCES catalogue(id)
+                FOREIGN KEY(ref_produit) REFERENCES catalogue(ref)
 );
 
 CREATE TABLE colis(
 
-                id INT UNIQUE,
-                qualifiant qualif,
+                id INTEGER UNIQUE,
+
+                ref_produit VARCHAR,
+                quantite INTEGER,
 
                 date_prevue DATE,
                 date_emballage DATE,
@@ -122,14 +124,14 @@ CREATE TABLE colis(
 
                 etat etat_c,
 
-                id_commande INT,
+                id_commande INTEGER,
 
                 PRIMARY KEY(id),
                 FOREIGN KEY(id_commande) REFERENCES commande(id)
 );
 
 CREATE TABLE palette(
-                id INT UNIQUE,
+                id INTEGER UNIQUE,
                 /* … */
 
                 PRIMARY KEY(id)
@@ -137,8 +139,8 @@ CREATE TABLE palette(
 
 CREATE TABLE palette_colis(
                 
-                id_palette INT,
-                id_colis INT,
+                id_palette INTEGER,
+                id_colis INTEGER,
 
                 FOREIGN KEY(id_palette) REFERENCES palette(id),
                 FOREIGN KEY(id_colis) REFERENCES colis(id)
@@ -146,9 +148,9 @@ CREATE TABLE palette_colis(
 
 CREATE TABLE container(
 
-                id INT UNIQUE,
-                id_transporteur INT,
-                id_emballeur INT,
+                id INTEGER UNIQUE,
+                id_transporteur INTEGER,
+                id_emballeur INTEGER,
 
                 FOREIGN KEY(id_transporteur) REFERENCES personne(id),
                 PRIMARY KEY(id)
@@ -156,8 +158,8 @@ CREATE TABLE container(
 
 CREATE TABLE container_palettes(
 
-                id_container INT,
-                id_palette INT,
+                id_container INTEGER,
+                id_palette INTEGER,
 
                 FOREIGN KEY(id_container) REFERENCES container(id),
                 FOREIGN KEY(id_palette) REFERENCES palette(id)
