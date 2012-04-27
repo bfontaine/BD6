@@ -1,9 +1,7 @@
 #! /bin/bash
 
-echo -n 'CSV->JSON...'
-./csv2json.py && echo 'ok' || echo 'fail! '
-echo -n 'JSON->SQL...'
-./json2sql.py && echo 'ok' || echo 'fail! '
+echo -n 'CSV->SQL...'
+./csv2sql.py && echo 'ok' || echo 'fail! '
 echo -n 'exécution des requêtes...'
 psql bd6 -f ./data.sql >/dev/null 2>./filldb.log && echo 'ok' || echo 'fail! '
 
