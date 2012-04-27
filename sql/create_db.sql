@@ -88,7 +88,7 @@ CREATE TABLE catalogue(
 
 CREATE TABLE commande(
               
-                id INTEGER UNIQUE,
+                id SERIAL UNIQUE,
                 id_client INTEGER,
 
                 date_commande DATE,
