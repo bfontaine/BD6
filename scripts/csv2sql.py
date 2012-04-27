@@ -4,7 +4,7 @@
 import json
 
 INPUT_FILE = '../data/data.csv'
-OUTPUT_FILE = 'data.sql'
+OUTPUT_FILE = '../sql/data.sql'
 
 f = open(INPUT_FILE, 'r')
 
