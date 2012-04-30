@@ -1,8 +1,6 @@
 #! /usr/bin/python3.2
 # -*- coding: UTF-8 -*-
 
-import json
-
 INPUT_FILE = '../data/data.csv'
 OUTPUT_FILE = '../sql/data.sql'
 
