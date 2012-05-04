@@ -112,10 +112,7 @@ CREATE TABLE commande_produits(
 
 CREATE TABLE colis(
 
-                id INTEGER UNIQUE,
-
-                ref_produit VARCHAR,
-                quantite INTEGER,
+                id SERIAL UNIQUE,
 
                 date_prevue DATE,
                 date_emballage DATE,
@@ -128,6 +125,16 @@ CREATE TABLE colis(
 
                 PRIMARY KEY(id),
                 FOREIGN KEY(id_commande) REFERENCES commande(id)
+);
+
+CREATE TABLE colis_produits(
+
+                id_colis INTEGER UNIQUE,
+                ref_produit VARCHAR,
+                quantite INTEGER,
+
+                FOREIGN KEY(id_colis) REFERENCES colis(id),
+                FOREIGN KEY(ref_produit) REFERENCES catalogue(ref)))))
 );
 
 CREATE TABLE palette(
