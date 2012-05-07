@@ -19,17 +19,8 @@ CREATE TABLE personne(
                   
                   type_personne type_p,
 
-                  PRIMARY KEY(id)
+                  PRIMARY KEY(login)
 );
-
-/*
-CREATE TABLE transporteur(
-                  
-                  id INTEGER UNIQUE,
-                  scac CHAR(4),
-
-                  FOREIGN KEY(id) REFERENCES personne
-);*/
 
 CREATE TABLE douane(
   
@@ -39,15 +30,6 @@ CREATE TABLE douane(
 
                   FOREIGN KEY(id) REFERENCES personne(login)
 );
-
-/*
-CREATE TABLE emballeur(
-                  
-                  id INTEGER UNIQUE,
-                  num CHAR(7),
-
-                  FOREIGN KEY(id) REFERENCES personne
-);*/
 
 CREATE TABLE client(
 
@@ -101,7 +83,7 @@ CREATE TABLE commande(
 CREATE TABLE commande_produits(
 
                 id_commande INTEGER,
-                ref_produit INTEGER,
+                ref_produit VARCHAR,
                 quantite INTEGER,
 
                 FOREIGN KEY(id_commande) REFERENCES commande(id),

@@ -34,10 +34,8 @@ f.close()
 
 # références de tous les produits
 refs_produits = [li.split("|")[1] for li in csv if li.startswith("30|")]
-
-# on sait qu'il y a 100 clients dans data.csv
-ids_clients = range(1,101) # 1-100
-
+# ids de tous les clients
+ids_clients = [li.split("|")[1] for li in csv if li.startswith("20|")]
 
 # 50 commandes non expédiées
 for i in range(50):
@@ -53,13 +51,23 @@ for i in range(50):
     ))
     last_cmd_id += 1
 
-    for j in nb_produits:
+    for j in range(nb_produits):
         ref_produit = rd.choice(refs_produits)
         quantite = int(rd.random()*100)+1 # 1-100 produits du meme type
-        insertions.append(('commande_produits'
+        insertions.append(('commande_produits',
             [last_cmd_id, ref_produit, quantite]
         ))
 
-# 20 commandes à moitié expédiées
+# 20 commandes à moitié expédiées : TODO
 
-#TODO
+# insertions de tout
+f = open(OUTPUT_FILE, 'w')
+
+for ins in insertions:
+    table = ins[0]
+    labels_ = ','.join(labels[ins[0]])
+    values = "'"+"','".join([str(e) for e in ins[1]])+"'"
+    l = "INSERT INTO %s (%s) VALUES(%s)" % (table, labels_, values)
+    f.write(l+";\n")
+
+f.close()
