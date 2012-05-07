@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Connexion extends JFrame{
+public class fenetre_co extends JFrame{
     requete re;
     JTextField login;
     JTextField mdp;
