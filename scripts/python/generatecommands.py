@@ -5,7 +5,7 @@ import random as rd
 import datetime as dt
 import time
 
-CSV_FILE = '../data/data.csv'
+CSV_FILE    = '../data/data.csv'
 OUTPUT_FILE = '../sql/commands.sql'
 
 # génère 250 commandes de façon aléatoire
