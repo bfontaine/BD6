@@ -3,6 +3,7 @@
 
 INPUT_FILE = '../data/data.csv'
 OUTPUT_FILE = '../sql/data.sql'
+CATALOGUE_FILE = '../data/catalogue.csv'
 
 f = open(INPUT_FILE, 'r')
 
@@ -159,19 +160,36 @@ for cli in data_dict['client']:
         ]
     ))
 
+#for pro in data_dict['produit']:
+#   insertions.append(('catalogue',
+#       [
+#           pro['numero'],             # ref
+#           pro['desc'],               # description
+#           qualif[pro['qualifiant']], # qualifiant
+#           pro['prix'],               # prix
+#           pro['poids'],              # poids
+#           pro['reserve'],            # quantite_restante
+#           pro['qte par carton'],     # quantite_par_carton
+#           pro['cartons par palette'] # cartons_par_palette
+#       ]
+#   ))
+
+I = open(CATALOGUE_FILE , 'w')
 for pro in data_dict['produit']:
-    insertions.append(('catalogue',
-        [
-            pro['numero'],             # ref
-            pro['desc'],               # description
-            qualif[pro['qualifiant']], # qualifiant
-            pro['prix'],               # prix
-            pro['poids'],              # poids
-            pro['reserve'],            # quantite_restante
-            pro['qte par carton'],     # quantite_par_carton
-            pro['cartons par palette'] # cartons_par_palette
-        ]
-    ))
+    line = ''
+    line = line + pro['numero'] + '|'
+    line = line + pro['desc'] + '|'
+    line = line + qualif[pro['qualifiant']]+ '|'
+    line = line + pro['prix']+ '|'
+    line = line + pro['poids']+ '|'
+    line = line + pro['reserve']+ '|'
+    line = line + pro['qte par carton']+ '|'
+    line = line + pro['cartons par palette']+'\n'
+    I.write(line)
+I.close()
+
+
+
 
 for trans in data_dict['transporteur']:
     insertions.append(('personne',
@@ -225,4 +243,5 @@ for insertion in insertions:
     line = "INSERT INTO %s (%s) VALUES(%s);\n" % (table, labels, values)
     f.write(line)
 
+f.write("\copy catalogue from '../data/catalogue.csv' delimiter as '|'")
 f.close()
