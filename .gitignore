@@ -6,3 +6,4 @@ data.sql
 /scripts/filldb.log
 /data/catalogue.csv
 /sql/commands.sql
+/data.csv
