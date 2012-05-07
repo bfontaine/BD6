@@ -4,9 +4,6 @@ CREATE TYPE qualif AS ENUM('normal', 'fragile', 'dangereux');
 CREATE TYPE etat_c AS ENUM('normal', 'renvoye' /*, … */);
 
 CREATE TABLE personne(
-                  
-                  id SERIAL UNIQUE,
-                  -- id INTEGER UNIQUE,
 
                   prenom VARCHAR,
                   nom VARCHAR,
@@ -14,6 +11,8 @@ CREATE TABLE personne(
                   /*
                     login = SCAC               pour le transporteur
                           = numéro d'emballeur pour l'emballeur
+
+                    le login est l'identifiant unique
                   */
                   login VARCHAR UNIQUE,
                   mot_de_passe VARCHAR,
@@ -34,11 +33,11 @@ CREATE TABLE transporteur(
 
 CREATE TABLE douane(
   
-                  id INTEGER UNIQUE,
+                  id VARCHAR UNIQUE,
 
                   pays VARCHAR,
 
-                  FOREIGN KEY(id) REFERENCES personne(id)
+                  FOREIGN KEY(id) REFERENCES personne(login)
 );
 
 /*
@@ -52,7 +51,7 @@ CREATE TABLE emballeur(
 
 CREATE TABLE client(
 
-                  id INTEGER UNIQUE,
+                  id VARCHAR UNIQUE,
                   
                   /* nom_societe VARCHAR,
                      suffixe_societe VARCHAR, -> fusionnés en 1 champ: personne.nom */
@@ -64,14 +63,13 @@ CREATE TABLE client(
                   
                   telephone VARCHAR,
 
-                  FOREIGN KEY(id) REFERENCES personne(id)
+                  FOREIGN KEY(id) REFERENCES personne(login)
 );
 
 
 CREATE TABLE catalogue(
 
                 ref VARCHAR UNIQUE,
-                -- nom VARCHAR,
                 description VARCHAR,
                 qualifiant qualif,
 
@@ -89,7 +87,7 @@ CREATE TABLE catalogue(
 CREATE TABLE commande(
               
                 id SERIAL UNIQUE,
-                id_client INTEGER,
+                id_client VARCHAR,
 
                 date_commande DATE,
                 date_prevue DATE,
@@ -134,7 +132,7 @@ CREATE TABLE colis_produits(
                 quantite INTEGER,
 
                 FOREIGN KEY(id_colis) REFERENCES colis(id),
-                FOREIGN KEY(ref_produit) REFERENCES catalogue(ref)))))
+                FOREIGN KEY(ref_produit) REFERENCES catalogue(ref)
 );
 
 CREATE TABLE palette(
@@ -156,10 +154,11 @@ CREATE TABLE palette_colis(
 CREATE TABLE container(
 
                 id INTEGER UNIQUE,
-                id_transporteur INTEGER,
-                id_emballeur INTEGER,
+                id_transporteur VARCHAR,
+                id_emballeur VARCHAR,
 
-                FOREIGN KEY(id_transporteur) REFERENCES personne(id),
+                FOREIGN KEY(id_transporteur) REFERENCES personne(login),
+                FOREIGN KEY(id_emballeur) REFERENCES personne(login),
                 PRIMARY KEY(id)
 );
 

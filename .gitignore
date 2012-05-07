@@ -4,3 +4,4 @@
 data.sql
 /tests
 /scripts/filldb.log
+/data/catalogue.csv

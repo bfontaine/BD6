@@ -151,42 +151,24 @@ for cli in data_dict['client']:
     ))
     insertions.append(('client',
         [
-            '(SELECT last_value FROM personne_id_seq)', # id->personne.id
-            cli['adresse'],                             # adresse
-            cli['ville'],                               # ville
-            cli['cp'],                                  # code_postal
-            cli['pays'],                                # pays
-            cli['tel']                                  # telephone
+            cli['numero'],                                         # id->personne.login
+            cli['adresse'],                                        # adresse
+            cli['ville'],                                          # ville
+            cli['cp'],                                             # code_postal
+            cli['pays'],                                           # pays
+            cli['tel']                                             # telephone
         ]
     ))
 
-#for pro in data_dict['produit']:
-#   insertions.append(('catalogue',
-#       [
-#           pro['numero'],             # ref
-#           pro['desc'],               # description
-#           qualif[pro['qualifiant']], # qualifiant
-#           pro['prix'],               # prix
-#           pro['poids'],              # poids
-#           pro['reserve'],            # quantite_restante
-#           pro['qte par carton'],     # quantite_par_carton
-#           pro['cartons par palette'] # cartons_par_palette
-#       ]
-#   ))
-
-I = open(CATALOGUE_FILE , 'w')
+cf = open(CATALOGUE_FILE , 'w')
 for pro in data_dict['produit']:
-    line = ''
-    line = line + pro['numero'] + '|'
-    line = line + pro['desc'] + '|'
-    line = line + qualif[pro['qualifiant']]+ '|'
-    line = line + pro['prix']+ '|'
-    line = line + pro['poids']+ '|'
-    line = line + pro['reserve']+ '|'
-    line = line + pro['qte par carton']+ '|'
-    line = line + pro['cartons par palette']+'\n'
-    I.write(line)
-I.close()
+    pro['qualifiant'] = qualif[pro['qualifiant']]
+    champs = ['numero', 'desc', 'qualifiant', 'prix', 'poids', 'reserve', \
+                'qte par carton', 'cartons par palette']
+    line = '|'.join([pro[c] for c in champs])+"\n"
+
+    cf.write(line)
+cf.close()
 
 
 
@@ -243,5 +225,4 @@ for insertion in insertions:
     line = "INSERT INTO %s (%s) VALUES(%s);\n" % (table, labels, values)
     f.write(line)
 
-f.write("\copy catalogue from '../data/catalogue.csv' delimiter as '|'")
 f.close()
