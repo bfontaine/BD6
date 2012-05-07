@@ -3,3 +3,4 @@
 *.json
 data.sql
 /tests
+/scripts/filldb.log
