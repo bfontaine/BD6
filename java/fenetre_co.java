@@ -47,20 +47,19 @@ public class fenetre_co extends JFrame implements ActionListener{
             String login = login_JT.getText(); 
             String mdp = mdp_JT.getText();
             try{
+                Container cp = this.getContentPane();
+                cp.removeAll();
                 if(re.connexion(login,mdp)){
-                    Container cp = this.getContentPane();
-                    cp.removeAll();
                     JLabel label = new JLabel("Connexion reussi : "+login);
-                    cp.add(label /*, contrainte éventuelle liée au layout */);
+                    cp.add(label);
                 }
                 else{
-                    Container cp = this.getContentPane();
-                    cp.removeAll();
                     JLabel label = new JLabel("Login ou mot de passe incorrect");
                     JPanel panel = buildJP();
                     panel.add(label);
                     cp.add(panel);
                 }
+                this.setContentPane(cp);
             }catch(SQLException sqle){}
         }
     }
