@@ -35,4 +35,24 @@ public class ConnexionBDD_tests {
         boolean estConnecte = co.connectUtilisateur("SEGZE03368", "IVW24HJB2RU");
         assertTrue(estConnecte);
     }
+
+    // --- Gérant ---
+    
+    @Test
+    public void testChangerPrixBonneRef() {
+        boolean estChange = co.changePrix("PW-403570-TGG-27", 1337);
+        assertTrue(estChange);
+    }
+    
+    @Test
+    public void testChangerPrixMauvaiseRef() {
+        boolean estChange = co.changePrix("nexistepas", 1337);
+        assertFalse(estChange);
+    }
+    
+    @Test
+    public void testChangerPrixNegatif() {
+        boolean estChange = co.changePrix("PW-403570-TGG-27", -1337);
+        assertFalse(estChange);
+    }
 }

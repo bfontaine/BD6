@@ -35,11 +35,27 @@ public class ConnexionBDD {
      **/
     public boolean connectUtilisateur(String login, String mdp) {
         try {
-            PreparedStatement ps = co.prepareStatement("SELECT mot_de_passe FROM personne WHERE login = ?;");
+            PreparedStatement ps = co.prepareStatement("SELECT mot_de_passe FROM personne WHERE login=?;");
             ps.setString(1, login);
             ResultSet rs = ps.executeQuery();
 
             return (rs.next() && (rs.getString("mot_de_passe").equals(mdp)));
+
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public boolean changePrix(String ref, float nouveauPrix) {
+
+        if (nouveauPrix < 0)
+            return false;
+
+        try {
+            PreparedStatement ps = co.prepareStatement("UPDATE catalogue SET prix=? WHERE ref=?;");
+            ps.setFloat(1, nouveauPrix);
+            ps.setString(2, ref);
+            return (ps.executeUpdate() > 0);
 
         } catch (SQLException e) {
             return false;
