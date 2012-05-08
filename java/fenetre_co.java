@@ -6,10 +6,10 @@ public class fenetre_co extends JFrame{
     JTextField login;
     JTextField mdp;
 
-    public Connexion(requete r){
+    public fenetre_co(requete r){
         super();
         setSize(400,400);  //taille de la fenêtre
-        setLocationRelativeTO(null); //on centre notre fenêtre
+        setLocationRelativeTo(null); //on centre notre fenêtre
         setResizable(false); //interdit de redimentionner la fenêtre
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //fermeture si clic sur croix
         setVisible(true); //on rend la fenêtre visible 
@@ -19,8 +19,8 @@ public class fenetre_co extends JFrame{
     }
 
     public JPanel buildJP(){
-        JPanel panel = new Jpanel();
-        panel.SetLayout(new FlowLayout());
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout());
 
         login = new JTextField();
         login.setColumns(10);
@@ -34,6 +34,6 @@ public class fenetre_co extends JFrame{
 
     public static void main(String [] args){
         requete re = new requete("david","david");
-        JFrame fenetre = new  Connexion(re);    
+        fenetre_co fenetre = new  fenetre_co(re);    
     }
 }
