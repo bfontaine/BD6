@@ -187,7 +187,7 @@ public class ConnexionBDD {
                 hm.put("téléphone", rs.getString(8));
 
                 if (etendue) {
-                    q = "SELECT COUNT(*) FROM commande WHERE id_client=?";
+                    q = "SELECT COUNT(*) FROM commande WHERE id_client=?;";
                     ps = co.prepareStatement(q);
                     ps.setString(1, login);
                     rs2 = ps.executeQuery();
@@ -195,7 +195,19 @@ public class ConnexionBDD {
                         return null;
                     }
                     hm.put("commandes", rs2.getInt(1));
-                    //TODO ajouter le nombre de produits et le total
+
+                    q = "SELECT COUNT(*) FROM commande_produits WHERE";
+                    q += " id_commande = ANY (SELECT id FROM commande WHERE";
+                    q += " id_client=?);";
+                    ps = co.prepareStatement(q);
+                    ps.setString(1, login);
+                    rs2 = ps.executeQuery();
+                    if (!rs2.next()) {
+                        return null;
+                    }
+                    hm.put("produits", rs2.getInt(1));
+
+                    //TODO ajouter le total (prix) commandé
                 }
 
                 liste.add(hm);
