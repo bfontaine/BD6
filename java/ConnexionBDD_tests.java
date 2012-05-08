@@ -36,8 +36,6 @@ public class ConnexionBDD_tests {
         boolean estConnecte = co.connectUtilisateur("SEGZE03368", "IVW24HJB2RU");
         assertTrue(estConnecte);
     }
-
-    // --- Gérant ---
     
     @Test
     public void testChangerPrixBonneRef() {
@@ -95,6 +93,21 @@ public class ConnexionBDD_tests {
         assertFalse(liste.isEmpty());
         // à faire uniquement si on a pas ajouté/enlevé un client
         assertEquals(100, liste.size());
+    }
+
+    @Test
+    public void testListeEtendueClients() {
+        LinkedList<HashMap<String,Object>> liste = co.listeClients(true);
+
+        assertNotNull(liste);
+        assertFalse(liste.isEmpty());
+        // à faire uniquement si on a pas ajouté/enlevé un client
+        assertEquals(100, liste.size());
+        
+        HashMap<String,Object> hm = liste.getFirst();
+        assertNotNull(hm);
+
+        assertTrue(hm.containsKey("commandes"));
     }
 
     @Test

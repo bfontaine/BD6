@@ -99,6 +99,7 @@ public class ConnexionBDD {
         } else {
             q += " WHERE type_personne=?::type_p";
         }
+        q += " ORDER BY nom";
 
         ResultSet rs = null;
         
@@ -139,13 +140,27 @@ public class ConnexionBDD {
      * colonnes et valeurs
      **/
     public LinkedList<HashMap<String,Object>> listeClients() {
+        return listeClients(false);
+    }
+
+
+    /**
+     * Liste les clients
+     * @param etendue précise si la liste doit être étendue, par exemple en ajoutant
+     * le nombre de commandes faites par ce client, le nombre de produits achetés,
+     * le total dépensé, etc.
+     * @return une liste de `HashMap` avec une correspondance entre nom de
+     * colonnes et valeurs
+     **/
+    public LinkedList<HashMap<String,Object>> listeClients(boolean etendue) {
 
         PreparedStatement ps = null;
         String q = "SELECT prenom,nom,login,adresse,ville,code_postal,pays";
         q += ",telephone FROM personne NATURAL JOIN client";
-        q += " WHERE personne.login=client.id;";
+        q += " WHERE personne.login=client.id ORDER BY nom;";
 
         ResultSet rs = null;
+        ResultSet rs2 = null;
         
         try {
             ps = co.prepareStatement(q);
@@ -163,12 +178,25 @@ public class ConnexionBDD {
 
                 hm.put("prenom", rs.getString(1));
                 hm.put("nom", rs.getString(2));
-                hm.put("login", rs.getString(3));
+                String login = rs.getString(3);
+                hm.put("login", login);
                 hm.put("adresse", rs.getString(4));
                 hm.put("ville", rs.getString(5));
                 hm.put("code postal", rs.getString(6));
                 hm.put("pays", rs.getString(7));
                 hm.put("téléphone", rs.getString(8));
+
+                if (etendue) {
+                    q = "SELECT COUNT(*) FROM commande WHERE id_client=?";
+                    ps = co.prepareStatement(q);
+                    ps.setString(1, login);
+                    rs2 = ps.executeQuery();
+                    if (!rs2.next()) {
+                        return null;
+                    }
+                    hm.put("commandes", rs2.getInt(1));
+                    //TODO ajouter le nombre de produits et le total
+                }
 
                 liste.add(hm);
             }
