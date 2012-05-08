@@ -120,4 +120,31 @@ public class ConnexionBDD_tests {
         // à faire uniquement si on a pas ajouté/enlevé un produit
         assertEquals(2000, liste.size());
     }
+
+    @Test
+    public void testNouveauGerant() {
+        boolean estNouvellePersonne
+            = co.nouvellePersonne("Chuck", "Norris", "chucknorris", "42", "gerant");
+        assertTrue(estNouvellePersonne);
+
+        // impossible: la personne existe déjà
+        estNouvellePersonne
+            = co.nouvellePersonne("Chuck", "Norris", "chucknorris", "42", "gerant");
+        assertFalse(estNouvellePersonne);
+
+        // impossible: le login existe déjà
+        estNouvellePersonne
+            = co.nouvellePersonne("Chuque", "Nauris", "chucknorris", "24", "gerant");
+        assertFalse(estNouvellePersonne);
+    }
+
+    @Test
+    public void testSupprimeGerant() {
+        boolean personneSupprimee = co.supprimePersonne("chucknorris");
+        assertTrue(personneSupprimee);
+
+        // impossible: la personne n'existe plus
+        personneSupprimee = co.supprimePersonne("chucknorris");
+        assertFalse(personneSupprimee);
+    }
 }

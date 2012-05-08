@@ -7,6 +7,16 @@ import java.util.*;
  **/
 public class ConnexionBDD {
     private Connection co; //la connexion à la base
+
+    private static HashSet<String> typePersonnes = new HashSet<String>();
+
+    static {
+        typePersonnes.add("client");
+        typePersonnes.add("douane");
+        typePersonnes.add("emballeur");
+        typePersonnes.add("gerant");
+        typePersonnes.add("transporteur");
+    }
     
     /**
      * Crée une nouvelle connexion à une base de données locale donnée
@@ -69,6 +79,8 @@ public class ConnexionBDD {
             return false;
         }
     }
+
+    // === Listes === //
 
     /**
      * Liste tous les employés
@@ -260,5 +272,69 @@ public class ConnexionBDD {
         }
 
         return liste;
+    }
+
+    // === Créations === //
+
+    /**
+     * Crée une nouvelle personne
+     * @param prenom Prénom de la personne
+     * @param nom Nom de la personne
+     * @param login Login de la personne (doit être unique)
+     * @param mdp Mot de passe de la personne
+     * @param type Type de la personne
+     * @return true si l'insertion s'est déroulée avec succès, false sinon ou
+     * si le type n'est pas reconnu.
+     *
+     * Note: si la personne est un client ou une douane, il faut aussi faire un
+     * ajout dans les tables "client" ou "douane".
+     **/
+    public boolean nouvellePersonne(String prenom, String nom,
+                                      String login, String mdp, String type) {
+
+        if (!typePersonnes.contains(type)) {
+            return false;
+        }
+
+        String q = "INSERT INTO personne VALUES(?,?,?,?,?::type_p);";
+
+        try {
+            PreparedStatement ps = co.prepareStatement(q);
+            ps.setString(1, prenom);
+            ps.setString(2, nom);
+            ps.setString(3, login);
+            ps.setString(4, mdp);
+            ps.setString(5, type);
+            int result = ps.executeUpdate();
+            return (result > 0);
+        }
+        catch (SQLException e) {
+            return false;
+        }
+    }
+
+    // === Suppressions === //
+
+    /**
+     * Supprime une personne
+     * @param login Login de la personne à supprimer
+     * @return true si la suppression s'est déroulée avec succès
+     *
+     * Note: si la personne est un client ou une douane, il faut aussi faire
+     * une suppression dans les tables "client" ou "douane".
+     **/
+    public boolean supprimePersonne(String login) {
+
+        String q = "DELETE FROM personne WHERE login=?;";
+
+        try {
+            PreparedStatement ps = co.prepareStatement(q);
+            ps.setString(1, login);
+            int result = ps.executeUpdate();
+            return (result > 0);
+        }
+        catch (SQLException e) {
+            return false;
+        }
     }
 }
