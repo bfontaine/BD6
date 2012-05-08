@@ -1,5 +1,6 @@
 import java.io.*;
 import java.sql.*;
+import java.util.*;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -54,5 +55,35 @@ public class ConnexionBDD_tests {
     public void testChangerPrixNegatif() {
         boolean estChange = co.changePrix("PW-403570-TGG-27", -1337);
         assertFalse(estChange);
+    }
+
+    @Test
+    public void testListerEmballeurs() {
+        LinkedList<HashMap<String,Object>> liste = co.listeEmployes("emballeur");
+
+        assertNotNull(liste);
+        assertFalse(liste.isEmpty());
+        // à faire uniquement si on a pas ajouté/enlevé un emballeur
+        assertEquals(5, liste.size());
+    }
+
+    @Test
+    public void testListerTransporteurs() {
+        LinkedList<HashMap<String,Object>> liste = co.listeEmployes("transporteur");
+
+        assertNotNull(liste);
+        assertFalse(liste.isEmpty());
+        // à faire uniquement si on a pas ajouté/enlevé un transporteur
+        assertEquals(10, liste.size());
+    }
+
+    @Test
+    public void testListerTousLesEmployes() {
+        LinkedList<HashMap<String,Object>> liste = co.listeEmployes();
+
+        assertNotNull(liste);
+        assertFalse(liste.isEmpty());
+        // à faire uniquement si on a pas ajouté/enlevé un employé
+        assertEquals(15, liste.size());
     }
 }
