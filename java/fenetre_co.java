@@ -1,10 +1,15 @@
+import java.io.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
 import java.awt.*;
+import java.sql.*;
 
-public class fenetre_co extends JFrame{
+public class fenetre_co extends JFrame implements ActionListener{
     requete re;
-    JTextField login;
-    JTextField mdp;
+    JTextField login_JT;
+    JTextField mdp_JT;
+    JButton bouton ;
 
     public fenetre_co(requete r){
         super();
@@ -12,8 +17,8 @@ public class fenetre_co extends JFrame{
         setLocationRelativeTo(null); //on centre notre fenêtre
         setResizable(false); //interdit de redimentionner la fenêtre
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //fermeture si clic sur croix
+        setContentPane(buildJP()); 
         setVisible(true); //on rend la fenêtre visible 
-        this.add(buildJP()); 
 
         this.re = r;
     }
@@ -22,17 +27,45 @@ public class fenetre_co extends JFrame{
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
 
-        login = new JTextField();
-        login.setColumns(10);
-        mdp = new JTextField();
-        mdp.setColumns(10);
+        login_JT = new JTextField();
+        login_JT.setColumns(10);
+        mdp_JT = new JTextField();
+        mdp_JT.setColumns(10);
+        bouton = new JButton("connexion");
+        bouton.addActionListener(this);
 
-        panel.add(login);
-        panel.add(mdp);
+        panel.add(login_JT);
+        panel.add(mdp_JT);
+        panel.add(bouton);
         return panel;
     }
 
-    public static void main(String [] args){
+    public void actionPerformed(ActionEvent e){
+        Object source = e.getSource();
+        if(source == bouton){
+            System.out.println("Vous avez cliqué ici.");
+            String login = login_JT.getText(); 
+            String mdp = mdp_JT.getText();
+            try{
+                if(re.connexion(login,mdp)){
+                    Container cp = this.getContentPane();
+                    cp.removeAll();
+                    JLabel label = new JLabel("Connexion reussi : "+login);
+                    cp.add(label /*, contrainte éventuelle liée au layout */);
+                }
+                else{
+                    Container cp = this.getContentPane();
+                    cp.removeAll();
+                    JLabel label = new JLabel("Login ou mot de passe incorrect");
+                    JPanel panel = buildJP();
+                    panel.add(label);
+                    cp.add(panel);
+                }
+            }catch(SQLException sqle){}
+        }
+    }
+
+    public static void main(String [] args) throws SQLException,ClassNotFoundException{
         requete re = new requete("david","david");
         fenetre_co fenetre = new  fenetre_co(re);    
     }
