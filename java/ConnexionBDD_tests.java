@@ -96,4 +96,14 @@ public class ConnexionBDD_tests {
         // à faire uniquement si on a pas ajouté/enlevé un client
         assertEquals(100, liste.size());
     }
+
+    @Test
+    public void testListerProduits() {
+        LinkedList<HashMap<String,Object>> liste = co.listeProduits();
+
+        assertNotNull(liste);
+        assertFalse(liste.isEmpty());
+        // à faire uniquement si on a pas ajouté/enlevé un produit
+        assertEquals(2000, liste.size());
+    }
 }

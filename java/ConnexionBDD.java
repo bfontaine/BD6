@@ -178,4 +178,47 @@ public class ConnexionBDD {
 
         return liste;
     }
+
+    /**
+     * Liste les produits
+     * @return une liste de `HashMap` avec une correspondance entre nom de
+     * colonnes et valeurs
+     **/
+    public LinkedList<HashMap<String,Object>> listeProduits() {
+
+        PreparedStatement ps = null;
+        String q = "SELECT ref,description,qualifiant,prix,poids,";
+        q += "quantite_restante FROM catalogue;";
+
+        ResultSet rs = null;
+        
+        try {
+            ps = co.prepareStatement(q);
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            return null;
+        }
+
+        LinkedList<HashMap<String,Object>> liste
+            = new LinkedList<HashMap<String,Object>>();
+
+        try {
+            while(rs.next()) {
+                HashMap<String,Object> hm = new HashMap<String,Object>();
+
+                hm.put("ref", rs.getString(1));
+                hm.put("description", rs.getString(2));
+                hm.put("qualifiant", rs.getString(3));
+                hm.put("prix", rs.getFloat(4));
+                hm.put("poids", rs.getFloat(5));
+                hm.put("quantité restante", rs.getFloat(6));
+
+                liste.add(hm);
+            }
+        } catch (SQLException e) {
+            return null;
+        }
+
+        return liste;
+    }
 }
