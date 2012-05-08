@@ -132,4 +132,50 @@ public class ConnexionBDD {
 
         return liste;
     }
+
+    /**
+     * Liste les clients
+     * @return une liste de `HashMap` avec une correspondance entre nom de
+     * colonnes et valeurs
+     **/
+    public LinkedList<HashMap<String,Object>> listeClients() {
+
+        PreparedStatement ps = null;
+        String q = "SELECT prenom,nom,login,adresse,ville,code_postal,pays";
+        q += ",telephone FROM personne NATURAL JOIN client";
+        q += " WHERE personne.login=client.id;";
+
+        ResultSet rs = null;
+        
+        try {
+            ps = co.prepareStatement(q);
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            return null;
+        }
+
+        LinkedList<HashMap<String,Object>> liste
+            = new LinkedList<HashMap<String,Object>>();
+
+        try {
+            while(rs.next()) {
+                HashMap<String,Object> hm = new HashMap<String,Object>();
+
+                hm.put("prenom", rs.getString(1));
+                hm.put("nom", rs.getString(2));
+                hm.put("login", rs.getString(3));
+                hm.put("adresse", rs.getString(4));
+                hm.put("ville", rs.getString(5));
+                hm.put("code postal", rs.getString(6));
+                hm.put("pays", rs.getString(7));
+                hm.put("téléphone", rs.getString(8));
+
+                liste.add(hm);
+            }
+        } catch (SQLException e) {
+            return null;
+        }
+
+        return liste;
+    }
 }

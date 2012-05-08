@@ -86,4 +86,14 @@ public class ConnexionBDD_tests {
         // à faire uniquement si on a pas ajouté/enlevé un employé
         assertEquals(15, liste.size());
     }
+
+    @Test
+    public void testListerClients() {
+        LinkedList<HashMap<String,Object>> liste = co.listeClients();
+
+        assertNotNull(liste);
+        assertFalse(liste.isEmpty());
+        // à faire uniquement si on a pas ajouté/enlevé un client
+        assertEquals(100, liste.size());
+    }
 }
