@@ -139,6 +139,13 @@ public class ConnexionBDD_tests {
     }
 
     @Test
+    public void testNouvellePersonneMauvaisType() {
+        boolean estNouvellePersonne
+            = co.nouvellePersonne("Chuck", "Norris", "chucknorris", "42", "acteur");
+        assertFalse(estNouvellePersonne);
+    }
+
+    @Test
     public void testSupprimeGerant() {
         boolean personneSupprimee = co.supprimePersonne("chucknorris");
         assertTrue(personneSupprimee);
