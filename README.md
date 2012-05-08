@@ -25,7 +25,7 @@ le répertoire `java` et faire:
     $ make tests
 
 Les tests sont faits en utilisant JUnit. Pour ajouter des tests, il faut
-s'inspirer des tests qui existent déjà:
+s'inspirer des tests qui existent déjà dans `ConnexionBDD_tests.java`:
     
     @Test
     public void monNouveauTestTropBien() {
@@ -37,10 +37,10 @@ Les principales
 suivantes:
 
 * `assertEquals(A, B)` : vérifie que `A` est bien égal à `B` (`A` est ce qu'on
-  attend, `B` est ce qu'on obtient)
-* `assertTrue(A)` : vérifie que `A` est bien égal à `true`
-* `assertFalse(A)` : vérifie que `A` est bien égal à `false`
-* `assertNull(A)` : vérifie que `A` est bien égal à `null`
-* `assertNotNull(A)` : contraire de `assertNull(A)`
+  attend, `B` est ce qu'on obtient).
+* `assertTrue(A)` : vérifie que `A` est bien égal à `true`.
+* `assertFalse(A)` : vérifie que `A` est bien égal à `false`.
+* `assertNull(A)` : vérifie que `A` est bien égal à `null`.
+* `assertNotNull(A)` : contraire de `assertNull(A)`.
 * `fail(msg)` : fait rater le test, en affichant `msg`.
 
