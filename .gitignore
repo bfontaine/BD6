@@ -1,6 +1,7 @@
 *~
 *.swp
 *.json
+*.class
 data.sql
 /tests
 /scripts/filldb.log
