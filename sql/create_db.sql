@@ -94,7 +94,6 @@ CREATE TABLE colis(
 
                 id SERIAL UNIQUE,
 
-                date_prevue DATE,
                 date_emballage DATE,
                 date_expedie DATE,
                 date_livraison DATE,
