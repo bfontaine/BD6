@@ -12,4 +12,5 @@ Si la base existe déjà, pour la réinitialiser utilisez:
     $ cd scripts
     $ ./dropdb.sh
 
-
+Ne pas oublier d'installer le paquet `python3-postgresql` pour le remplissage de
+la base de données.
