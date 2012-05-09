@@ -57,7 +57,7 @@ public class Panel_co  extends Panel_princ implements ActionListener{
 
 
         JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER,200,200));
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER));
         Color color = new Color(0,153,102);
         panel.setBackground(color);
         panel.add(panel_co);
@@ -74,10 +74,15 @@ public class Panel_co  extends Panel_princ implements ActionListener{
             cp.add(label);
         }
         else{
+            connexion_inderdit();
             JPanel panel = this.buildJP();
             cp.add(panel);
         }
         this.frame.setContentPane(cp);
 
+    }
+
+    public void connexion_inderdit(){
+        this.connection_F = false;
     }
 }
