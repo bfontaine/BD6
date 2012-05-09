@@ -11,8 +11,9 @@ public class Panel_co  extends Panel_princ implements ActionListener{
     JTextField mdp_JT;
     JButton bouton ;
 
-    public Panel_co(){
+    public Panel_co(inter_princ jfr){
         this.connexion = this.buildJP();
+        this.frame = jfr;
     }
 
     public JPanel buildJP(){
@@ -56,22 +57,21 @@ public class Panel_co  extends Panel_princ implements ActionListener{
 
     public void actionPerformed(ActionEvent e){
         System.out.println("Vous avez cliqué ici.");
-        //  String login = login_JT.getText(); 
-        //  String mdp = mdp_JT.getText();
-        //  try{
-        //      Container cp = this.getContentPane();
-        //      cp.removeAll();
-        //      if(re.connexion(login,mdp)){
-        //          JLabel label = new JLabel("Connexion reussi : "+login);
-        //          cp.add(label);
-        //      }
-        //      else{
-        //          JLabel label = new JLabel("Login ou mot de passe incorrect");
-        //          JPanel panel = buildJP();
-        //          panel.add(label);
-        //          cp.add(panel);
-        //      }
-        //      this.setContentPane(cp);
-        //  }catch(SQLException sqle){}
+        String login = login_JT.getText(); 
+        String mdp = mdp_JT.getText();
+        Container cp = this.frame.getContentPane();
+        cp.removeAll();
+        if(this.frame.conn.connectUtilisateur(login,mdp)){
+            JLabel label = new JLabel("Connexion reussi : "+login);
+            cp.add(label);
+        }
+        else{
+            JLabel label = new JLabel("Login ou mot de passe incorrect");
+            JPanel panel = this.buildJP();
+            panel.add(label);
+            cp.add(panel);
+        }
+        this.frame.setContentPane(cp);
+
     }
 }
