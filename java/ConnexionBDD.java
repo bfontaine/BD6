@@ -312,7 +312,7 @@ public class ConnexionBDD {
             return false;
         }
     }
-    /*
+    
     /**
      * Crée une nouvelle commande
      * @param client login du client
@@ -321,7 +321,7 @@ public class ConnexionBDD {
      * @param produits mapping entre les références des produits et les
      * quantités commandées
      * @return true si l'insertion s'est bien déroulée
-     ** /
+     **/
     public boolean nouvelleCommande(String client, Calendar date_commande,
                     Calendar date_prevue, HashMap<String, Integer> produits) {
 
@@ -337,7 +337,7 @@ public class ConnexionBDD {
             frais = max( 100, 2*e^(11-log10(a)) )
             (en gros, =100 pour une date éloignée, >100 pour une date plus
             proche)
-         * /
+         */
         long a = (dc.getTime()-dp.getTime())/3600;
         float frais = (float)(Math.max(100, 2*Math.exp(11-Math.log10(a))));
 
@@ -373,7 +373,6 @@ public class ConnexionBDD {
         }
 
     }
-    */
 
     // === Suppressions === //
 
