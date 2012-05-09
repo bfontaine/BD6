@@ -312,8 +312,7 @@ public class ConnexionBDD {
             return false;
         }
     }
-
-    //TODO enlever les new Date et utiliser Calendar
+    /*
     /**
      * Crée une nouvelle commande
      * @param client login du client
@@ -322,27 +321,59 @@ public class ConnexionBDD {
      * @param produits mapping entre les références des produits et les
      * quantités commandées
      * @return true si l'insertion s'est bien déroulée
-     **/
-    public boolean nouvelleCommande(String client, Date date_commande,
-                        Date date_prevue, HashMap<String, Integer> produits) {
+     ** /
+    public boolean nouvelleCommande(String client, Calendar date_commande,
+                    Calendar date_prevue, HashMap<String, Integer> produits) {
 
         String q = "INSERT INTO commande (id_client,date_commande,date_prevue";
         q += ",frais) VALUES(?,?,?,?);";
 
+        Date dc = date_commande.getTime();
+        Date dp = date_prevue.getTime();
+
+        /*
+         Frais de commande:
+            a = nombre d'heures entre la date de commande et la date prévue
+            frais = max( 100, 2*e^(11-log10(a)) )
+            (en gros, =100 pour une date éloignée, >100 pour une date plus
+            proche)
+         * /
+        long a = (dc.getTime()-dp.getTime())/3600;
+        float frais = (float)(Math.max(100, 2*Math.exp(11-Math.log10(a))));
+
         try {
             PreparedStatement ps = co.prepareStatement(q);
             ps.setString(1, client);
-            ps.setDate(2, date_commande);
-            ps.setDate(3, date_prevue);
+            ps.setDate(2, dc);
+            ps.setDate(3, dp);
+            ps.setFloat(4, frais);
             int result = ps.executeUpdate();
-            //TODO
-            return (result > 0);
+
+            if (result == 0) {
+                return false;
+            }
+
+            q = "SELECT last_value FROM commande_id_seq;"
+            ps = co.prepareStatement(q);
+            ResultSet rs = ps.executeQuery();
+
+            if (!rs.next()) {
+                return false;
+            }
+
+            int id_cmd = rs.getInt(1);
+
+            for (String k : produits.keySet()) {
+                q = "INSERT";
+            }
+
         }
         catch (SQLException e) {
             return false;
         }
 
     }
+    */
 
     // === Suppressions === //
 
