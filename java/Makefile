@@ -2,9 +2,13 @@
 # David Galichet & Baptiste Fontaine
 # v 0.1
 
-CLASSPATH=".:./postgresql.jdbc4.jar"
-TESTS_CLASSPATH="${CLASSPATH}:/usr/share/java/junit4.jar"
-INTERFACE_CLASSPATH="${CLASSPATH}:java"
+PG_DRIVER_NAME=postgresql.jdbc4.jar
+
+CLASSPATH=.:./${PG_DRIVER_NAME}
+TESTS_CLASSPATH=${CLASSPATH}:/usr/share/java/junit4.jar
+
+INTERFACE_DIR=$(shell pwd)/Interface
+INTERFACE_CLASSPATH=.:..:../${PG_DRIVER_NAME}
 
 default: all
 
@@ -21,13 +25,13 @@ cleanall: clean
 
 # affiche la fenetre de connexion
 fenetre: interface
-	java -cp ${INTERFACE_CLASSPATH} $<
+	cd ${INTERFACE_DIR};java -cp ${INTERFACE_CLASSPATH} inter_princ bd6 baptiste baptiste
 
 # compile l'interface
 interface: Interface/inter_princ.class
 
-Interface/inter_princ.class: Interface/inter_princ.java
-	javac -cp ${INTERFACE_CLASSPATH} $<
+Interface/inter_princ.class: ${INTERFACE_DIR}/inter_princ.java
+	cd ${INTERFACE_DIR};javac -cp ${INTERFACE_CLASSPATH} inter_princ.java
 
 # pour chaque *.class, il faut compiler le *.java correspondant
 %.class: %.java
