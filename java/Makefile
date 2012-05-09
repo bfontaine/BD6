@@ -18,11 +18,11 @@ all: ConnexionBDD.class java/inter_princ.class
 
 # efface les fichiers *~
 clean:
-	rm -f *~
+	find . -name *~ -delete
 
 # efface les fichiers *~ et *.class
 cleanall: clean
-	rm -f *.class
+	find . -name *.class -delete
 
 # affiche la fenetre de connexion
 fenetretest: interface
