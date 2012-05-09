@@ -8,3 +8,4 @@ data.sql
 /data/catalogue.csv
 /sql/commands.sql
 /data.csv
+*.swo
