@@ -6,6 +6,8 @@ import java.awt.*;
 import java.sql.*;
 
 public class Panel_co  extends Panel_princ implements ActionListener{
+    boolean connection_F=true;
+
     //objet swing de notre Panel connexion
     JTextField login_JT;
     JTextField mdp_JT;
@@ -38,10 +40,15 @@ public class Panel_co  extends Panel_princ implements ActionListener{
         panel_CEN.add(mdp_JT);
 
         JPanel panel_SU = new JPanel();
-        panel_SU.setLayout(new FlowLayout());
+        panel_SU.setLayout(new BorderLayout());
+        if(!connection_F){
+            JLabel label = new JLabel("Login ou mot de passe incorrect");
+            label.setForeground(Color.red);
+            panel_SU.add(label, BorderLayout.NORTH);
+        }
         bouton = new JButton("connexion");
         bouton.addActionListener(this);
-        panel_SU.add(bouton);
+        panel_SU.add(bouton, BorderLayout.CENTER);
 
 
         panel_co.add(panel_NO, BorderLayout.NORTH);
@@ -50,13 +57,14 @@ public class Panel_co  extends Panel_princ implements ActionListener{
 
 
         JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-        panel.add(panel_co,BorderLayout.CENTER);
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER,200,200));
+        Color color = new Color(0,153,102);
+        panel.setBackground(color);
+        panel.add(panel_co);
         return panel;
     }
 
     public void actionPerformed(ActionEvent e){
-        System.out.println("Vous avez cliqué ici.");
         String login = login_JT.getText(); 
         String mdp = mdp_JT.getText();
         Container cp = this.frame.getContentPane();
@@ -66,9 +74,7 @@ public class Panel_co  extends Panel_princ implements ActionListener{
             cp.add(label);
         }
         else{
-            JLabel label = new JLabel("Login ou mot de passe incorrect");
             JPanel panel = this.buildJP();
-            panel.add(label);
             cp.add(panel);
         }
         this.frame.setContentPane(cp);
