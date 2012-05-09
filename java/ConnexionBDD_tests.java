@@ -1,6 +1,9 @@
 import java.io.*;
 import java.sql.*;
-import java.util.*;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Calendar;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -153,5 +156,122 @@ public class ConnexionBDD_tests {
         // impossible: la personne n'existe plus
         personneSupprimee = co.supprimePersonne("chucknorris");
         assertFalse(personneSupprimee);
+    }
+
+    @Test
+    public void testCommandeMauvaisClient() {
+
+        Calendar maintenant = Calendar.getInstance();
+        Calendar apres      = Calendar.getInstance();
+        apres.set(2012, 11, 21);
+
+        HashMap<String, Integer> produits = new HashMap<String, Integer>();
+        produits.put("GN-746901-SIY-63", 1);
+
+        boolean commandeValidee
+          = co.nouvelleCommande("nexistepas", maintenant, apres, produits);
+
+        assertFalse(commandeValidee);
+    }
+
+    @Test
+    public void testCommandePasDeProduits() {
+
+        Calendar maintenant = Calendar.getInstance();
+        Calendar apres      = Calendar.getInstance();
+        apres.set(2012, 11, 21);
+
+        HashMap<String, Integer> produits = new HashMap<String, Integer>();
+
+        boolean commandeValidee
+          = co.nouvelleCommande("SEGZE03368", maintenant, apres, produits);
+
+        assertFalse(commandeValidee);
+    }
+
+    @Test
+    public void testCommandeNbDeProduitsNegatif() {
+
+        Calendar maintenant = Calendar.getInstance();
+        Calendar apres      = Calendar.getInstance();
+        apres.set(2012, 11, 21);
+
+        HashMap<String, Integer> produits = new HashMap<String, Integer>();
+        produits.put("GN-746901-SIY-63", -1); 
+        produits.put("TL-338853-AIN-30", 2); 
+
+        boolean commandeValidee
+          = co.nouvelleCommande("SEGZE03368", maintenant, apres, produits);
+
+        assertFalse(commandeValidee);
+    }
+
+    @Test
+    public void testCommandeNbDeProduitsNul() {
+
+        Calendar maintenant = Calendar.getInstance();
+        Calendar apres      = Calendar.getInstance();
+        apres.set(2012, 11, 21);
+
+        HashMap<String, Integer> produits = new HashMap<String, Integer>();
+        produits.put("GN-746901-SIY-63", 0); 
+
+        boolean commandeValidee
+          = co.nouvelleCommande("SEGZE03368", maintenant, apres, produits);
+
+        assertFalse(commandeValidee);
+    }
+
+    @Test
+    public void testCommandeDatePrevuePassee() {
+
+        Calendar maintenant = Calendar.getInstance();
+        Calendar avant      = Calendar.getInstance();
+        avant.set(1999, 11, 21);
+
+        HashMap<String, Integer> produits = new HashMap<String, Integer>();
+        produits.put("GN-746901-SIY-63", 0); 
+        produits.put("TL-338853-AIN-30", 0); 
+
+        boolean commandeValidee
+          = co.nouvelleCommande("SEGZE03368", maintenant, avant, produits);
+
+        assertFalse(commandeValidee);
+    }
+
+    @Test
+    public void testCommandeMauvaiseRefProduit() {
+
+        Calendar maintenant = Calendar.getInstance();
+        Calendar apres      = Calendar.getInstance();
+        apres.set(2012, 11, 21);
+
+        HashMap<String, Integer> produits = new HashMap<String, Integer>();
+        produits.put("nexistepas", 1); 
+
+        boolean commandeValidee
+          = co.nouvelleCommande("SEGZE03368", maintenant, apres, produits);
+
+        assertFalse(commandeValidee);
+    }
+
+    @Test
+    public void testCommandeOk() {
+
+        Calendar maintenant = Calendar.getInstance();
+        Calendar apres      = Calendar.getInstance();
+        apres.set(2012, 11, 21);
+
+        HashMap<String, Integer> produits = new HashMap<String, Integer>();
+        produits.put("GN-746901-SIY-63", 1);
+
+        boolean commandeValidee
+          = co.nouvelleCommande("SEGZE03368", maintenant, apres, produits);
+
+        assertTrue(commandeValidee);
+
+        // version courte
+        commandeValidee = co.nouvelleCommande("SEGZE03368", apres, produits);
+        assertTrue(commandeValidee);
     }
 }
