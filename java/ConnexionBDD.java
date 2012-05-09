@@ -313,6 +313,37 @@ public class ConnexionBDD {
         }
     }
 
+    //TODO enlever les new Date et utiliser Calendar
+    /**
+     * Crée une nouvelle commande
+     * @param client login du client
+     * @param date_commande date de la commande
+     * @param date_prevue date de livraison prévue
+     * @param produits mapping entre les références des produits et les
+     * quantités commandées
+     * @return true si l'insertion s'est bien déroulée
+     **/
+    public boolean nouvelleCommande(String client, Date date_commande,
+                        Date date_prevue, HashMap<String, Integer> produits) {
+
+        String q = "INSERT INTO commande (id_client,date_commande,date_prevue";
+        q += ",frais) VALUES(?,?,?,?);";
+
+        try {
+            PreparedStatement ps = co.prepareStatement(q);
+            ps.setString(1, client);
+            ps.setDate(2, date_commande);
+            ps.setDate(3, date_prevue);
+            int result = ps.executeUpdate();
+            //TODO
+            return (result > 0);
+        }
+        catch (SQLException e) {
+            return false;
+        }
+
+    }
+
     // === Suppressions === //
 
     /**
