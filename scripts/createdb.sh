@@ -5,7 +5,14 @@ createdb bd6 > /dev/null 2>&1 && echo "ok" || echo "fail! "
 echo -n "Création des tables... "
 psql bd6 -f ../sql/create_db.sql > /dev/null 2>createtables.log && echo "ok" || echo "fail! "
 
-[ -s ./createtables.log ] && grep -v 'NOTICE' ./createtables.log | sponge ./createtables.log
+if [ -s ./createtables.log ];then
+    if [ $(which sponge) ];then
+        grep -v 'NOTICE' ./createtables.log | sponge ./createtables.log
+    else
+        grep -v 'NOTICE' ./createtables.log > .tmp-log;
+        mv .tmp-log ./createtables.log;
+    fi
+fi
 
 if [ -s ./createtables.log ]; then
     echo 'Des erreurs sont survenues, consultez le fichier "createtable.log" pour'
