@@ -9,6 +9,7 @@ INPUT_FILE = '../data/data.csv'
 BASE_NAME = 'bd6'
 HOST_NAME = 'localhost'
 USER_NAME = getpass.getuser() # nom d'utilisateur courant
+PASSWORD  = USER_NAME
 
 db = None
 
@@ -153,7 +154,7 @@ def insert_client(cli):
 
 if __name__ == '__main__':
 
-    db = pg.open('pq://%s@%s/%s' % (USER_NAME, HOST_NAME, BASE_NAME))
+    db = pg.open('pq://%s@%s/%s' % (USER_NAME, HOST_NAME, BASE_NAME), PASSWORD)
     print('Connexion à la base de données: ok')
 
     # lecture du CSV, et exécution des requêtes d'insertion
