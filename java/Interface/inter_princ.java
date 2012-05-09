@@ -7,12 +7,12 @@ public class inter_princ extends JFrame{
 
     ConnexionBDD conn;
 
-    Panel_princ contenue;
+    Panel_princ contenu;
 
     public inter_princ (ConnexionBDD co){
         super();
         
-        this.contenue = new Panel_co();
+        this.contenu = new Panel_co(this);
         //crée notre objet requete
         this.conn = co;
 
@@ -20,7 +20,7 @@ public class inter_princ extends JFrame{
         setLocationRelativeTo(null); // centre la fenêtre
         setResizable(false); // interdit de redimentionner la fenêtre
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // fermeture si clic sur croix
-        setContentPane(contenue.getConnexion()); // insere le contenue de la fenêtre
+        setContentPane(contenu.getConnexion()); // insere le contenue de la fenêtre
         setVisible(true); //rend la fenêtre visible
     }
 
