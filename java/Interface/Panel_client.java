@@ -11,12 +11,12 @@ public class Panel_client  extends Panel_princ implements ActionListener{
     //objet swing de notre Panel connexion
 
     public Panel_client(inter_princ jfr){
-        this.connexion = this.buildJP();
+        this.contenu = this.buildJP();
         this.frame = jfr;
     }
 
     public JPanel buildJP(){
-        Jpanel panel = new Jpanel();
+        JPanel panel = new JPanel();
         return panel;
     }
 

@@ -20,10 +20,45 @@ public class inter_princ extends JFrame{
         setLocationRelativeTo(null); // centre la fenêtre
         setResizable(false); // interdit de redimentionner la fenêtre
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // fermeture si clic sur croix
-        setContentPane(contenu.getConnexion()); // insere le contenue de la fenêtre
+        setContentPane(contenu.getContenu()); // insere le contenue de la fenêtre
         setVisible(true); //rend la fenêtre visible
     }
 
+    public void connexion_client(){
+        Container cp = this.getContentPane();
+        cp.removeAll();
+        contenu = new Panel_client(this);
+        this.setContentPane(contenu.getContenu());
+    }
+
+    public void connexion_transporteur(){
+        Container cp = this.getContentPane();
+        cp.removeAll();
+        contenu = new Panel_tran(this);
+        this.setContentPane(contenu.getContenu());
+    }
+      
+    public void connexion_emballeur(){
+        Container cp = this.getContentPane();
+        cp.removeAll();
+        contenu = new Panel_emb(this);
+        this.setContentPane(contenu.getContenu());
+    }
+      
+    public void connexion_douane(){
+        Container cp = this.getContentPane();
+        cp.removeAll();
+        contenu = new Panel_douane(this);
+        this.setContentPane(contenu.getContenu());
+    }
+      
+    public void connexion_gerant(){
+        Container cp = this.getContentPane();
+        cp.removeAll();
+        contenu = new Panel_ger(this);
+        this.setContentPane(contenu.getContenu());
+    }
+      
     public static void main (String [] args) throws SQLException,ClassNotFoundException {
         //prend en argument le nom bdd et utilisateur et mdp_bdd
         if(args.length == 3){

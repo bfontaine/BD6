@@ -14,7 +14,7 @@ public class Panel_co  extends Panel_princ implements ActionListener{
     JButton bouton ;
 
     public Panel_co(inter_princ jfr){
-        this.connexion = this.buildJP();
+        this.contenu = this.buildJP();
         this.frame = jfr;
     }
 
@@ -69,20 +69,34 @@ public class Panel_co  extends Panel_princ implements ActionListener{
         String mdp = mdp_JT.getText();
         Container cp = this.frame.getContentPane();
         cp.removeAll();
-        if(this.frame.conn.connectUtilisateur(login,mdp)){
-            JLabel label = new JLabel("Connexion reussi : "+login);
-            cp.add(label);
+        String type = this.frame.conn.connecteUtilisateur(login,mdp);
+        if(type != null){
+                if (type.equals("client")) {
+                    this.frame.connexion_client();
+                }
+                else if (type.equals("transporteur")) {
+                    this.frame.connexion_transporteur();
+                }
+                else if (type.equals("emballeur")) {
+                    this.frame.connexion_emballeur();
+                }
+                else if (type.equals("gerant")) {
+                    this.frame.connexion_gerant();
+                }
+                else if (type.equals("douane")) {
+                    this.frame.connexion_douane();
+                }
         }
         else{
-            connexion_inderdit();
+            connexion_interdit();
             JPanel panel = this.buildJP();
             cp.add(panel);
+            this.frame.setContentPane(cp);
         }
-        this.frame.setContentPane(cp);
 
     }
 
-    public void connexion_inderdit(){
+    public void connexion_interdit(){
         this.connection_F = false;
     }
 }

@@ -4,8 +4,8 @@ import java.awt.*;
 import java.sql.*;
 
 public class Panel_princ {
-    //Panel de Panel connexion
-    JPanel connexion;
+    //Contenu de notre panel
+    JPanel contenu;
     
     //le JFrame qui appelle les Panel
     inter_princ frame;
@@ -13,8 +13,8 @@ public class Panel_princ {
     public Panel_princ(){
     }
     
-    public JPanel getConnexion(){
-        return connexion;
+    public JPanel getContenu(){
+        return contenu;
     }
 
 }
