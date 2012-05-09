@@ -66,6 +66,8 @@ public class ConnexionBDD {
         }
     }
 
+    // === Changements dans la BDD === //
+
     /**
      * Change le prix d'un produit du catalogue
      * @param ref référence du produit
@@ -280,6 +282,44 @@ public class ConnexionBDD {
         }
 
         return liste;
+    }
+
+    // === Informations === //
+
+    /**
+     * Retourne des informations sur l'utilisateur (nom, prénom, login, type)
+     * @param login login de l'utilisateur
+     **/
+    public HashMap<String,String> infosPersonne(String login) {
+        if (login == null) {
+            return null;
+        }
+
+        String q = "SELECT nom,prenom,login,type_personne FROM personne";
+        q += " WHERE login=? LIMIT 1;";
+
+        try {
+            PreparedStatement ps = co.prepareStatement(q);
+            ps.setString(1, login);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (!rs.next()) {
+                return null;
+            }
+
+            HashMap<String,String> hm = new HashMap<String,String>();
+
+            hm.put("nom", rs.getString("nom"));
+            hm.put("prénom", rs.getString("prenom"));
+            hm.put("login", rs.getString("login"));
+            hm.put("type", rs.getString("type_personne"));
+
+            return hm;
+
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
     // === Créations === //

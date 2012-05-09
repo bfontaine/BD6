@@ -274,4 +274,26 @@ public class ConnexionBDD_tests {
         commandeValidee = co.nouvelleCommande("SEGZE03368", apres, produits);
         assertTrue(commandeValidee);
     }
+
+    @Test
+    public void testInfosMauvaisePersonne() {
+
+        HashMap<String,String> hm = co.infosPersonne("nexistepas");
+
+        assertNull(hm);
+    }
+
+    @Test
+    public void testInfosPersonne() {
+
+        String login = "SEGZE03368";
+
+        HashMap<String,String> hm = co.infosPersonne(login);
+
+        assertNotNull(hm);
+        assertFalse(hm.isEmpty());
+        assertEquals(4, hm.size());
+
+        assertEquals(login, hm.get("login"));
+    }
 }
