@@ -1,6 +1,9 @@
 import java.io.*;
 import java.sql.*;
-import java.util.*;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Calendar;
 
 /**
  * Une connexion à la base de données
@@ -312,7 +315,23 @@ public class ConnexionBDD {
             return false;
         }
     }
-    /*
+
+    /**
+     * Crée une nouvelle commande. La date de la commande est considérée
+     * comme étant maintenant.
+     * @param client login du client
+     * @param date_prevue date de livraison prévue
+     * @param produits mapping entre les références des produits et les
+     * quantités commandées
+     * @return true si l'insertion s'est bien déroulée
+     **/
+    public boolean nouvelleCommande(String client, Calendar date_prevue,
+                                        HashMap<String, Integer> produits) {
+
+        return nouvelleCommande(client, Calendar.getInstance(),
+                                    date_prevue, produits);
+    }
+    
     /**
      * Crée une nouvelle commande
      * @param client login du client
@@ -321,31 +340,39 @@ public class ConnexionBDD {
      * @param produits mapping entre les références des produits et les
      * quantités commandées
      * @return true si l'insertion s'est bien déroulée
-     ** /
+     **/
     public boolean nouvelleCommande(String client, Calendar date_commande,
                     Calendar date_prevue, HashMap<String, Integer> produits) {
+
+        if (produits.size() == 0) {
+            return false;
+        }
 
         String q = "INSERT INTO commande (id_client,date_commande,date_prevue";
         q += ",frais) VALUES(?,?,?,?);";
 
-        Date dc = date_commande.getTime();
-        Date dp = date_prevue.getTime();
+        // Calendar -> Date -> long (millisecondes)
+        long dc = date_commande.getTime().getTime();
+        long dp = date_prevue.getTime().getTime();
 
         /*
          Frais de commande:
             a = nombre d'heures entre la date de commande et la date prévue
-            frais = max( 100, 2*e^(11-log10(a)) )
+            frais = max( 100, 2*e^(11-log10(1000*a)) )
             (en gros, =100 pour une date éloignée, >100 pour une date plus
             proche)
-         * /
-        long a = (dc.getTime()-dp.getTime())/3600;
+         */
+        long a = (dc-dp)/3600;
         float frais = (float)(Math.max(100, 2*Math.exp(11-Math.log10(a))));
+
+        if (frais == Float.NaN)
+            frais = 100;
 
         try {
             PreparedStatement ps = co.prepareStatement(q);
             ps.setString(1, client);
-            ps.setDate(2, dc);
-            ps.setDate(3, dp);
+            ps.setDate(2, new Date(dc));
+            ps.setDate(3, new Date(dp));
             ps.setFloat(4, frais);
             int result = ps.executeUpdate();
 
@@ -353,7 +380,7 @@ public class ConnexionBDD {
                 return false;
             }
 
-            q = "SELECT last_value FROM commande_id_seq;"
+            q = "SELECT last_value FROM commande_id_seq;";
             ps = co.prepareStatement(q);
             ResultSet rs = ps.executeQuery();
 
@@ -361,11 +388,40 @@ public class ConnexionBDD {
                 return false;
             }
 
-            int id_cmd = rs.getInt(1);
+            int i, quantite, id_cmd = rs.getInt(1);
 
-            for (String k : produits.keySet()) {
-                q = "INSERT";
+            q = "INSERT INTO commande_produits VALUES (?,?,?)";
+
+            // pour chaque produit, …
+            for (i=1; i<produits.size(); i++) {
+                q += ", (?,?,?)";
             }
+
+            ps = co.prepareStatement(q+";");
+
+            i = 1;
+
+            // … on ajoute 3 valeurs: id de la commande
+            //                        ref du produit
+            //                        quantité du produit
+            for (String ref : produits.keySet()) {
+                ps.setInt(i, id_cmd);
+                ps.setString(i+1, ref);
+                
+                quantite = produits.get(ref);
+
+                if (quantite <= 0) {
+                    return false;
+                }
+
+                ps.setInt(i+2, quantite);
+
+                i += 3;
+            }
+
+            result = ps.executeUpdate();
+
+            return (result == produits.size());
 
         }
         catch (SQLException e) {
@@ -373,7 +429,6 @@ public class ConnexionBDD {
         }
 
     }
-    */
 
     // === Suppressions === //
 
