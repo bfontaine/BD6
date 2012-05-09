@@ -322,7 +322,7 @@ public class ConnexionBDD {
         }
     }
 
-    // === Créations === //
+    // === Créations/Ajouts === //
 
     /**
      * Crée une nouvelle personne
@@ -433,7 +433,11 @@ public class ConnexionBDD {
                 return false;
             }
 
-            int i, quantite, id_cmd = rs.getInt(1);
+            int reserve, i, quantite, id_cmd = rs.getInt(1);
+            
+            String checkCatalogue = "SELECT quantite_restante FROM catalogue";
+            checkCatalogue += " WHERE ref=? LIMIT 1;";
+            PreparedStatement ps2;
 
             q = "INSERT INTO commande_produits VALUES (?,?,?)";
 
@@ -444,20 +448,31 @@ public class ConnexionBDD {
 
             ps = co.prepareStatement(q+";");
 
-            i = 1;
-
             // … on ajoute 3 valeurs: id de la commande
             //                        ref du produit
             //                        quantité du produit
+            i = 1;
             for (String ref : produits.keySet()) {
-                ps.setInt(i, id_cmd);
-                ps.setString(i+1, ref);
-                
-                quantite = produits.get(ref);
 
-                if (quantite <= 0) {
+                //TODO verifier qu'il y a assez de produits dans le catalogue
+                ps2 = co.prepareStatement(checkCatalogue);
+                ps2.setString(1, ref);
+                rs = ps2.executeQuery();
+                if (!rs.next()) {
                     return false;
                 }
+
+                reserve = rs.getInt("quantite_restante");
+                quantite = produits.get(ref);
+
+                ps.setInt(i, id_cmd);
+                ps.setString(i+1, ref);
+
+                if ((quantite <= 0) || (reserve < quantite)) {
+                    return false;
+                }
+
+                //TODO decrementer la réserve
 
                 ps.setInt(i+2, quantite);
 
@@ -467,12 +482,14 @@ public class ConnexionBDD {
             result = ps.executeUpdate();
 
             return (result == produits.size());
-
         }
         catch (SQLException e) {
             return false;
         }
+    }
 
+    public boolean enregistreColis() {
+        return false; //TODO
     }
 
     // === Suppressions === //

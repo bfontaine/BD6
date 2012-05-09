@@ -223,6 +223,22 @@ public class ConnexionBDD_tests {
     }
 
     @Test
+    public void testCommandeNbDeProduitsTropGrand() {
+
+        Calendar maintenant = Calendar.getInstance();
+        Calendar apres      = Calendar.getInstance();
+        apres.set(2012, 11, 21);
+
+        HashMap<String, Integer> produits = new HashMap<String, Integer>();
+        produits.put("GN-746901-SIY-63", 99999999); 
+
+        boolean commandeValidee
+          = co.nouvelleCommande("SEGZE03368", maintenant, apres, produits);
+
+        assertFalse(commandeValidee);
+    }
+
+    @Test
     public void testCommandeDatePrevuePassee() {
 
         Calendar maintenant = Calendar.getInstance();
