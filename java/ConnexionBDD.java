@@ -46,18 +46,23 @@ public class ConnexionBDD {
      * Teste si la connexion de l'utilisateur donné est acceptée
      * @param login login de l'utilisateur
      * @param mdp mot de passe de l'utilisateur
-     * @return `true` si le login existe et le mot de passe correspond, `false` sinon
+     * @return le type de l'utilisateur si le login/mdp est mauvais
      **/
-    public boolean connectUtilisateur(String login, String mdp) {
+    public String connecteUtilisateur(String login, String mdp) {
         try {
-            PreparedStatement ps = co.prepareStatement("SELECT mot_de_passe FROM personne WHERE login=?;");
+            String q = "SELECT type_personne,mot_de_passe FROM personne WHERE login=?;";
+            PreparedStatement ps = co.prepareStatement(q);
             ps.setString(1, login);
             ResultSet rs = ps.executeQuery();
 
-            return (rs.next() && (rs.getString("mot_de_passe").equals(mdp)));
+            if (!(rs.next() && (rs.getString("mot_de_passe").equals(mdp)))) {
+                return null;
+            }
+
+            return rs.getString("type_personne");
 
         } catch (SQLException e) {
-            return false;
+            return null;
         }
     }
 

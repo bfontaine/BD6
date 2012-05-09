@@ -29,15 +29,15 @@ public class ConnexionBDD_tests {
 
     @Test
     public void testMauvaiseConnexion() {
-        boolean estConnecte = co.connectUtilisateur("nexiste", "pas");
-        assertFalse(estConnecte);
+        String estConnecte = co.connecteUtilisateur("nexiste", "pas");
+        assertNull(estConnecte);
     }
 
     @Test
     public void testBonneConnexion() {
         // premiere personne de la BDD
-        boolean estConnecte = co.connectUtilisateur("SEGZE03368", "IVW24HJB2RU");
-        assertTrue(estConnecte);
+        String estConnecte = co.connecteUtilisateur("SEGZE03368", "IVW24HJB2RU");
+        assertEquals("client", estConnecte);
     }
     
     @Test
