@@ -5,17 +5,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
 
-public class fenetre_co implements ActionListener{
-    //Panel de Panel connexion
-    JPanel connexion;
-
+public class Panel_co  extends Panel_princ implements ActionListener{
     //objet swing de notre Panel connexion
     JTextField login_JT;
     JTextField mdp_JT;
     JButton bouton ;
 
-    public fenetre_co(){
-        this.connexion = buildJP();
+    public Panel_co(){
+        this.connexion = this.buildJP();
     }
 
     public JPanel buildJP(){
@@ -24,8 +21,8 @@ public class fenetre_co implements ActionListener{
 
         JPanel panel_NO = new JPanel();
         panel_NO.setLayout(new FlowLayout());
-        login_JT = new JTextField();
         JLabel user = new JLabel("Utilisateur :");
+        login_JT = new JTextField();
         login_JT.setColumns(10);
         panel_NO.add(user);
         panel_NO.add(login_JT);
@@ -33,11 +30,11 @@ public class fenetre_co implements ActionListener{
 
         JPanel panel_CEN = new JPanel();
         panel_CEN.setLayout(new FlowLayout());
-        JLabel user = new JLabel("Mot de Passe :");
+        JLabel mdp_text = new JLabel("Mot de Passe :");
         mdp_JT = new JTextField();
         mdp_JT.setColumns(10);
-        panel_CEN.add(user);
-        panel_CEN.add(login_JT);
+        panel_CEN.add(mdp_text);
+        panel_CEN.add(mdp_JT);
 
         JPanel panel_SU = new JPanel();
         panel_SU.setLayout(new FlowLayout());
@@ -46,16 +43,19 @@ public class fenetre_co implements ActionListener{
         panel_SU.add(bouton);
 
 
-        panel.add(panel_NO, BorderLayout.NORTH);
-        panel.add(panel_CEN, BorderLayout.CENTER);
-        panel.add(panel_SU, BorderLayout.SOUTH);
+        panel_co.add(panel_NO, BorderLayout.NORTH);
+        panel_co.add(panel_CEN, BorderLayout.CENTER);
+        panel_co.add(panel_SU, BorderLayout.SOUTH);
+
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.add(panel_co,BorderLayout.CENTER);
         return panel;
     }
 
     public void actionPerformed(ActionEvent e){
-        Object source = e.getSource();
-        if(source == bouton) {
-            System.out.println("Vous avez cliqué ici.");
+        System.out.println("Vous avez cliqué ici.");
         //  String login = login_JT.getText(); 
         //  String mdp = mdp_JT.getText();
         //  try{
@@ -73,6 +73,5 @@ public class fenetre_co implements ActionListener{
         //      }
         //      this.setContentPane(cp);
         //  }catch(SQLException sqle){}
-        }
     }
 }
