@@ -20,11 +20,13 @@ cleanall: clean
 	rm -f *.class
 
 # affiche la fenetre de connexion
-fenetre: java/inter_princ.class
+fenetre: interface
 	java -cp ${INTERFACE_CLASSPATH} $<
 
 # compile l'interface
-java/inter_princ.class: java/inter_princ.java
+interface: Interface/inter_princ.class
+
+Interface/inter_princ.class: Interface/inter_princ.java
 	javac -cp ${INTERFACE_CLASSPATH} $<
 
 # pour chaque *.class, il faut compiler le *.java correspondant
