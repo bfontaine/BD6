@@ -57,7 +57,6 @@ public class Panel_co  extends Panel_princ implements ActionListener{
 
 
         JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER));
         Color color = new Color(0,153,102);
         panel.setBackground(color);
         panel.add(panel_co);
@@ -72,19 +71,19 @@ public class Panel_co  extends Panel_princ implements ActionListener{
         String type = this.frame.conn.connecteUtilisateur(login,mdp);
         if(type != null){
                 if (type.equals("client")) {
-                    this.frame.connexion_client();
+                    this.frame.connexion_client(login);
                 }
                 else if (type.equals("transporteur")) {
-                    this.frame.connexion_transporteur();
+                    this.frame.connexion_transporteur(login);
                 }
                 else if (type.equals("emballeur")) {
-                    this.frame.connexion_emballeur();
+                    this.frame.connexion_emballeur(login);
                 }
                 else if (type.equals("gerant")) {
-                    this.frame.connexion_gerant();
+                    this.frame.connexion_gerant(login);
                 }
                 else if (type.equals("douane")) {
-                    this.frame.connexion_douane();
+                    this.frame.connexion_douane(login);
                 }
         }
         else{

@@ -11,7 +11,7 @@ public class inter_princ extends JFrame{
 
     public inter_princ (ConnexionBDD co){
         super();
-        
+
         this.contenu = new Panel_co(this);
         //crée notre objet requete
         this.conn = co;
@@ -24,41 +24,54 @@ public class inter_princ extends JFrame{
         setVisible(true); //rend la fenêtre visible
     }
 
-    public void connexion_client(){
+    public void connexion_co(){
         Container cp = this.getContentPane();
         cp.removeAll();
-        contenu = new Panel_client(this);
-        this.setContentPane(contenu.getContenu());
+        contenu = new Panel_co(this);
+        cp.add(contenu.getContenu());
+        this.setContentPane(cp);
     }
 
-    public void connexion_transporteur(){
+    public void connexion_client(String login){
+        Container cp = this.getContentPane();
+        cp.removeAll();
+        contenu = new Panel_client(this,login);
+        cp.add(contenu.getContenu());
+        this.setContentPane(cp);
+    }
+
+    public void connexion_transporteur(String login){
         Container cp = this.getContentPane();
         cp.removeAll();
         contenu = new Panel_tran(this);
-        this.setContentPane(contenu.getContenu());
+        cp.add(contenu.getContenu());
+        this.setContentPane(cp);
     }
-      
-    public void connexion_emballeur(){
+
+    public void connexion_emballeur(String login){
         Container cp = this.getContentPane();
         cp.removeAll();
         contenu = new Panel_emb(this);
-        this.setContentPane(contenu.getContenu());
+        cp.add(contenu.getContenu());
+        this.setContentPane(cp);
     }
-      
-    public void connexion_douane(){
+
+    public void connexion_douane(String login){
         Container cp = this.getContentPane();
         cp.removeAll();
         contenu = new Panel_douane(this);
-        this.setContentPane(contenu.getContenu());
+        cp.add(contenu.getContenu());
+        this.setContentPane(cp);
     }
-      
-    public void connexion_gerant(){
+
+    public void connexion_gerant(String login){
         Container cp = this.getContentPane();
         cp.removeAll();
         contenu = new Panel_ger(this);
-        this.setContentPane(contenu.getContenu());
+        cp.add(contenu.getContenu());
+        this.setContentPane(cp);
     }
-      
+
     public static void main (String [] args) throws SQLException,ClassNotFoundException {
         //prend en argument le nom bdd et utilisateur et mdp_bdd
         if(args.length == 3){
