@@ -3,6 +3,7 @@
 # v 0.1
 
 PG_DRIVER_NAME=postgresql.jdbc4.jar
+USER=$(shell whoami)
 
 CLASSPATH=.:./${PG_DRIVER_NAME}
 TESTS_CLASSPATH=${CLASSPATH}:/usr/share/java/junit4.jar
@@ -24,8 +25,11 @@ cleanall: clean
 	rm -f *.class
 
 # affiche la fenetre de connexion
+fenetretest: interface
+	cd ${INTERFACE_DIR};java -cp ${INTERFACE_CLASSPATH} inter_princ bd6 ${USER} ${USER}
+
+# alias
 fenetre: interface
-	cd ${INTERFACE_DIR};java -cp ${INTERFACE_CLASSPATH} inter_princ bd6 baptiste baptiste
 
 # compile l'interface
 interface: Interface/inter_princ.class
