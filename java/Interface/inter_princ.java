@@ -59,7 +59,7 @@ public class inter_princ extends JFrame{
     public void connexion_douane(String login){
         Container cp = this.getContentPane();
         cp.removeAll();
-        contenu = new Panel_douane(this);
+        contenu = new Panel_douane(this,login);
         cp.add(contenu.getContenu());
         this.setContentPane(cp);
     }
