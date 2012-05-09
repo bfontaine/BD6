@@ -308,8 +308,6 @@ public class ConnexionBDD_tests {
 
         assertNotNull(hm);
         assertFalse(hm.isEmpty());
-        assertEquals(4, hm.size());
-
-        assertEquals(login, hm.get("login"));
+        assertEquals(3, hm.size());
     }
 }

@@ -90,6 +90,32 @@ public class ConnexionBDD {
         }
     }
 
+    /**
+     * Change la quantité d'un produit dans le catalogue
+     * @param ref référence du produit
+     * @param nouvelleQuantite nouvelle quantité du produit dans le catalogue
+     * @return true si le changement a été fait avec succès, false sinon (ou si
+     * la nouvelle quantité est négative)
+     **/
+    private boolean changerQuantiteProduit(String ref, int nouvelleQuantite) {
+        
+        if (nouvelleQuantite < 0) {
+            return false;
+        }
+
+        String q = "UPDATE catalogue SET quantite_restante=? WHERE ref=?;";
+        try {
+            PreparedStatement ps = co.prepareStatement(q);
+            ps.setInt(1, nouvelleQuantite);
+            ps.setString(2, ref);
+            int result = ps.executeUpdate();
+            return (result == 1);
+
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
     // === Listes === //
 
     /**
@@ -287,7 +313,7 @@ public class ConnexionBDD {
     // === Informations === //
 
     /**
-     * Retourne des informations sur l'utilisateur (nom, prénom, login, type)
+     * Retourne des informations sur l'utilisateur (nom, prénom, type)
      * @param login login de l'utilisateur
      **/
     public HashMap<String,String> infosPersonne(String login) {
@@ -295,7 +321,7 @@ public class ConnexionBDD {
             return null;
         }
 
-        String q = "SELECT nom,prenom,login,type_personne FROM personne";
+        String q = "SELECT nom,prenom,type_personne FROM personne";
         q += " WHERE login=? LIMIT 1;";
 
         try {
@@ -312,7 +338,6 @@ public class ConnexionBDD {
 
             hm.put("nom", rs.getString("nom"));
             hm.put("prénom", rs.getString("prenom"));
-            hm.put("login", rs.getString("login"));
             hm.put("type", rs.getString("type_personne"));
 
             return hm;
@@ -454,7 +479,6 @@ public class ConnexionBDD {
             i = 1;
             for (String ref : produits.keySet()) {
 
-                //TODO verifier qu'il y a assez de produits dans le catalogue
                 ps2 = co.prepareStatement(checkCatalogue);
                 ps2.setString(1, ref);
                 rs = ps2.executeQuery();
@@ -468,11 +492,11 @@ public class ConnexionBDD {
                 ps.setInt(i, id_cmd);
                 ps.setString(i+1, ref);
 
-                if ((quantite <= 0) || (reserve < quantite)) {
+                if (   (quantite <= 0)
+                    || (reserve < quantite)
+                    || (!changerQuantiteProduit(ref, reserve-quantite))) {
                     return false;
                 }
-
-                //TODO decrementer la réserve
 
                 ps.setInt(i+2, quantite);
 
@@ -488,7 +512,8 @@ public class ConnexionBDD {
         }
     }
 
-    public boolean enregistreColis() {
+    public boolean emballeColis(Calendar date_emballage, int id_commande,
+                                        HashMap<String,Integer> produits) {
         return false; //TODO
     }
 
