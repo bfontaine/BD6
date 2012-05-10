@@ -55,7 +55,7 @@ public class GenerateCommands {
             HashMap<String,Integer> produits_commande = new HashMap<String,Integer>();
 
             // nombre de produits différents
-            int nb_produits_diff = (int)(Math.random()*100)+1;
+            int nb_produits_diff = (int)(Math.random()*10)+1;
 
             for (int j=0; j<nb_produits_diff; j++) {
 
