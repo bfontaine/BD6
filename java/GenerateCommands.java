@@ -18,7 +18,7 @@ public class GenerateCommands {
         // 180 complètes
 
         LinkedList<HashMap<String,Object>> lhm = co.listeClients();
-        LinkedList<HashMap<String,Object>> produits = co.listeProduits();
+        LinkedList<HashMap<String,Object>> produits = co.listeProduitsRestants();
 
         // liste des logins des clients
         LinkedList<String> logins = new LinkedList<String>();
