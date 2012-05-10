@@ -47,7 +47,7 @@ public class GenerateCommands {
             // >= année courante (max: année courante +4)
             int annee_prevue = (int)(Math.random())*5+annee;
             // >= mois courant +2
-            int mois_prevu = (annee_prevue == annee) ? (int)(Math.random())*(11-mois-2)+mois+2 : (int)(Math.random()*10)+2;
+            int mois_prevu = (annee_prevue == annee) ? (int)(Math.random())*(9-mois)+mois+2 : (int)(Math.random()*9)+2;
             int jour_prevu = (int)(Math.random()*25);
 
             date_prevue.set(annee_prevue, mois_prevu, jour_prevu);
@@ -66,6 +66,12 @@ public class GenerateCommands {
 
                 int qte = Math.min((int)(Math.random()*20)+1, qte_max/100);
 
+                if (qte == 0) {
+                    if (qte_max == 0) {
+                        continue;
+                    }
+                    qte = 1;
+                }
                 produits_commande.put(ref, qte);
             }
 
