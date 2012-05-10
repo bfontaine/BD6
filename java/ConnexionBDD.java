@@ -168,10 +168,10 @@ public class ConnexionBDD {
             while(rs.next()) {
                 HashMap<String,Object> hm = new HashMap<String,Object>();
 
-                hm.put("prenom", rs.getString(1));
+                hm.put("prénom", rs.getString(1));
                 hm.put("nom", rs.getString(2));
                 hm.put("login", rs.getString(3));
-                hm.put("type_personne", rs.getString(4));
+                hm.put("type", rs.getString(4));
 
                 liste.add(hm);
             }
@@ -224,15 +224,15 @@ public class ConnexionBDD {
             while(rs.next()) {
                 HashMap<String,Object> hm = new HashMap<String,Object>();
 
-                hm.put("prenom", rs.getString(1));
+                hm.put("prénom", rs.getString(1));
                 hm.put("nom", rs.getString(2));
                 String login = rs.getString(3);
                 hm.put("login", login);
                 hm.put("adresse", rs.getString(4));
                 hm.put("ville", rs.getString(5));
-                hm.put("code_postal", rs.getString(6));
+                hm.put("code postal", rs.getString(6));
                 hm.put("pays", rs.getString(7));
-                hm.put("telephone", rs.getString(8));
+                hm.put("téléphone", rs.getString(8));
 
                 if (etendue) {
                     q = "SELECT COUNT(*) FROM commande WHERE id_client=?;";
@@ -294,12 +294,12 @@ public class ConnexionBDD {
             while(rs.next()) {
                 HashMap<String,Object> hm = new HashMap<String,Object>();
 
-                hm.put("ref", rs.getString(1));
+                hm.put("référence", rs.getString(1));
                 hm.put("description", rs.getString(2));
                 hm.put("qualifiant", rs.getString(3));
                 hm.put("prix", rs.getFloat(4));
                 hm.put("poids", rs.getFloat(5));
-                hm.put("quantité restante", rs.getFloat(6));
+                hm.put("quantite restante", rs.getFloat(6));
 
                 liste.add(hm);
             }
@@ -337,8 +337,8 @@ public class ConnexionBDD {
             HashMap<String,String> hm = new HashMap<String,String>();
 
             hm.put("nom", rs.getString("nom"));
-            hm.put("prenom", rs.getString("prenom"));
-            hm.put("type_personne", rs.getString("type_personne"));
+            hm.put("prénom", rs.getString("prenom"));
+            hm.put("type personne", rs.getString("type_personne"));
 
             return hm;
 
