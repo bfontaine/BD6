@@ -171,7 +171,7 @@ public class ConnexionBDD {
                 hm.put("prenom", rs.getString(1));
                 hm.put("nom", rs.getString(2));
                 hm.put("login", rs.getString(3));
-                hm.put("type", rs.getString(4));
+                hm.put("type_personne", rs.getString(4));
 
                 liste.add(hm);
             }
@@ -230,9 +230,9 @@ public class ConnexionBDD {
                 hm.put("login", login);
                 hm.put("adresse", rs.getString(4));
                 hm.put("ville", rs.getString(5));
-                hm.put("code postal", rs.getString(6));
+                hm.put("code_postal", rs.getString(6));
                 hm.put("pays", rs.getString(7));
-                hm.put("téléphone", rs.getString(8));
+                hm.put("telephone", rs.getString(8));
 
                 if (etendue) {
                     q = "SELECT COUNT(*) FROM commande WHERE id_client=?;";
@@ -337,8 +337,8 @@ public class ConnexionBDD {
             HashMap<String,String> hm = new HashMap<String,String>();
 
             hm.put("nom", rs.getString("nom"));
-            hm.put("prénom", rs.getString("prenom"));
-            hm.put("type", rs.getString("type_personne"));
+            hm.put("prenom", rs.getString("prenom"));
+            hm.put("type_personne", rs.getString("type_personne"));
 
             return hm;
 
