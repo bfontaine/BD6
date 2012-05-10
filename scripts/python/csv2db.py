@@ -88,79 +88,81 @@ db_fields = {
 }
 
 # formate les valeurs des colonnes pour l'insertion dans la BDD
-def format_values(vals):
-    for i,e in enumerate(vals):
-        # si la valeur est une expression (ex: (SELECT … FROM …),
+def format_values(*vals):
+
+    values = []
+
+    for v in vals:
+        # si la valeur est une expression (ex: (SELECT … FROM …) ou NULL
         # on ne l'entoure pas de guillemets, pour toutes les
         # autres on ajoute des guillemets (PgSQL se charge de convertir
         # les nombres, ex: "5"->5)
-        if (e[0] != '(' and e != 'NULL'):
-            vals[i] = "'"+e+"'"
+        if (v[0] == '(' or v == 'NULL'):
+            values.append(v)
+        else:
+            values.append("'"+v+"'")
 
-    return ','.join(vals)
+    return '(' + ','.join(values) + ')'
 
-def insert(table, values):
-    # noms des champs
-    labels = ','.join(db_fields[table])
-    # valeurs des champs
-    values = format_values(values)
-    # prepare la requete
-    s = "INSERT INTO %s (%s) VALUES(%s);"
-    ps = db.prepare(s % (table, labels, values))
-    # execute la requete
-    ps()
-
-def insert_emballeur(emb):
+def insert_emballeur(dic, emb):
     chps = ['prenom', 'nom', 'numero', 'mdp']
 
     # prenom, nom, login, mot_de_passe, type
-    insert('personne', [emb[c] for c in chps]+['emballeur'])
+    dic['personne'] += format_values(*[emb[c] for c in chps]+['emballeur']) + ','
 
-def insert_produit(pro):
+def insert_produit(dic, pro):
     pro['qualifiant'] = qualif[pro['qualifiant']]
     chps = ['numero', 'desc', 'qualifiant', 'prix', 'poids', 'reserve', \
                 'qte par carton', 'cartons par palette']
 
     # ref, description, qualifiant, prix, poids,
     #  quantite_restante, quantite_par_carton, cartons_par_palette
-    insert('catalogue', [pro[c] for c in chps])
+    dic['catalogue'] += format_values(*[pro[c] for c in chps]) + ','
 
-def insert_transporteur(trans):
+def insert_transporteur(dic, trans):
     # prenom, nom, login, mot_de_passe, type
-    insert('personne',['NULL','NULL',trans['numero'],trans['mdp'],'transporteur'])
+    dic['personne'] += format_values('NULL','NULL',trans['numero'],trans['mdp'],'transporteur')
+    dic['personne'] += ','
 
-def insert_douane(douane):
+def insert_douane(dic, douane):
     chps = ['numero', 'pays']
 
     # prenom, nom, login, mot_de_passe, type
-    insert('personne', ['NULL', 'NULL',douane['numero'],douane['mdp'],'douane'])
+    dic['personne'] += format_values('NULL', 'NULL',douane['numero'],douane['mdp'],'douane')
+    dic['personne'] += ','
     # id->personne.login, pays
-    insert('douane', [douane[c] for c in chps])
+    dic['douane'] += format_values(*[douane[c] for c in chps]) + ','
 
-def insert_gerant(ger):
+def insert_gerant(dic, ger):
     chps = ['prenom', 'nom', 'numero', 'mdp']
 
     # prenom, nom, login, mot_de_passe, type
-    insert('personne', [ger[c] for c in chps]+['gerant'])
+    dic['personne'] += format_values(*[ger[c] for c in chps]+['gerant']) + ','
 
-def insert_client(cli):
+def insert_client(dic, cli):
     nom = ' '.join([cli['nom societe'], cli['suffixe societe']])
     chps = ['numero', 'adresse', 'ville', 'cp', 'pays', 'tel']
 
     # prenom, nom, login, mot_de_passe, type
-    insert('personne', ['NULL', nom, cli['numero'], cli['mdp'], 'client'])
+    dic['personne'] += format_values('NULL', nom, cli['numero'], cli['mdp'], 'client')
+    dic['personne'] += ','
     # id->personne.login, adresse,ville, code_postal, pays, telephone
-    insert('client', [cli[c] for c in chps])
+    dic['client'] += format_values(*[cli[c] for c in chps]) + ','
 
 if __name__ == '__main__':
 
     db = pg.open('pq://%s:%s@%s/%s' % (USER_NAME,PASSWORD, HOST_NAME, BASE_NAME))
     print('Connexion à la base de données: ok')
 
+    insertions = {}
+
+    # FIXME nom des tables uniquement, pas les emballeurs/transporteurs
+    for k,v in db_fields.items():
+        insertions[k] = "INSERT INTO %s (%s) VALUES " % (k, ','.join(v))
+
     # lecture du CSV, et exécution des requêtes d'insertion
     f = open(INPUT_FILE, 'r')
     line = f.readline()
-    nb_req = 0
     while (line != ''):
         fields = line.strip("\n").split('|')
 
@@ -177,12 +179,15 @@ if __name__ == '__main__':
          'emballeur':insert_emballeur,
          'gerant':insert_gerant,
          'produit':insert_produit,
-         'transporteur':insert_transporteur}[l_type](values)
-        nb_req += 1
+         'transporteur':insert_transporteur}[l_type](insertions, values)
 
         line = f.readline()
 
+    for ins in ['personne', 'client', 'douane', 'emballeur', 'gerant',
+                    'transporteur', 'produit']:
+        ps = db.prepare(insertions[ins][:-1]+";") # supprime la derniere virgule
+        ps()
+
     f.close()
-    print('%d requêtes effectuées avec succès.' % nb_req)
     db.close()
     print('Fermeture de la connexion: ok')
