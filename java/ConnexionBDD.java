@@ -347,6 +347,40 @@ public class ConnexionBDD {
     }
 
     /**
+     * Retourne des informations sur le colis
+     * @param id identifiant du colis
+     **/
+    public HashMap<String,Object> infosColis(int id) {
+        if (id <= 0) {
+            return null;
+        }
+        String q = "SELECT id_commande,date_emballage,date_expedie,date_livraison";
+        q += ",etat FROM colis WHERE id=?;";
+
+        try {
+            PreparedStatement ps = co.prepareStatement(q);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (!rs.next()) {
+                return null;
+            }
+
+            HashMap<String,Object> c = new HashMap<String,Object>();
+
+            c.put("date d'emballage", rs.getDate("date_emballage"));
+            c.put("date d'expédition", rs.getDate("date_expedie"));
+            c.put("date de livraison", rs.getDate("date_livraison"));
+            c.put("état", rs.getString("etat"));
+            c.put("id", rs.getString("id"));
+        }
+        catch (SQLException e) {}
+        return null;
+    }
+    
+
+
+    /**
      * Retourne des informations sur la commande (date de commande, date
      * de livraison prévue, produits, colis concernés, login du client)
      * @param id l'identifiant de la commande
@@ -400,7 +434,7 @@ public class ConnexionBDD {
             } while (rs.next());
 
             // colis associés à cette commande
-            q = "SELECT date_emballage,date_expedie,date_livraison,etat FROM colis";
+            q = "SELECT id,date_emballage,date_expedie,date_livraison,etat FROM colis";
             q += " WHERE id_commande=?;";
             ps = co.prepareStatement(q);
             ps.setInt(1, id);

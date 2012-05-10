@@ -354,4 +354,9 @@ public class ConnexionBDD_tests {
         assertEquals(qte, qte_2);
         assertEquals(loginOk, hm.get("login client"));
     }
+
+    @Test
+    public void testsInfosColisIdNegatif() {
+        assertNull(co.infosColis(-1));
+    }
 }
