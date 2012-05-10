@@ -67,10 +67,8 @@ public class GenerateCommands {
                 int qte = Math.min((int)(Math.random()*20)+1, qte_max/100);
 
                 if (qte == 0) {
-                    if (qte_max == 0) {
-                        continue;
-                    }
-                    qte = 1;
+                    // pour éviter la rupture de stock
+                    continue;
                 }
                 produits_commande.put(ref, qte);
             }
