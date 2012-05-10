@@ -636,7 +636,55 @@ public class ConnexionBDD {
 
     public int nouveauColis(Calendar date_emballage, int id_commande,
                                         HashMap<String,Integer> produits) {
-        return -1; //TODO
+
+        if (id_commande <= 0 || produits == null || produits.isEmpty()) {
+            return -1;
+        }
+
+        // Calendar -> Date -> millisecondes
+        long de = date_emballage.getTime().getTime();
+
+        String q = "INSERT INTO colis (id_commande,date_emballage)";
+        q += " VALUES(?,?);";
+
+        if (date_emballage == null) {
+            q = "INSERT INTO colis (id_commande) VALUES(?);";
+        }
+
+        try {
+            // insere le nouveau colis
+            PreparedStatement ps = co.prepareStatement(q);
+            ps.setInt(1, id_commande);
+            if (date_emballage != null) {
+                ps.setDate(2, new Date(de));
+            }
+
+            int result = ps.executeUpdate();
+
+            if (result != 1) {
+                return -1;
+            }
+
+            // recupere son identifiant
+            q = "SELECT last_value FROM colis_id_seq;";
+            ps = co.prepareStatement(q);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                return -1;
+            }
+
+            int id_colis = rs.getInt("last_value");
+
+            // insere les produits
+/*
+                id_colis INTEGER UNIQUE NOT NULL,
+                ref_produit VARCHAR(255) NOT NULL,
+                quantite INTEGER CONSTRAINT quantite_positive CHECK (quantite > 0),
+*/
+        }
+        catch (SQLException e) {}
+
+        return -1;
     }
 
     // === Suppressions === //
