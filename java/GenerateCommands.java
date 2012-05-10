@@ -9,7 +9,8 @@ public class GenerateCommands {
     private static int NB_COMMANDES = 250;
 
     public static void main (String[] args) throws SQLException, ClassNotFoundException {
-        ConnexionBDD co = new ConnexionBDD("baptiste", "baptiste");
+        String user = System.getProperty("user.name");
+        ConnexionBDD co = new ConnexionBDD(user, user);
 
         // 250 commandes:
         // 50 non expédiées
@@ -29,10 +30,6 @@ public class GenerateCommands {
 
         int nb_clients = logins.size();
         int nb_produits = produits.size();
-
-        // debug
-        System.out.println("Nombre de clients: "+nb_clients);
-        System.out.println("Nombre de produits: "+nb_produits);
 
         int[] commandes = new int[NB_COMMANDES];
 
@@ -92,9 +89,14 @@ public class GenerateCommands {
                 System.err.println(".");
 
             } else {
-                System.out.println("Commande OK pour client "+client+".");
+                //System.out.println("Commande OK pour client "+client+".");
                 commandes[i] = cmd;
             }
         }
+
+        /* 
+         * À ce stade, `commandes` contient les identifiant de 250 commandes
+         * pas encore expédiées.
+         */
     }
 }
