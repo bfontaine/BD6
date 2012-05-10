@@ -19,6 +19,17 @@ la base de données.
 Note: Pour aller plus vite, le script `reset.sh` combine `dropdb.sh`,
 `createdb.sh` et `filldb.sh`.
 
+Générer les commandes aléatoires
+--------------------------------
+
+Le fichier `GenerateCommands.java` se charge de mettre dans la base de données
+les 250 commandes aléatoires demandées par le sujet. Pour l'exécuter, le plus
+simple est de se placer dans le répertoire `java` et de faire:
+    
+    $ make generate
+
+Si rien ne s'affiche, c'est que tout s'est déroulé correctement.
+
 Tests
 -----
 
