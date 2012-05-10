@@ -634,6 +634,23 @@ public class ConnexionBDD {
         return -1;
     }
 
+    /**
+     * Crée un nouveau colis, emballé aujoud'hui
+     * @param id_commande Identifiant de la commande correspondante
+     * @param produits Produits contenus dans ce colis
+     * @return identifiant du produit, ou -1 s'il y a eu un problème
+     **/
+    public int nouveauColis(int id_commande, HashMap<String,Integer> produits) {
+        return nouveauColis(null, id_commande, produits);
+    }
+
+    /**
+     * Crée un nouveau colis
+     * @param date_emballage Date d'emballage du produit
+     * @param id_commande Identifiant de la commande correspondante
+     * @param produits Produits contenus dans ce colis
+     * @return identifiant du produit, ou -1 s'il y a eu un problème
+     **/
     public int nouveauColis(Calendar date_emballage, int id_commande,
                                         HashMap<String,Integer> produits) {
 
@@ -642,7 +659,7 @@ public class ConnexionBDD {
         }
 
         // Calendar -> Date -> millisecondes
-        long de = date_emballage.getTime().getTime();
+        long de = (date_emballage == null) ? 0 : date_emballage.getTime().getTime();
 
         String q = "INSERT INTO colis (id_commande,date_emballage)";
         q += " VALUES(?,?);";
@@ -676,11 +693,22 @@ public class ConnexionBDD {
             int id_colis = rs.getInt("last_value");
 
             // insere les produits
-/*
-                id_colis INTEGER UNIQUE NOT NULL,
-                ref_produit VARCHAR(255) NOT NULL,
-                quantite INTEGER CONSTRAINT quantite_positive CHECK (quantite > 0),
-*/
+            q = "INSERT INTO colis_produits VALUES(?,?,?);";
+
+            for (String ref: produits.keySet()) {
+                ps = co.prepareStatement(q);
+                ps.setInt(1, id_colis);
+                ps.setString(2, ref);
+                ps.setInt(3, produits.get(ref));
+
+                result = ps.executeUpdate();
+
+                if (result == -1) {
+                    return -1;
+                }
+            }
+
+            return id_colis;
         }
         catch (SQLException e) {}
 

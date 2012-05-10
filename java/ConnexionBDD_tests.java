@@ -13,6 +13,7 @@ public class ConnexionBDD_tests {
 
     private static String loginOk = "SEGZE03368";
     private static String refOk = "PW-403570-TGG-27";
+    private static int cmdOk = 0; // initialisé plus tard
     
     @Test
     public void testCreation() {
@@ -343,6 +344,8 @@ public class ConnexionBDD_tests {
         int id = co.nouvelleCommande(loginOk, c, produits);
 
         assertFalse(-1 == id);
+    
+        cmdOk = id;
 
         HashMap<String,Object> hm = co.infosCommande(id);
 
@@ -356,7 +359,61 @@ public class ConnexionBDD_tests {
     }
 
     @Test
-    public void testsInfosColisIdNegatif() {
+    public void testInfosColisIdNegatif() {
         assertNull(co.infosColis(-1));
+    }
+
+    @Test
+    public void testNouveauColisDateNulle() {
+
+        HashMap<String,Integer> hm = new HashMap<String,Integer>(); 
+
+        hm.put(refOk, 5);
+
+        // méthode longue
+        int id = co.nouveauColis(null, cmdOk, hm);
+        assertFalse(-1 == id);
+
+        // méthode courte
+        id = co.nouveauColis(cmdOk, hm);
+        assertFalse(-1 == id);
+    }
+
+    @Test
+    public void testNouveauColisPasDeProduits() {
+
+        HashMap<String,Integer> hm = new HashMap<String,Integer>(); 
+
+        // pas de HashMap
+        int id = co.nouveauColis(cmdOk, null);
+        assertEquals(-1, id);
+
+        // HashMap vide
+        id = co.nouveauColis(Calendar.getInstance(), cmdOk, hm);
+        assertEquals(-1, id);
+
+        // HashMap avec quantité de produit = 0
+        hm.put(refOk, 0);
+        assertEquals(-1, id);
+    }
+
+    @Test
+    public void testNouveauColisProduitInconnu() {
+
+        HashMap<String,Integer> hm = new HashMap<String,Integer>(); 
+        hm.put("nexistepas", 2);
+
+        int id = co.nouveauColis(cmdOk, hm);
+        assertEquals(-1, id);
+    }
+
+    @Test
+    public void testNouveauColisOk() {
+
+        HashMap<String,Integer> hm = new HashMap<String,Integer>(); 
+        hm.put(refOk, 2);
+
+        int id = co.nouveauColis(cmdOk, hm);
+        assertFalse(-1 == id);
     }
 }
