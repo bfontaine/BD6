@@ -1,0 +1,34 @@
+Gérant
+    - Changer le prix des produits
+    - A accès à la liste des employés/clients
+    - Voir les produits les plus vendus
+    - Voir les clients les plus dépensiés
+    - Voir les employés les moins actifs
+
+Client
+    - Passer une commande (+ choisir date de livraison)
+    - Savoir où en est leurs colis
+    - Lister les produits disponibles
+    - Changer son login/mdp
+
+Emballeur
+    - Connaître la liste des commandes d'un client (sans connaître son identité)
+    - Entrer les colis emballés
+    - Entrer les palettes préparées
+
+Douane
+    - Renvoyer un colis en précisant le motif
+    - voir la liste des commandes expédiées pour le pays
+    - voir la liste des commandes contrôlées par cette douane
+    - voir la liste des commandes expédiées (non contrôlées) pour le pays
+    - Rechercher des commandes par le num/destination/contenu
+    - Voir les détails d'une commande
+    - Entrer les résultats d'un contrôle
+    - lister les palettes d'un conteneur
+    - lister les colis d'une palette
+    - lister les produits d'un colis
+    - Accéder au prix des produits transportés
+
+Transporteur
+    - Savoir si un colis est fragile ou dangereux
+    - Connaître la date limite de livraison souhaitée par le client
