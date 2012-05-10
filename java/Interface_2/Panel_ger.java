@@ -19,27 +19,22 @@ public class Panel_ger  extends Panel_princ implements ActionListener{
         this.contenu = this.buildJP();
     }
 
-    public JLayeredPane buildJP(){
-        JLayeredPane panel = new JLayeredPane();
+    public JPanel buildJP(){
+        JPanel panel = new JPanel();
         
         //construit le panel des info
         JPanel info = buildJP_info();
-        info.setBounds(10,10,200,200);
+        //info.setBounds(10,10,200,200);
         panel.add(info);
 
         //construit le panel des choix d'action
         JPanel choix_action = buildJP_choixA();
-        choix_action.setBounds(10,400,100,200);
+        //choix_action.setBounds(10,400,100,200);
         panel.add(choix_action);
 
 
         //construit le panel action
-        
 
-
-        Color color = new Color(100,0,0);
-        panel.setBackground(color);
-        panel.setBounds(10,10,500,400);
         return panel;
     }
 
@@ -48,7 +43,7 @@ public class Panel_ger  extends Panel_princ implements ActionListener{
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(5,1));
         
-        JLabel type = new JLabel(info_client.get("type"));
+        JLabel type = new JLabel("Gerant");
         panel.add(type);
         JLabel login = new JLabel("Login : "+this.login);
         panel.add(login);

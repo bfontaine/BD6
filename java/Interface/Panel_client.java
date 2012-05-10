@@ -22,6 +22,7 @@ public class Panel_client  extends Panel_princ implements ActionListener{
         
         //construit le panel des info
         JPanel info = buildJP_info();
+        info.setBounds(10,10,100,200);
         panel.add(info);
 
         //construit le panel des choix d'action
@@ -54,7 +55,7 @@ public class Panel_client  extends Panel_princ implements ActionListener{
     public void actionPerformed(ActionEvent e){
         Object source = e.getSource();
         if(source == deconnexion){
-            this.frame.connexion_co();
+            this.frame.connexion_co(true);
         }
     }
 }

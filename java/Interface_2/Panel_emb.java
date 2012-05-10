@@ -15,8 +15,8 @@ public class Panel_emb  extends Panel_princ implements ActionListener{
         this.frame = jfr;
     }
 
-    public JLayeredPane buildJP(){
-        JLayeredPane panel = new JLayeredPane();
+    public JPanel buildJP(){
+        JPanel panel = new JPanel();
         return panel;
     }
 

@@ -24,7 +24,7 @@ public class Panel_co  extends Panel_princ implements ActionListener{
         this.connection_F = erreur;
     }
 
-    public JLayeredPane buildJP(){
+    public JPanel buildJP(){
         JPanel panel_co = new JPanel();
         panel_co.setLayout(new GridLayout(3,1));
 
@@ -55,7 +55,7 @@ public class Panel_co  extends Panel_princ implements ActionListener{
         }
         bouton = new JButton("connexion");
         bouton.addActionListener(this);
-        p.add(bouton, BorderLayout.CENTER);
+        p.add(bouton, BorderLayout.SOUTH);
         panel_SU.add(p);
 
 
@@ -63,10 +63,12 @@ public class Panel_co  extends Panel_princ implements ActionListener{
         panel_co.add(panel_CEN);
         panel_co.add(panel_SU);
 
-        JLayeredPane panel = new JLayeredPane();
-        panel_co.setBounds(300,150,200,150);
+        JPanel panel = new JPanel();
+        //panel_co.setBounds(300,150,200,150);
         panel.add(panel_co);
 
+        Color color = new Color(0,153,102);
+        panel.setBackground(color);
         return panel;
     }
 
@@ -92,7 +94,7 @@ public class Panel_co  extends Panel_princ implements ActionListener{
                 }
         }
         else{
-            this.frame.connexion_gerant("daglic");
+            this.frame.connexion_co(false);
         }
 
     }

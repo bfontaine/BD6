@@ -5,18 +5,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
 
-public class Panel_emb  extends Panel_princ implements ActionListener{
+public class Panel_tran  extends Panel_princ implements ActionListener{
     boolean connection_F=true;
 
     //objet swing de notre Panel connexion
 
-    public Panel_emb(inter_princ jfr){
+    public Panel_tran(inter_princ jfr){
         this.contenu = this.buildJP();
         this.frame = jfr;
     }
 
-    public JLayeredPane buildJP(){
-        JLayeredPane panel = new JLayeredPane();
+    public JPanel buildJP(){
+        JPanel panel = new JPanel();
         return panel;
     }
 
