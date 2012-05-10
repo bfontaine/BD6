@@ -16,11 +16,14 @@ Si la base existe déjà, pour la réinitialiser utilisez:
 Ne pas oublier d'installer le paquet `python3-postgresql` pour le remplissage de
 la base de données.
 
+Note: Pour aller plus vite, le script `reset.sh` combine `dropdb.sh`,
+`createdb.sh` et `filldb.sh`.
+
 Tests
 -----
 
-Pour faire des tests, il faut avoir installé le paquet `junit4`, puis aller dans
-le répertoire `java` et faire:
+Pour faire des tests, il faut avoir installé le paquet `junit4`, avoir rempli la
+base avec le CSV donnée, puis aller dans le répertoire `java` et faire:
 
     $ make tests
 
