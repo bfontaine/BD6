@@ -1,5 +1,7 @@
 #! /bin/bash
 
+rm -f ./createtables.log
+
 echo -n "Création de la base de données 'bd6'... "
 createdb bd6 > /dev/null 2>&1 && echo "ok" || echo "fail! "
 echo -n "Création des tables... "
