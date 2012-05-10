@@ -68,6 +68,7 @@ public class GenerateCommands {
 
                 if (qte == 0) {
                     // pour éviter la rupture de stock
+                    // FIXME: ceci fait que certains clients ne commandent rien -> erreur
                     continue;
                 }
                 produits_commande.put(ref, qte);
