@@ -48,7 +48,7 @@ CREATE TABLE client(
                   
                   telephone VARCHAR(255) NOT NULL,
 
-                  FOREIGN KEY(id) REFERENCES personne(login)
+                  FOREIGN KEY(id) REFERENCES personne(login) ON UPDATE CASCADE
 );
 
 
@@ -79,7 +79,7 @@ CREATE TABLE commande(
 
                 frais FLOAT CONSTRAINT frais_positifs CHECK (frais >= 0),
 
-                FOREIGN KEY(id_client) REFERENCES client(id),
+                FOREIGN KEY(id_client) REFERENCES client(id) ON UPDATE CASCADE,
                 PRIMARY KEY(id)
 );
 
@@ -193,24 +193,3 @@ $update_qualif_colis$ LANGUAGE plpgsql;
 CREATE TRIGGER update_qualif_colis AFTER INSERT OR UPDATE ON colis_produits
   FOR EACH ROW EXECUTE PROCEDURE update_qualif_colis();
 
-/*
-  Lorsqu'on change le login d'un client, avant de le faire on met vérifie que le login
-  est disponible, et si oui on change le login dans toutes les tables où il est référencé
-  (commande.id_client, client.id)
-*/
-
-CREATE FUNCTION update_login_client() RETURNS trigger AS $update_login_client$
-BEGIN
-  -- si le login est deja pris
-  IF (SELECT COUNT(*) FROM personne WHERE login=NEW.login)=1 THEN
-    RAISE EXCEPTION 'Ce login est déjà pris.';
-  END IF;
-  -- met à jour les bases liées à la table personne
-  UPDATE commande SET id_client=NEW.login WHERE id_client=OLD.login;
-  UPDATE client SET id=NEW.login WHERE id=OLD.login;
-  RETURN NEW;
-END
-$update_login_client$ LANGUAGE plpgsql;
-
-CREATE TRIGGER update_login_client BEFORE UPDATE ON personne
-  FOR EACH ROW EXECUTE PROCEDURE update_login_client();
