@@ -154,7 +154,7 @@ def insert_client(cli):
 
 if __name__ == '__main__':
 
-    db = pg.open('pq://%s@%s/%s' % (USER_NAME, HOST_NAME, BASE_NAME), PASSWORD)
+    db = pg.open('pq://%s:%s@%s/%s' % (USER_NAME,PASSWORD, HOST_NAME, BASE_NAME))
     print('Connexion à la base de données: ok')
 
     # lecture du CSV, et exécution des requêtes d'insertion
