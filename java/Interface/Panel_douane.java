@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.HashMap;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
@@ -10,7 +11,7 @@ public class Panel_douane  extends Panel_princ implements ActionListener{
     //objet swing de notre Panel connexion
     JButton deconnexion;
 
-    public Panel_douane(inter_princ jfr,String login){
+    public Panel_douane(inter_princ jfr,String log){
         this.frame = jfr;
         this.login = log;
         this.contenu = this.buildJP();

@@ -67,7 +67,7 @@ public class inter_princ extends JFrame{
     public void connexion_gerant(String login){
         Container cp = this.getContentPane();
         cp.removeAll();
-        contenu = new Panel_ger(this);
+        contenu = new Panel_ger(this,login);
         cp.add(contenu.getContenu());
         this.setContentPane(cp);
     }
