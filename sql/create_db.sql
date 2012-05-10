@@ -74,8 +74,8 @@ CREATE TABLE commande(
                 id SERIAL UNIQUE NOT NULL,
                 id_client VARCHAR NOT NULL,
 
-                date_commande DATE NOT NULL,
-                date_prevue DATE,
+                date_commande DATE NOT NULL DEFAULT current_date, -- défaut: aujourd'hui
+                date_prevue DATE NOT NULL DEFAULT current_date + integer '30', -- défaut: dans 30 jours
 
                 frais FLOAT CONSTRAINT frais_positifs CHECK (frais >= 0),
 
@@ -97,13 +97,13 @@ CREATE TABLE colis(
 
                 id SERIAL UNIQUE NOT NULL,
 
-                date_emballage DATE NOT NULL,
-                date_expedie DATE,
-                date_livraison DATE,
+                date_emballage DATE NOT NULL DEFAULT current_date,
+                date_expedie DATE DEFAULT NULL,
+                date_livraison DATE DEFAULT NULL,
 
-                etat etat_c NOT NULL,
+                etat etat_c NOT NULL DEFAULT 'normal',
 
-                qualifiant qualif DEFAULT NULL, -- mis à jour avec un trigger
+                qualifiant qualif DEFAULT 'normal', -- mis à jour avec un trigger
 
                 id_commande INTEGER NOT NULL,
 
@@ -175,6 +175,7 @@ BEGIN
   IF qualif_prod IN ('fragile','dangereux') AND qualif_colis='normal' THEN
     UPDATE colis SET qualifiant=qualif_prod WHERE id=NEW.id_colis;
   END IF;
+  RETURN NEW;
 END
 $update_etat_colis$ LANGUAGE plpgsql;
 
