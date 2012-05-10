@@ -168,10 +168,10 @@ public class ConnexionBDD_tests {
         HashMap<String, Integer> produits = new HashMap<String, Integer>();
         produits.put("GN-746901-SIY-63", 1);
 
-        boolean commandeValidee
+        int commande
           = co.nouvelleCommande("nexistepas", maintenant, apres, produits);
 
-        assertFalse(commandeValidee);
+        assertEquals(-1, commande);
     }
 
     @Test
@@ -183,10 +183,10 @@ public class ConnexionBDD_tests {
 
         HashMap<String, Integer> produits = new HashMap<String, Integer>();
 
-        boolean commandeValidee
+        int commande
           = co.nouvelleCommande("SEGZE03368", maintenant, apres, produits);
 
-        assertFalse(commandeValidee);
+        assertEquals(-1, commande);
     }
 
     @Test
@@ -200,10 +200,10 @@ public class ConnexionBDD_tests {
         produits.put("GN-746901-SIY-63", -1); 
         produits.put("TL-338853-AIN-30", 2); 
 
-        boolean commandeValidee
+        int commande
           = co.nouvelleCommande("SEGZE03368", maintenant, apres, produits);
 
-        assertFalse(commandeValidee);
+        assertEquals(-1, commande);
     }
 
     @Test
@@ -216,10 +216,10 @@ public class ConnexionBDD_tests {
         HashMap<String, Integer> produits = new HashMap<String, Integer>();
         produits.put("GN-746901-SIY-63", 0); 
 
-        boolean commandeValidee
+        int commande
           = co.nouvelleCommande("SEGZE03368", maintenant, apres, produits);
 
-        assertFalse(commandeValidee);
+        assertEquals(-1, commande);
     }
 
     @Test
@@ -232,10 +232,10 @@ public class ConnexionBDD_tests {
         HashMap<String, Integer> produits = new HashMap<String, Integer>();
         produits.put("GN-746901-SIY-63", 99999999); 
 
-        boolean commandeValidee
+        int commande
           = co.nouvelleCommande("SEGZE03368", maintenant, apres, produits);
 
-        assertFalse(commandeValidee);
+        assertEquals(-1, commande);
     }
 
     @Test
@@ -249,10 +249,10 @@ public class ConnexionBDD_tests {
         produits.put("GN-746901-SIY-63", 0); 
         produits.put("TL-338853-AIN-30", 0); 
 
-        boolean commandeValidee
+        int commande
           = co.nouvelleCommande("SEGZE03368", maintenant, avant, produits);
 
-        assertFalse(commandeValidee);
+        assertEquals(-1, commande);
     }
 
     @Test
@@ -265,10 +265,10 @@ public class ConnexionBDD_tests {
         HashMap<String, Integer> produits = new HashMap<String, Integer>();
         produits.put("nexistepas", 1); 
 
-        boolean commandeValidee
+        int commande
           = co.nouvelleCommande("SEGZE03368", maintenant, apres, produits);
 
-        assertFalse(commandeValidee);
+        assertEquals(-1, commande);
     }
 
     @Test
@@ -281,14 +281,14 @@ public class ConnexionBDD_tests {
         HashMap<String, Integer> produits = new HashMap<String, Integer>();
         produits.put("GN-746901-SIY-63", 1);
 
-        boolean commandeValidee
+        int commande
           = co.nouvelleCommande("SEGZE03368", maintenant, apres, produits);
 
-        assertTrue(commandeValidee);
+        assertTrue(commande >= 0);
 
         // version courte
-        commandeValidee = co.nouvelleCommande("SEGZE03368", apres, produits);
-        assertTrue(commandeValidee);
+        int commande2 = co.nouvelleCommande("SEGZE03368", apres, produits);
+        assertTrue(commande2 > commande);
     }
 
     @Test

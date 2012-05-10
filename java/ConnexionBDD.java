@@ -393,9 +393,9 @@ public class ConnexionBDD {
      * @param date_prevue date de livraison prévue
      * @param produits mapping entre les références des produits et les
      * quantités commandées
-     * @return true si l'insertion s'est bien déroulée
+     * @return l'identifiant de la commande, ou -1 si il y a eu une erreur
      **/
-    public boolean nouvelleCommande(String client, Calendar date_prevue,
+    public int nouvelleCommande(String client, Calendar date_prevue,
                                         HashMap<String, Integer> produits) {
 
         return nouvelleCommande(client, Calendar.getInstance(),
@@ -409,13 +409,13 @@ public class ConnexionBDD {
      * @param date_prevue date de livraison prévue
      * @param produits mapping entre les références des produits et les
      * quantités commandées
-     * @return true si l'insertion s'est bien déroulée
+     * @return l'identifiant de la commande, ou -1 si il y a eu une erreur
      **/
-    public boolean nouvelleCommande(String client, Calendar date_commande,
+    public int nouvelleCommande(String client, Calendar date_commande,
                     Calendar date_prevue, HashMap<String, Integer> produits) {
 
         if (produits.size() == 0) {
-            return false;
+            return -1;
         }
 
         String q = "INSERT INTO commande (id_client,date_commande,date_prevue";
@@ -447,7 +447,7 @@ public class ConnexionBDD {
             int result = ps.executeUpdate();
 
             if (result == 0) {
-                return false;
+                return -1;
             }
 
             q = "SELECT last_value FROM commande_id_seq;";
@@ -455,7 +455,7 @@ public class ConnexionBDD {
             ResultSet rs = ps.executeQuery();
 
             if (!rs.next()) {
-                return false;
+                return -1;
             }
 
             int reserve, i, quantite, id_cmd = rs.getInt(1);
@@ -483,7 +483,7 @@ public class ConnexionBDD {
                 ps2.setString(1, ref);
                 rs = ps2.executeQuery();
                 if (!rs.next()) {
-                    return false;
+                    return -1;
                 }
 
                 reserve = rs.getInt("quantite_restante");
@@ -495,7 +495,7 @@ public class ConnexionBDD {
                 if (   (quantite <= 0)
                     || (reserve < quantite)
                     || (!changerQuantiteProduit(ref, reserve-quantite))) {
-                    return false;
+                    return -1;
                 }
 
                 ps.setInt(i+2, quantite);
@@ -505,11 +505,12 @@ public class ConnexionBDD {
 
             result = ps.executeUpdate();
 
-            return (result == produits.size());
+            if (result == produits.size()) {
+                return id_cmd;
+            }
         }
-        catch (SQLException e) {
-            return false;
-        }
+        catch (SQLException e) {}
+        return -1;
     }
 
     public boolean emballeColis(Calendar date_emballage, int id_commande,
