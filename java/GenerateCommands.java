@@ -45,7 +45,7 @@ public class GenerateCommands {
             int annee = date_prevue.get(date_prevue.YEAR);
 
             // >= année courante (max: année courante +4)
-            int annee_prevue = (int)(Math.random())*5+annee;
+            int annee_prevue = (int)(Math.random()*5)+annee;
             // >= mois courant +2
             int mois_prevu = (annee_prevue == annee) ? (int)(Math.random())*(9-mois)+mois+2 : (int)(Math.random()*9)+2;
             int jour_prevu = (int)(Math.random()*25);
