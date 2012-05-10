@@ -146,6 +146,39 @@ public class ConnexionBDD {
         return false;
     }
 
+    /**
+     * Change le mot de passe d'un client
+     * @param login le login du client
+     * @param ancienMdp l'ancien mot de passe
+     * @param nouveauMdp le nouveau mot de passe
+     * @return `true` si tout s'est bien passé, `false` sinon
+     **/
+    public boolean changerMdp(String login, String ancienMdp, String nouveauMdp) {
+
+        if (login == null || ancienMdp == null || nouveauMdp == null) {
+            return false;
+        } else if (ancienMdp.equals(nouveauMdp)) {
+            return true;
+        }
+
+        String q = "UPDATE personne SET mot_de_passe=? WHERE login=?";
+        q += " AND mot_de_passe=? AND type_personne='client';";
+
+        try {
+            PreparedStatement ps = co.prepareStatement(q);
+            ps.setString(1, nouveauMdp);
+            ps.setString(2, login);
+            ps.setString(3, ancienMdp);
+
+            int result = ps.executeUpdate();
+
+            return (result == 1);
+        }
+        catch (SQLException e) {}
+
+        return false;
+    }
+
     // === Listes === //
 
     /**

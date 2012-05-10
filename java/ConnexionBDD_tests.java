@@ -12,6 +12,7 @@ public class ConnexionBDD_tests {
     private static ConnexionBDD co = null;
 
     private static String loginOk = "SEGZE03368";
+    private static String mdpOk = "IVW24HJB2RU";
     private static String refOk = "PW-403570-TGG-27";
     private static int cmdOk = 0; // initialisé plus tard
     
@@ -40,7 +41,7 @@ public class ConnexionBDD_tests {
     @Test
     public void testBonneConnexion() {
         // premiere personne de la BDD
-        String estConnecte = co.connecteUtilisateur(loginOk, "IVW24HJB2RU");
+        String estConnecte = co.connecteUtilisateur(loginOk, mdpOk);
         assertEquals("client", estConnecte);
     }
     
@@ -438,20 +439,40 @@ public class ConnexionBDD_tests {
     }
 
     @Test
-    public void testNouveauChangerLoginPareil() {
+    public void testChangerLoginPareil() {
         boolean nouveauLoginOk = co.changerLogin(loginOk, loginOk);
         assertTrue(nouveauLoginOk);
     }
 
     @Test
-    public void testNouveauChangerLoginNul() {
+    public void testChangerLoginNul() {
         boolean nouveauLoginOk = co.changerLogin(loginOk, null);
         assertFalse(nouveauLoginOk);
     }
 
     @Test
-    public void testNouveauChangerLoginOk() {
+    public void testChangerLoginOk() {
         boolean nouveauLoginOk = co.changerLogin(loginOk, "chucknorris");
         assertTrue(nouveauLoginOk);
+        nouveauLoginOk = co.changerLogin("chucknorris", loginOk);
+        assertTrue(nouveauLoginOk);
+    }
+
+    @Test
+    public void testChangerMdpPareil() {
+        boolean nouveauMdpOk = co.changerMdp(loginOk, mdpOk, mdpOk);
+        assertTrue(nouveauMdpOk);
+    }
+
+    @Test
+    public void testChangerMdpNul() {
+        boolean nouveauMdpOk = co.changerMdp(loginOk, mdpOk, null);
+        assertFalse(nouveauMdpOk);
+    }
+
+    @Test
+    public void testChangerMdpOk() {
+        boolean nouveauMdpOk = co.changerMdp(loginOk, mdpOk, "42");
+        assertTrue(nouveauMdpOk);
     }
 }
