@@ -18,8 +18,13 @@ all: ConnexionBDD.class java/inter_princ.class
 
 # efface les fichiers *~
 clean:
-	find . -name *~ -delete
-	find . -name *.class -delete
+	rm -f *~ */*~
+	rm -f *.class */*.class
+	#find . -name *~ -delete
+	#find . -name *.class -delete
+
+generate: GenerateCommands.class
+	java -cp ${CLASSPATH} GenerateCommands
 
 # affiche la fenetre de connexion
 fenetretest: interface
