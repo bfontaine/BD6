@@ -513,9 +513,9 @@ public class ConnexionBDD {
         return -1;
     }
 
-    public boolean emballeColis(Calendar date_emballage, int id_commande,
+    public int nouveauColis(Calendar date_emballage, int id_commande,
                                         HashMap<String,Integer> produits) {
-        return false; //TODO
+        return -1; //TODO
     }
 
     // === Suppressions === //
