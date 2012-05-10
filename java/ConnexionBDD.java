@@ -439,7 +439,8 @@ public class ConnexionBDD {
         long a = (dc-dp)/3600;
         float frais = (float)(Math.max(100, 2*Math.exp(11-Math.log10(a))));
 
-        if (frais == Float.NaN)
+        // la négation permet de prendre la valeur 'NaN'
+        if (!(frais >= 100))
             frais = 100;
 
         try {
