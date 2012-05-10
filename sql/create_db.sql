@@ -103,6 +103,8 @@ CREATE TABLE colis(
 
                 etat etat_c NOT NULL,
 
+                qualifiant qualif DEFAULT NULL, -- mis à jour avec un trigger
+
                 id_commande INTEGER NOT NULL,
 
                 PRIMARY KEY(id),
@@ -154,3 +156,27 @@ CREATE TABLE container_palettes(
                 FOREIGN KEY(id_container) REFERENCES container(id),
                 FOREIGN KEY(id_palette) REFERENCES palette(id)
 );
+
+-- triggers
+
+CREATE FUNCTION update_etat_colis() RETURNS trigger AS $update_etat_colis$
+DECLARE
+  qualif_prod qualif := (SELECT qualifiant FROM catalogue WHERE ref=NEW.ref_produit);
+  qualif_colis qualif := (SELECT qualifiant FROM colis WHERE id=NEW.id_colis);
+BEGIN
+  -- on ne peux pas mélanger fragile et dangereux
+  IF qualif_prod='fragile' AND qualif_colis='dangereux' THEN
+    RAISE EXCEPTION 'Le colis est déjà fragile, impossible d''y mettre un produit dangereux';
+  END IF;
+  IF qualif_prod='dangereux' AND qualif_colis='fragile' THEN
+    RAISE EXCEPTION 'Le colis est déjà dangereux, impossible dE''y mettre un produit fragile';
+  END IF;
+  -- si on ajoute un produit fragile/dangereux, on met à jour le colis
+  IF qualif_prod IN ('fragile','dangereux') AND qualif_colis='normal' THEN
+    UPDATE colis SET qualifiant=qualif_prod WHERE id=NEW.id_colis;
+  END IF;
+END
+$update_etat_colis$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_etat_colis BEFORE INSERT OR UPDATE ON colis_produits
+  FOR EACH ROW EXECUTE PROCEDURE update_etat_colis();
