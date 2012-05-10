@@ -1,5 +1,6 @@
 #! /bin/bash
 
+rm -f ./filldb.log
 echo 'Import du CSV...'
 ./python/csv2db.py 2>./filldb.log && echo 'ok' || echo 'fail! '
 
