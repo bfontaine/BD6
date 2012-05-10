@@ -9,7 +9,10 @@ import static org.junit.Assert.*;
 
 public class ConnexionBDD_tests {
     
-    public static ConnexionBDD co = null;
+    private static ConnexionBDD co = null;
+
+    private static String loginOk = "SEGZE03368";
+    private static String refOk = "PW-403570-TGG-27";
     
     @Test
     public void testCreation() {
@@ -36,13 +39,13 @@ public class ConnexionBDD_tests {
     @Test
     public void testBonneConnexion() {
         // premiere personne de la BDD
-        String estConnecte = co.connecteUtilisateur("SEGZE03368", "IVW24HJB2RU");
+        String estConnecte = co.connecteUtilisateur(loginOk, "IVW24HJB2RU");
         assertEquals("client", estConnecte);
     }
     
     @Test
     public void testChangerPrixBonneRef() {
-        boolean estChange = co.changePrix("PW-403570-TGG-27", 1337);
+        boolean estChange = co.changePrix(refOk, 1337);
         assertTrue(estChange);
     }
     
@@ -54,7 +57,7 @@ public class ConnexionBDD_tests {
     
     @Test
     public void testChangerPrixNegatif() {
-        boolean estChange = co.changePrix("PW-403570-TGG-27", -1337);
+        boolean estChange = co.changePrix(refOk, -1337);
         assertFalse(estChange);
     }
 
@@ -184,7 +187,7 @@ public class ConnexionBDD_tests {
         HashMap<String, Integer> produits = new HashMap<String, Integer>();
 
         int commande
-          = co.nouvelleCommande("SEGZE03368", maintenant, apres, produits);
+          = co.nouvelleCommande(loginOk, maintenant, apres, produits);
 
         assertEquals(-1, commande);
     }
@@ -201,7 +204,7 @@ public class ConnexionBDD_tests {
         produits.put("TL-338853-AIN-30", 2); 
 
         int commande
-          = co.nouvelleCommande("SEGZE03368", maintenant, apres, produits);
+          = co.nouvelleCommande(loginOk, maintenant, apres, produits);
 
         assertEquals(-1, commande);
     }
@@ -217,7 +220,7 @@ public class ConnexionBDD_tests {
         produits.put("GN-746901-SIY-63", 0); 
 
         int commande
-          = co.nouvelleCommande("SEGZE03368", maintenant, apres, produits);
+          = co.nouvelleCommande(loginOk, maintenant, apres, produits);
 
         assertEquals(-1, commande);
     }
@@ -233,7 +236,7 @@ public class ConnexionBDD_tests {
         produits.put("GN-746901-SIY-63", 99999999); 
 
         int commande
-          = co.nouvelleCommande("SEGZE03368", maintenant, apres, produits);
+          = co.nouvelleCommande(loginOk, maintenant, apres, produits);
 
         assertEquals(-1, commande);
     }
@@ -250,7 +253,7 @@ public class ConnexionBDD_tests {
         produits.put("TL-338853-AIN-30", 0); 
 
         int commande
-          = co.nouvelleCommande("SEGZE03368", maintenant, avant, produits);
+          = co.nouvelleCommande(loginOk, maintenant, avant, produits);
 
         assertEquals(-1, commande);
     }
@@ -266,7 +269,7 @@ public class ConnexionBDD_tests {
         produits.put("nexistepas", 1); 
 
         int commande
-          = co.nouvelleCommande("SEGZE03368", maintenant, apres, produits);
+          = co.nouvelleCommande(loginOk, maintenant, apres, produits);
 
         assertEquals(-1, commande);
     }
@@ -282,12 +285,12 @@ public class ConnexionBDD_tests {
         produits.put("GN-746901-SIY-63", 1);
 
         int commande
-          = co.nouvelleCommande("SEGZE03368", maintenant, apres, produits);
+          = co.nouvelleCommande(loginOk, maintenant, apres, produits);
 
         assertTrue(commande >= 0);
 
         // version courte
-        int commande2 = co.nouvelleCommande("SEGZE03368", apres, produits);
+        int commande2 = co.nouvelleCommande(loginOk, apres, produits);
         assertTrue(commande2 > commande);
     }
 
@@ -302,12 +305,53 @@ public class ConnexionBDD_tests {
     @Test
     public void testInfosPersonne() {
 
-        String login = "SEGZE03368";
-
-        HashMap<String,String> hm = co.infosPersonne(login);
+        HashMap<String,String> hm = co.infosPersonne(loginOk);
 
         assertNotNull(hm);
         assertFalse(hm.isEmpty());
         assertEquals(3, hm.size());
+    }
+
+    @Test
+    public void testInfosCommandeIdNegatif() {
+
+        HashMap<String,Object> hm = co.infosCommande(-1);
+
+        assertNull(hm);
+    }
+
+    @Test
+    public void testInfosCommandeInexistante() {
+
+        HashMap<String,Object> hm = co.infosCommande(99999);
+
+        assertNull(hm);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked") // cast Object->HashMap = warning
+    public void testInfosCommandeOk() {
+
+        HashMap<String,Integer> produits = new HashMap<String,Integer>();
+        Calendar c = Calendar.getInstance();
+        c.set(2014, 5, 15);
+
+        int qte = 2;
+
+        produits.put(refOk, qte);
+
+        int id = co.nouvelleCommande(loginOk, c, produits);
+
+        assertFalse(-1 == id);
+
+        HashMap<String,Object> hm = co.infosCommande(id);
+
+        assertNotNull(hm);
+        assertFalse(hm.isEmpty());
+
+        int qte_2 = ((HashMap<String,Integer>)hm.get("produits")).get(refOk);
+
+        assertEquals(qte, qte_2);
+        assertEquals(loginOk, hm.get("login client"));
     }
 }
