@@ -299,7 +299,7 @@ public class ConnexionBDD {
                 hm.put("qualifiant", rs.getString(3));
                 hm.put("prix", rs.getFloat(4));
                 hm.put("poids", rs.getFloat(5));
-                hm.put("quantite restante", rs.getFloat(6));
+                hm.put("quantité restante", rs.getFloat(6));
 
                 liste.add(hm);
             }
