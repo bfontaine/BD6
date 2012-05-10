@@ -19,9 +19,6 @@ all: ConnexionBDD.class java/inter_princ.class
 # efface les fichiers *~
 clean:
 	find . -name *~ -delete
-
-# efface les fichiers *~ et *.class
-cleanall: clean
 	find . -name *.class -delete
 
 # affiche la fenetre de connexion
