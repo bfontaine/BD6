@@ -156,7 +156,6 @@ if __name__ == '__main__':
 
     insertions = {}
 
-    # FIXME nom des tables uniquement, pas les emballeurs/transporteurs
     for k,v in db_fields.items():
         insertions[k] = "INSERT INTO %s (%s) VALUES " % (k, ','.join(v))
 
@@ -183,8 +182,7 @@ if __name__ == '__main__':
 
         line = f.readline()
 
-    for ins in ['personne', 'client', 'douane', 'emballeur', 'gerant',
-                    'transporteur', 'produit']:
+    for ins in ['personne', 'client', 'douane', 'catalogue']:
         ps = db.prepare(insertions[ins][:-1]+";") # supprime la derniere virgule
         ps()
 
