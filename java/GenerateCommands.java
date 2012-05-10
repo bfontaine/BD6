@@ -59,33 +59,37 @@ public class GenerateCommands {
 
             for (int j=0; j<nb_produits_diff; j++) {
 
-                int id_produit = (int)(Math.random()*nb_produits);
+                int id_produit, qte_max, qte = 0;
+                String ref = "";
 
-                String ref = (String)produits.get(id_produit).get("référence");
-                int qte_max = ((Float)produits.get(id_produit).get("quantité restante")).intValue();
+                // tant que le produit courant n'est pas disponible en bonne quantité,
+                // le changer avec un autre aléatoirement
+                while (qte == 0) {
 
-                int qte = Math.min((int)(Math.random()*20)+1, qte_max/100);
+                    id_produit = (int)(Math.random()*nb_produits);
 
-                if (qte == 0) {
-                    // pour éviter la rupture de stock
-                    // FIXME: ceci fait que certains clients ne commandent rien -> erreur
-                    continue;
+                    ref = (String)produits.get(id_produit).get("référence");
+                    qte_max = ((Float)produits.get(id_produit).get("quantité restante")).intValue();
+
+                    qte = Math.min((int)(Math.random()*20)+1, qte_max/100);
+
                 }
+
                 produits_commande.put(ref, qte);
             }
 
             int cmd = co.nouvelleCommande(client, date_prevue, produits_commande);
 
             if (cmd == -1) {
-                System.out.println("Erreur: client="+client+", date_prevue="
+                System.err.println("Erreur: client="+client+", date_prevue="
                                     +jour_prevu+"/"+mois_prevu+"/"+annee_prevue
                                     + "(Aujourd'hui: "+jour+"/"+mois+"/"+annee+")");
 
-                System.out.print("Produits (quantité): ");
+                System.err.print("Produits (quantité): ");
                 for (String ref : produits_commande.keySet()) {
-                    System.out.print(ref+" ("+produits_commande.get(ref)+"), ");
+                    System.err.print(ref+" ("+produits_commande.get(ref)+"), ");
                 }
-                System.out.println(".");
+                System.err.println(".");
 
             } else {
                 System.out.println("Commande OK pour client "+client+".");
