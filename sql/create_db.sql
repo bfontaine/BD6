@@ -28,7 +28,7 @@ CREATE TABLE douane(
 
                   pays VARCHAR(255) NOT NULL,
 
-                  FOREIGN KEY(id) REFERENCES personne(login)
+                  FOREIGN KEY(id) REFERENCES personne(login) ON DELETE CASCADE
 );
 
 CREATE TABLE client(
@@ -89,8 +89,8 @@ CREATE TABLE commande_produits(
                 ref_produit VARCHAR NOT NULL,
                 quantite INTEGER CONSTRAINT quantite_positive CHECK (quantite > 0),
 
-                FOREIGN KEY(id_commande) REFERENCES commande(id),
-                FOREIGN KEY(ref_produit) REFERENCES catalogue(ref)
+                FOREIGN KEY(id_commande) REFERENCES commande(id) ON DELETE CASCADE,
+                FOREIGN KEY(ref_produit) REFERENCES catalogue(ref) ON DELETE NO ACTION
 );
 
 CREATE TABLE colis(
@@ -108,7 +108,7 @@ CREATE TABLE colis(
                 id_commande INTEGER NOT NULL,
 
                 PRIMARY KEY(id),
-                FOREIGN KEY(id_commande) REFERENCES commande(id)
+                FOREIGN KEY(id_commande) REFERENCES commande(id) ON DELETE CASCADE
 );
 
 CREATE TABLE colis_produits(
@@ -117,8 +117,8 @@ CREATE TABLE colis_produits(
                 ref_produit VARCHAR(255) NOT NULL,
                 quantite INTEGER CONSTRAINT quantite_positive CHECK (quantite > 0),
 
-                FOREIGN KEY(id_colis) REFERENCES colis(id),
-                FOREIGN KEY(ref_produit) REFERENCES catalogue(ref)
+                FOREIGN KEY(id_colis) REFERENCES colis(id) ON DELETE CASCADE,
+                FOREIGN KEY(ref_produit) REFERENCES catalogue(ref) ON DELETE CASCADE
 );
 
 CREATE TABLE palette(
@@ -133,17 +133,17 @@ CREATE TABLE palette_colis(
                 id_palette INTEGER NOT NULL,
                 id_colis INTEGER NOT NULL,
 
-                FOREIGN KEY(id_palette) REFERENCES palette(id),
-                FOREIGN KEY(id_colis) REFERENCES colis(id)
+                FOREIGN KEY(id_palette) REFERENCES palette(id) ON DELETE CASCADE,
+                FOREIGN KEY(id_colis) REFERENCES colis(id) ON DELETE CASCADE
 );
 
 CREATE TABLE container(
 
                 id INTEGER UNIQUE NOT NULL,
-                id_transporteur VARCHAR(255) NOT NULL,
+                id_transporteur VARCHAR(255),
                 id_emballeur VARCHAR(255) NOT NULL,
 
-                FOREIGN KEY(id_transporteur) REFERENCES personne(login),
+                FOREIGN KEY(id_transporteur) REFERENCES personne(login) ON DELETE SET NULL,
                 FOREIGN KEY(id_emballeur) REFERENCES personne(login),
                 PRIMARY KEY(id)
 );
@@ -153,8 +153,8 @@ CREATE TABLE container_palettes(
                 id_container INTEGER NOT NULL,
                 id_palette INTEGER NOT NULL,
 
-                FOREIGN KEY(id_container) REFERENCES container(id),
-                FOREIGN KEY(id_palette) REFERENCES palette(id)
+                FOREIGN KEY(id_container) REFERENCES container(id) ON DELETE CASCADE,
+                FOREIGN KEY(id_palette) REFERENCES palette(id) ON DELETE CASCADE
 );
 
 -- triggers
@@ -193,3 +193,5 @@ $update_qualif_colis$ LANGUAGE plpgsql;
 CREATE TRIGGER update_qualif_colis AFTER INSERT OR UPDATE ON colis_produits
   FOR EACH ROW EXECUTE PROCEDURE update_qualif_colis();
 
+-- TODO quand on supprime commande_produit, incrémente la valeur du catalogue
+-- si possible: idem quand on ajoute une ligne (supprimer l'équivalent dans Java)
