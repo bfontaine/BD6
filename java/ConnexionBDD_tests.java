@@ -436,4 +436,22 @@ public class ConnexionBDD_tests {
         int id = co.nouveauColis(cmdOk, hm);
         assertFalse(-1 == id);
     }
+
+    @Test
+    public void testNouveauChangerLoginPareil() {
+        boolean nouveauLoginOk = co.changerLogin(loginOk, loginOk);
+        assertTrue(nouveauLoginOk);
+    }
+
+    @Test
+    public void testNouveauChangerLoginNul() {
+        boolean nouveauLoginOk = co.changerLogin(loginOk, null);
+        assertFalse(nouveauLoginOk);
+    }
+
+    @Test
+    public void testNouveauChangerLoginOk() {
+        boolean nouveauLoginOk = co.changerLogin(loginOk, "chucknorris");
+        assertTrue(nouveauLoginOk);
+    }
 }

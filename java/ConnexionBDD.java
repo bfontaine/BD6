@@ -97,7 +97,7 @@ public class ConnexionBDD {
      * @return true si le changement a été fait avec succès, false sinon (ou si
      * la nouvelle quantité est négative)
      **/
-    private boolean changerQuantiteProduit(String ref, int nouvelleQuantite) {
+    public boolean changerQuantiteProduit(String ref, int nouvelleQuantite) {
         
         if (nouvelleQuantite < 0) {
             return false;
@@ -114,6 +114,36 @@ public class ConnexionBDD {
         } catch (SQLException e) {
             return false;
         }
+    }
+
+    /**
+     * Change le login d'un client
+     * @param ancienLogin l'ancien login
+     * @param nouveauLogin le nouveau login
+     * @return `true` si tout s'est bien passé, `false` sinon
+     **/
+    public boolean changerLogin(String ancienLogin, String nouveauLogin) {
+
+        if (ancienLogin == null || nouveauLogin == null) {
+            return false;
+        } else if (ancienLogin.equals(nouveauLogin)) {
+            return true;
+        }
+
+        String q = "UPDATE personne SET login=? WHERE login=? AND type_personne='client';";
+
+        try {
+            PreparedStatement ps = co.prepareStatement(q);
+            ps.setString(1, nouveauLogin);
+            ps.setString(2, ancienLogin);
+
+            int result = ps.executeUpdate();
+
+            return (result == 1);
+        }
+        catch (SQLException e) {}
+
+        return false;
     }
 
     // === Listes === //
