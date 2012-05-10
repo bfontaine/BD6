@@ -272,15 +272,41 @@ public class ConnexionBDD {
      * colonnes et valeurs
      **/
     public LinkedList<HashMap<String,Object>> listeProduits() {
+        return listeProduits(-1);
+    }
+
+    /**
+     * Liste les produits disponibles
+     * @return une liste de `HashMap` avec une correspondance entre nom de
+     * colonnes et valeurs
+     **/
+    public LinkedList<HashMap<String,Object>> listeProduitsRestants() {
+        return listeProduits(1);
+    }
+
+    /**
+     * Liste les produits
+     * @param quantiteMin quantité minimale des produits (ignorée si négative)
+     * @return une liste de `HashMap` avec une correspondance entre nom de
+     * colonnes et valeurs
+     **/
+    public LinkedList<HashMap<String,Object>> listeProduits(int quantiteMin) {
 
         PreparedStatement ps = null;
         String q = "SELECT ref,description,qualifiant,prix,poids,";
-        q += "quantite_restante FROM catalogue;";
+        q += "quantite_restante FROM catalogue";
+
+        if (quantiteMin >= 0) {
+            q += " WHERE quantite_restante>=?";
+        }
 
         ResultSet rs = null;
         
         try {
-            ps = co.prepareStatement(q);
+            ps = co.prepareStatement(q+";");
+            if (quantiteMin >= 0) {
+                ps.setInt(1, quantiteMin);
+            }
             rs = ps.executeQuery();
         } catch (SQLException e) {
             return null;

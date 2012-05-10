@@ -129,6 +129,26 @@ public class ConnexionBDD_tests {
     }
 
     @Test
+    public void testListerProduitsRestants() {
+        LinkedList<HashMap<String,Object>> liste = co.listeProduitsRestants();
+
+        assertNotNull(liste);
+        assertFalse(liste.isEmpty());
+        // à faire uniquement si on a pas ajouté/enlevé un produit
+        assertTrue(2000 >= liste.size());
+    }
+
+    @Test
+    public void testListerProduitsParQuantiteMin() {
+        LinkedList<HashMap<String,Object>> liste = co.listeProduits(0);
+
+        assertNotNull(liste);
+        assertFalse(liste.isEmpty());
+        // à faire uniquement si on a pas ajouté/enlevé un produit
+        assertTrue(2000 >= liste.size());
+    }
+
+    @Test
     public void testNouveauGerant() {
         boolean estNouvellePersonne
             = co.nouvellePersonne("Chuck", "Norris", "chucknorris", "42", "gerant");
