@@ -425,6 +425,10 @@ public class ConnexionBDD {
         long dc = date_commande.getTime().getTime();
         long dp = date_prevue.getTime().getTime();
 
+        if (dp < dc) {
+            return -1;
+        }
+
         /*
          Frais de commande:
             a = nombre d'heures entre la date de commande et la date prévue
