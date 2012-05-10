@@ -18,9 +18,9 @@ public class Panel_co  extends Panel_princ implements ActionListener{
         this.frame = jfr;
     }
 
-    public JPanel buildJP(){
+    public JLayeredPane buildJP(){
         JPanel panel_co = new JPanel();
-        panel_co.setLayout(new BorderLayout());
+        panel_co.setLayout(new GridLayout(3,1));
 
         JPanel panel_NO = new JPanel();
         panel_NO.setLayout(new FlowLayout());
@@ -29,7 +29,6 @@ public class Panel_co  extends Panel_princ implements ActionListener{
         login_JT.setColumns(10);
         panel_NO.add(user);
         panel_NO.add(login_JT);
-
 
         JPanel panel_CEN = new JPanel();
         panel_CEN.setLayout(new FlowLayout());
@@ -40,34 +39,34 @@ public class Panel_co  extends Panel_princ implements ActionListener{
         panel_CEN.add(mdp_JT);
 
         JPanel panel_SU = new JPanel();
-        panel_SU.setLayout(new BorderLayout());
+        JPanel p = new JPanel();
+        p.setLayout(new BorderLayout());
         if(!connection_F){
             JLabel label = new JLabel("Login ou mot de passe incorrect");
             label.setForeground(Color.red);
-            panel_SU.add(label, BorderLayout.NORTH);
+            p.add(label, BorderLayout.NORTH);
         }
         bouton = new JButton("connexion");
         bouton.addActionListener(this);
-        panel_SU.add(bouton, BorderLayout.CENTER);
+        p.add(bouton, BorderLayout.CENTER);
+        panel_SU.add(p);
 
 
-        panel_co.add(panel_NO, BorderLayout.NORTH);
-        panel_co.add(panel_CEN, BorderLayout.CENTER);
-        panel_co.add(panel_SU, BorderLayout.SOUTH);
+        panel_co.add(panel_NO);
+        panel_co.add(panel_CEN);
+        panel_co.add(panel_SU);
 
-
-        JPanel panel = new JPanel();
-        Color color = new Color(0,153,102);
-        panel.setBackground(color);
+        JLayeredPane panel = new JLayeredPane();
+        panel_co.setBounds(300,150,200,150);
         panel.add(panel_co);
+
         return panel;
     }
 
     public void actionPerformed(ActionEvent e){
         String login = login_JT.getText(); 
         String mdp = mdp_JT.getText();
-        Container cp = this.frame.getContentPane();
-        cp.removeAll();
+        this.contenu.removeAll();
         String type = this.frame.conn.connecteUtilisateur(login,mdp);
         if(type != null){
                 if (type.equals("client")) {
@@ -88,9 +87,8 @@ public class Panel_co  extends Panel_princ implements ActionListener{
         }
         else{
             connexion_interdit();
-            JPanel panel = this.buildJP();
-            cp.add(panel);
-            this.frame.setContentPane(cp);
+            this.contenu = this.buildJP();
+            this.frame.setContentPane(this.getContenu());
         }
 
     }

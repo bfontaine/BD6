@@ -16,10 +16,12 @@ public class inter_princ extends JFrame{
         //crée notre objet requete
         this.conn = co;
 
-        setSize(700,500); // taille de la fenêtre
+        setSize(800,500); // taille de la fenêtre
         setLocationRelativeTo(null); // centre la fenêtre
         setResizable(false); // interdit de redimentionner la fenêtre
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // fermeture si clic sur croix
+        Color color = new Color(0,153,102);
+        setBackground(color);
         setContentPane(contenu.getContenu()); // insere le contenue de la fenêtre
         setVisible(true); //rend la fenêtre visible
     }

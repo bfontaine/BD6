@@ -10,6 +10,8 @@ public class Panel_ger  extends Panel_princ implements ActionListener{
     String login;
     //objet swing de notre Panel connexion
     JButton deconnexion;
+    JButton valide_choix;
+    JComboBox choix;
 
     public Panel_ger(inter_princ jfr,String log){
         this.frame = jfr;
@@ -17,22 +19,27 @@ public class Panel_ger  extends Panel_princ implements ActionListener{
         this.contenu = this.buildJP();
     }
 
-    public JPanel buildJP(){
-        JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout());
+    public JLayeredPane buildJP(){
+        JLayeredPane panel = new JLayeredPane();
         
         //construit le panel des info
         JPanel info = buildJP_info();
+        info.setBounds(10,10,100,200);
         panel.add(info);
 
         //construit le panel des choix d'action
         JPanel choix_action = buildJP_choixA();
+        choix_action.setBounds(10,10,100,200);
         panel.add(choix_action);
 
 
         //construit le panel action
         
 
+
+        Color color = new Color(0,153,102);
+        panel.setBackground(color);
+        panel.setBounds(10,10,500,400);
         return panel;
     }
 
@@ -60,16 +67,20 @@ public class Panel_ger  extends Panel_princ implements ActionListener{
     public JPanel buildJP_choixA(){
         JPanel panel = new JPanel();
         
-        String[] choix_action = new String[6];
+        String[] choix_action = new String[5];
         choix_action[0] = "Lister les employés/client";
         choix_action[1] = "Changer le prix d'un produit";
         choix_action[2] = "Voir les Produits les pLus vendus";
         choix_action[3] = "Voir les clients les plus depensiés";
-        choix_action[4] = "Licencier un personnel actif";
-        choix_action[5] = "Lister le nombre de colis qu'un emballeur traite par jour";
+        choix_action[4] = "Voir les employés les moins actif";
         
-        JComboBox choix = new JComboBox(choix_action);
+        choix = new JComboBox(choix_action);
         panel.add(choix);
+        
+        valide_choix = new JButton("valider");
+        valide_choix.addActionListener(this);
+        panel.add(valide_choix);
+
         return panel;
     }
 
@@ -77,6 +88,16 @@ public class Panel_ger  extends Panel_princ implements ActionListener{
         Object source = e.getSource();
         if(source == deconnexion){
             this.frame.connexion_co();
+        }
+        else if(source == valide_choix){
+            int rang = this.choix.getSelectedIndex();
+            switch(rang){
+                case 0:break;
+                case 1:break;
+                case 2:break;
+                case 3:break;
+                case 4:break;
+            }
         }
     }
 }
