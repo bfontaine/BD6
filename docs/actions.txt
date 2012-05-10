@@ -1,34 +1,36 @@
 Gérant
-    - Changer le prix des produits
-    - A accès à la liste des employés/clients
-    - Voir les produits les plus vendus
-    - Voir les clients les plus dépensiés
-    - Voir les employés les moins actifs
+    - Changer le prix des produits            | boolean changePrix(String ref, float nouveauPrix)
+    - A accès à la liste des employés/clients | LinkedList<HashMap<String,Object>> listeEmployes()
+                                              | LinkedList<HashMap<String,Object>> listeClients()
+    - Voir les produits les plus vendus       | …
+    - Voir les clients les plus dépensiés     | …
+    - Voir les employés les moins actifs      | …
 
 Client
-    - Passer une commande (+ choisir date de livraison)
-    - Savoir où en est leurs colis
-    - Lister les produits disponibles
-    - Changer son login/mdp
+    - Passer une commande (+ choisir date de livraison) | int nouvelleCommande(String client, Calendar date_prevue, HashMap<String, Integer> produits)
+    - Savoir où en est leurs colis                      | HashMap<String,Object> infosColis(int id)
+    - Lister les produits disponibles                   | LinkedList<HashMap<String,Object>> listeProduitsRestants()
+    - Changer son login/mdp                             | boolean changerLogin(String ancienLogin, String nouveauLogin)
+                                                        | boolean changerMdp(String login, String ancienMdp, String nouveauMdp)
 
 Emballeur
-    - Connaître la liste des commandes d'un client (sans connaître son identité)
-    - Entrer les colis emballés
-    - Entrer les palettes préparées
+    - Connaître la liste des commandes d'un client (sans connaître son identité) | …
+    - Entrer les colis emballés                                                  | int nouveauColis(int id_commande, HashMap<String,Integer> produits)
+    - Entrer les palettes préparées                                              | …
 
 Douane
-    - Renvoyer un colis en précisant le motif
-    - voir la liste des commandes expédiées pour le pays
-    - voir la liste des commandes contrôlées par cette douane
-    - voir la liste des commandes expédiées (non contrôlées) pour le pays
-    - Rechercher des commandes par le num/destination/contenu
-    - Voir les détails d'une commande
-    - Entrer les résultats d'un contrôle
-    - lister les palettes d'un conteneur
-    - lister les colis d'une palette
-    - lister les produits d'un colis
-    - Accéder au prix des produits transportés
+    - Renvoyer un colis en précisant le motif                             | …
+    - voir la liste des commandes expédiées pour le pays                  | …
+    - voir la liste des commandes contrôlées par cette douane             | …
+    - voir la liste des commandes expédiées (non contrôlées) pour le pays | …
+    - Rechercher des commandes par le num/destination/contenu             | …
+    - Voir les détails d'une commande                                     | HashMap<String,Object> infosCommande(int id)
+    - Entrer les résultats d'un contrôle                                  | …
+    - lister les palettes d'un conteneur                                  | …
+    - lister les colis d'une palette                                      | HashMap<String,Object> infosColis(int id) (pas fini)
+    - lister les produits d'un colis                                      | …
+    - Accéder au prix des produits transportés                            | …
 
 Transporteur
-    - Savoir si un colis est fragile ou dangereux
-    - Connaître la date limite de livraison souhaitée par le client
+    - Savoir si un colis est fragile ou dangereux                   | HashMap<String,Object> infosColis(int id)
+    - Connaître la date limite de livraison souhaitée par le client | HashMap<String,Object> infosCommande(int id)
