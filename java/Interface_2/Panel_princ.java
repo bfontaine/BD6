@@ -5,7 +5,7 @@ import java.sql.*;
 
 public class Panel_princ {
     //Contenu de notre panel
-    JLayeredPane contenu;
+    JPanel contenu;
     
     //le JFrame qui appelle les Panel
     inter_princ frame;
@@ -13,7 +13,7 @@ public class Panel_princ {
     public Panel_princ(){
     }
     
-    public JLayeredPane getContenu(){
+    public JPanel getContenu(){
         return this.contenu;
     }
 

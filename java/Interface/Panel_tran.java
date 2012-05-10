@@ -15,8 +15,8 @@ public class Panel_tran  extends Panel_princ implements ActionListener{
         this.frame = jfr;
     }
 
-    public JPanel buildJP(){
-        JPanel panel = new JPanel();
+    public JLayeredPane buildJP(){
+        JLayeredPane panel = new JLayeredPane();
         return panel;
     }
 

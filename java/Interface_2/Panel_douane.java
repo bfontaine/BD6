@@ -17,8 +17,8 @@ public class Panel_douane  extends Panel_princ implements ActionListener{
         this.contenu = this.buildJP();
     }
 
-    public JLayeredPane buildJP(){
-        JLayeredPane panel = new JLayeredPane();
+    public JPanel buildJP(){
+        JPanel panel = new JPanel();
         
         //construit le panel des info
         JPanel info = buildJP_info();
