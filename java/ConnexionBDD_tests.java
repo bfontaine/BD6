@@ -439,6 +439,26 @@ public class ConnexionBDD_tests {
     }
 
     @Test
+    @SuppressWarnings("unchecked") // cast Object->HashMap = warning
+    public void testInfosColisOk() {
+
+        HashMap<String,Integer> hm = new HashMap<String,Integer>(); 
+        hm.put(refOk, 2);
+
+        int id = co.nouveauColis(cmdOk, hm);
+        assertFalse(-1 == id);
+
+        HashMap<String,Object> colis = co.infosColis(id);
+
+        assertNotNull(colis);
+        assertFalse(colis.isEmpty());
+
+        assertEquals(id, ((Integer)colis.get("id")).intValue());
+
+        assertEquals(hm, (HashMap<String,Integer>)colis.get("produits"));
+    }
+
+    @Test
     public void testChangerLoginPareil() {
         boolean nouveauLoginOk = co.changerLogin(loginOk, loginOk);
         assertTrue(nouveauLoginOk);

@@ -456,12 +456,30 @@ public class ConnexionBDD {
             }
 
             HashMap<String,Object> c = new HashMap<String,Object>();
+            HashMap<String,Integer> produits = new HashMap<String,Integer>();
 
             c.put("date d'emballage", rs.getDate("date_emballage"));
             c.put("date d'expédition", rs.getDate("date_expedie"));
             c.put("date de livraison", rs.getDate("date_livraison"));
             c.put("état", rs.getString("etat"));
-            c.put("id", rs.getString("id"));
+            c.put("id commande", rs.getInt("id_commande"));
+            c.put("id", id);
+            c.put("produits", produits);
+
+            q = "SELECT ref_produit,quantite FROM colis_produits WHERE id_colis=?";
+            ps = co.prepareStatement(q);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+
+            if (!rs.next()) { // pas de produits dans le colis
+                return null;
+            }
+
+            do {
+                produits.put(rs.getString("ref_produit"), rs.getInt("quantite"));
+            } while (rs.next());
+
+            return c;
         }
         catch (SQLException e) {}
         return null;
