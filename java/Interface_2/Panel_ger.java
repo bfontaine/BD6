@@ -44,7 +44,6 @@ public class Panel_ger  extends Panel_princ implements ActionListener{
         panel.setLayout(new GridLayout(5,1));
         
         JLabel type = new JLabel("Gerant");
-        System.out.println(info_client.get("type"));
         panel.add(type);
         JLabel login = new JLabel("Login : "+this.login);
         panel.add(login);
