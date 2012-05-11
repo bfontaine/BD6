@@ -318,6 +318,15 @@ public class ConnexionBDD {
                     hm.put("produits", rs2.getInt(1));
 
                     //TODO ajouter le total (prix) commandé
+                    /*
+                         Récupérer les frais d'une commande:
+                         SELECT (SELECT SUM(frais) FROM commande WHERE
+                                 id=cp.id_commande) AS frais, id_commande
+                         FROM commande_produits AS cp GROUP BY id_commande;
+
+                         à faire: y associer les refs des produits concernés, et de là
+                         récupérer la somme dépensée.
+                    */
                 }
 
                 liste.add(hm);
