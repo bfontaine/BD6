@@ -506,6 +506,8 @@ public class ConnexionBDD_tests {
     public void testInfosProduitOk() {
         HashMap<String,Object> produit = co.infosProduit(refOk);
 
-        assertEquals(refOk, (String)produit.get("ref"));
+        assertNotNull(produit);
+        assertFalse(produit.isEmpty());
+        assertEquals(refOk, (String)produit.get("référence"));
     }
 }

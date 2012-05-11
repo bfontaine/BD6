@@ -514,7 +514,7 @@ public class ConnexionBDD {
             HashMap<String,Object> hm = new HashMap<String,Object>();
 
             do {
-                hm.put("ref", ref);
+                hm.put("référence", ref);
                 hm.put("description", rs.getString("description"));
                 hm.put("qualifiant", rs.getString("qualifiant"));
                 hm.put("prix", rs.getInt("prix"));
