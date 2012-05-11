@@ -16,6 +16,10 @@ default: all
 # compiler tout les .java
 all: ConnexionBDD.class java/inter_princ.class
 
+# reset la BDD
+reset: ../scripts/reset.sh
+	cd ../scripts;./reset.sh
+
 # efface les fichiers *~
 clean:
 	rm -f *~ */*~
