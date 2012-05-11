@@ -62,6 +62,12 @@ public class ConnexionBDD_tests {
         boolean estChange = co.changePrix(refOk, -1337);
         assertFalse(estChange);
     }
+    
+    @Test
+    public void testChangerPrixOk() {
+        boolean estChange = co.changePrix(refOk, 1337);
+        assertTrue(estChange);
+    }
 
     @Test
     public void testListerEmballeurs() {
@@ -494,5 +500,12 @@ public class ConnexionBDD_tests {
     public void testChangerMdpOk() {
         boolean nouveauMdpOk = co.changerMdp(loginOk, mdpOk, "42");
         assertTrue(nouveauMdpOk);
+    }
+    
+    @Test
+    public void testInfosProduitOk() {
+        HashMap<String,Object> produit = co.infosProduit(refOk);
+
+        assertEquals(refOk, (String)produit.get("ref"));
     }
 }

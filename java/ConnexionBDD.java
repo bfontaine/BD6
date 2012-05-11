@@ -494,7 +494,40 @@ public class ConnexionBDD {
         return null;
     }
     
+    /**
+     * Retourne des informations sur le produit
+     * @param ref référence du produit
+     **/
+    public HashMap<String,Object> infosProduit(String ref) {
+        String q = "SELECT description,qualifiant,prix,poids,quantite_restante,";
+        q += "quantite_par_carton,cartons_par_palette FROM catalogue WHERE ";
+        q += "ref=?;";
 
+        try {
+            PreparedStatement ps = co.prepareStatement(q);
+            ps.setString(1, ref);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                return null;
+            }
+
+            HashMap<String,Object> hm = new HashMap<String,Object>();
+
+            do {
+                hm.put("ref", ref);
+                hm.put("description", rs.getString("description"));
+                hm.put("qualifiant", rs.getString("qualifiant"));
+                hm.put("prix", rs.getInt("prix"));
+                hm.put("poids", rs.getInt("poids"));
+                hm.put("quantité restante", rs.getInt("quantite_restante"));
+                hm.put("quantité par carton", rs.getInt("quantite_par_carton"));
+                hm.put("cartons par palette", rs.getInt("cartons_par_palette"));
+            } while (rs.next());
+            return hm;
+        }
+        catch (SQLException e) {}
+        return null;
+    }
 
     /**
      * Retourne des informations sur la commande (date de commande, date
