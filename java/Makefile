@@ -25,7 +25,7 @@ clean:
 	#find . -name *~ -delete
 	#find . -name *.class -delete
 
-generate: GenerateCommands.class
+generate: GenerateCommands.class ConnexionBDD.class
 	java -cp ${CLASSPATH} GenerateCommands
 
 # affiche la fenetre de connexion
