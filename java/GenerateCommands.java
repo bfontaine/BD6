@@ -8,8 +8,9 @@ public class GenerateCommands {
 
     private static int NB_COMMANDES = 250;
     private static int NB_COMMANDES_NON_EXPEDIEES = 50;
+    private static int NB_COMMANDES_EN_COLIS = 10;
+    private static int NB_COMMANDES_EN_PALETTES = 10;
 
-    @SuppressWarnings("unchecked")
     public static void main (String[] args) throws SQLException, ClassNotFoundException {
         String user = System.getProperty("user.name");
         ConnexionBDD co = new ConnexionBDD(user, user);
@@ -33,6 +34,10 @@ public class GenerateCommands {
         HashMap<Integer,LinkedList<Integer>> commandes_colis
             = new HashMap<Integer,LinkedList<Integer>>();
 
+        // association id des colis -> ref des produits dedans
+        HashMap<Integer,String> colis_produits
+            = new HashMap<Integer,String>();
+
         for (HashMap hm : lhm) {
             logins.push((String)hm.get("login"));
         }
@@ -40,7 +45,7 @@ public class GenerateCommands {
 
         int nb_clients = logins.size();
         int nb_produits = produits.size();
-        int i=0; // curseur sur le tableau des commandes
+        int i = 0; // curseur sur le tableau des commandes
 
         // liste des commandes: associe l'identifiant de la commande
         // à un mapping entre les références de produits et leur quantités
@@ -154,16 +159,28 @@ public class GenerateCommands {
                     qte -= tmp;
                     nb_cartons--;
 
-                    HashMap<String,Integer> colis_produits
+                    HashMap<String,Integer> current_colis_produits
                         = new HashMap<String,Integer>();
-                    colis_produits.put(ref, tmp);
+                    current_colis_produits.put(ref, tmp);
+                    
+                    int id_colis = co.nouveauColis(cmd_produits.get("_id"), current_colis_produits);
+                    
+                    cmd_colis.push(id_colis);
 
-                    cmd_colis.push(co.nouveauColis(cmd_produits.get("_id"), colis_produits));
+                    colis_produits.put(new Integer(id_colis), ref);
                 }
             }
 
             commandes_colis.put(cmd_produits.get("_id"), cmd_colis);
-
         }
+
+        /*
+         * À ce stade, on a toujours 50 commandes non emballées, et
+         * 200 commandes dans des colis. On en laisse 10 dans des colis,
+         * et on continue;
+         */
+        i = NB_COMMANDES_NON_EXPEDIEES + NB_COMMANDES_EN_COLIS;
+
+
     }
 }
