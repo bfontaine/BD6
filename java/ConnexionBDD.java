@@ -530,6 +530,37 @@ public class ConnexionBDD {
     }
 
     /**
+     * Retourne des informations sur le produit dans l'ordre des plus vendu
+     **/
+    public LinkedList<HashMap<String,Object>> produitPlusVendu() {
+        String q = "SELECT ref_produit ,SUM(quantite) AS qt FROM commande_produits ";
+        q += "GROUP BY ref_produit ORDER BY qt DESC;";
+
+        try{
+            PreparedStatement ps = co.prepareStatement(q);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                return null;
+            }
+            LinkedList<HashMap<String,Object>> liste
+                = new LinkedList<HashMap<String,Object>>();
+
+            HashMap<String,Object> hm;
+
+            do {
+                hm = infosProduit(rs.getString("ref_produit"));  
+                hm.put("quantite", rs.getString("qt"));
+
+                liste.add(hm);
+
+            } while (rs.next());
+            return liste;
+
+        }catch(SQLException e){}
+        return null;
+    }
+
+    /**
      * Retourne des informations sur la commande (date de commande, date
      * de livraison prévue, produits, colis concernés, login du client)
      * @param id l'identifiant de la commande

@@ -510,4 +510,12 @@ public class ConnexionBDD_tests {
         assertFalse(produit.isEmpty());
         assertEquals(refOk, (String)produit.get("référence"));
     }
+
+    @Test
+    public void testProduitPlusVenduOk() {
+        LinkedList<HashMap<String,Object>> produit = co.produitPlusVendu();
+
+        assertNotNull(produit);
+        assertFalse(produit.isEmpty());
+    }
 }
