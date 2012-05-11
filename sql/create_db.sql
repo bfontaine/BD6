@@ -78,6 +78,7 @@ CREATE TABLE commande(
                 date_prevue DATE NOT NULL DEFAULT current_date + integer '30', -- défaut: dans 30 jours
 
                 frais FLOAT CONSTRAINT frais_positifs CHECK (frais >= 0),
+                prix FLOAT CONSTRAINT prix_positif CHECK (prix >= 0) DEFAULT 0,
 
                 FOREIGN KEY(id_client) REFERENCES client(id) ON UPDATE CASCADE,
                 PRIMARY KEY(id)
@@ -192,6 +193,42 @@ $update_qualif_colis$ LANGUAGE plpgsql;
 
 CREATE TRIGGER update_qualif_colis AFTER INSERT OR UPDATE ON colis_produits
   FOR EACH ROW EXECUTE PROCEDURE update_qualif_colis();
+
+/*
+Augmente le prix d'une commande en fonction des ajouts dans commande_produits
+*/
+
+CREATE FUNCTION update_prix_commande_up() RETURNS trigger AS $update_prix_commande_up$
+DECLARE
+  prix_produits FLOAT := NEW.quantite*(SELECT prix FROM catalogue WHERE ref=NEW.ref_produit);
+BEGIN
+  UPDATE commande SET prix=prix+prix_produits WHERE id=NEW.id_commande;
+  RETURN NEW;
+END
+$update_prix_commande_up$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_prix_commande_up AFTER INSERT ON commande_produits
+  FOR EACH ROW EXECUTE PROCEDURE update_prix_commande_up();
+
+/*
+Diminue le prix d'une commande en fonction des suppressions dans commande_produits
+*/
+
+CREATE FUNCTION update_prix_commande_down() RETURNS trigger AS $update_prix_commande_down$
+DECLARE
+  prix_produits FLOAT := OLD.quantite*(SELECT prix FROM catalogue WHERE ref=OLD.ref_produit);
+BEGIN
+  IF prix_produits > prix THEN
+    UPDATE commande SET prix=0 WHERE id=NEW.id_commande;
+    RETURN NEW;
+  END IF;
+  UPDATE commande SET prix=prix-prix_produits WHERE id=NEW.id_commande;
+  RETURN NEW;
+END
+$update_prix_commande_down$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_prix_commande_down AFTER DELETE ON commande_produits
+  FOR EACH ROW EXECUTE PROCEDURE update_prix_commande_down();
 
 -- TODO quand on supprime commande_produit, incrémente la valeur du catalogue
 -- si possible: idem quand on ajoute une ligne (supprimer l'équivalent dans Java)
