@@ -518,4 +518,12 @@ public class ConnexionBDD_tests {
         assertNotNull(produit);
         assertFalse(produit.isEmpty());
     }
+
+    @Test
+    public void testlisteClientsPlusDepensierOk() {
+        LinkedList<HashMap<String,Object>> produit = co.listeClientsPlusDepensier();
+
+        assertNotNull(produit);
+        assertFalse(produit.isEmpty());
+    }
 }

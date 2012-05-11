@@ -257,18 +257,20 @@ public class ConnexionBDD {
         q += "WHERE id_client=? GROUP BY id_client;"; 
 
         ResultSet rs = null;
-
         LinkedList<HashMap<String,Object>> liste = listeClients(true); 
         int size = liste.size();
-        for (int i = 0; i < size; i++){
-            HashMap<String,Object> hm = list.get(i);
-            String login = hm.get("login");
-            ps = co.prepareStatement(q);
-            ps.setString(1, login);
-            rs = ps.executeQuery();
-            rs.next();
-            hm.add(ps.getInt("fs") + ps.getInt("px"));
-        }
+        try{
+            for (int i = 0; i < size; i++){
+                HashMap<String,Object> hm = liste.get(i);
+                Object login = hm.get("login");
+                ps = co.prepareStatement(q);
+                ps.setString(1,(String) login);
+                rs = ps.executeQuery();
+                rs.next();
+                int depense = rs.getInt("fs") + rs.getInt("px");
+                hm.put("Total dépensé",new Integer(depense));
+            }
+        }catch(SQLException e){}
         return liste;
     }
 
