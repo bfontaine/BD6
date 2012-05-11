@@ -90,7 +90,8 @@ Interface
 
 Un début d'interface graphique a été écrit, mais le temps ne nous a pas permis
 de la terminer. Une interface textuelle est néanmoins fournie
-(`java/Interface_texte.java`).
+(`java/Interface_texte.java`). l'interface se lance avec trois arguments: le nom
+de la base, le nom de l'utilisateur, et son mot de passe.
 
 Améliorations
 -------------
