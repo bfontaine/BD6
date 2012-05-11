@@ -500,6 +500,8 @@ public class ConnexionBDD_tests {
     public void testChangerMdpOk() {
         boolean nouveauMdpOk = co.changerMdp(loginOk, mdpOk, "42");
         assertTrue(nouveauMdpOk);
+        nouveauMdpOk = co.changerMdp(loginOk, "42", mdpOk);
+        assertTrue(nouveauMdpOk);
     }
     
     @Test
@@ -520,10 +522,33 @@ public class ConnexionBDD_tests {
     }
 
     @Test
-    public void testlisteClientsPlusDepensierOk() {
-        LinkedList<HashMap<String,Object>> produit = co.listeClientsPlusDepensier();
+    public void testListeClientsPlusDepensiesOk() {
+        LinkedList<HashMap<String,Object>> liste = co.listeClientsPlusDepensies();
 
-        assertNotNull(produit);
-        assertFalse(produit.isEmpty());
+        assertNotNull(liste);
+        assertFalse(liste.isEmpty());
+    }
+
+    @Test
+    public void testNouvellePaletteListeColisVide() {
+        int id_p = co.nouvellePalette(null);
+        assertEquals(-1, id_p);
+    }
+
+    @Test
+    public void testNouvellePaletteOk() {
+
+        HashMap<String,Integer> hm = new HashMap<String,Integer>(); 
+        hm.put(refOk, 2);
+
+        int id_c = co.nouveauColis(cmdOk, hm);
+
+        LinkedList<Integer> liste_colis = new LinkedList<Integer>();
+
+        liste_colis.push(new Integer(id_c));
+
+        int id_p = co.nouvellePalette(liste_colis);
+
+        assertFalse(-1 == id_p);
     }
 }

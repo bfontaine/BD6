@@ -246,11 +246,11 @@ public class ConnexionBDD {
     }
 
     /**
-     * Liste les clients dans l'ordre de depense
+     * Liste les clients dans l'ordre de leurs dépenses
      * @return une liste de `HashMap` avec une correspondance entre nom de
      * colonnes et valeurs
      **/
-    public LinkedList<HashMap<String,Object>> listeClientsPlusDepensier() {
+    public LinkedList<HashMap<String,Object>> listeClientsPlusDepensies() {
 
         PreparedStatement ps = null;
         String q = "SELECT SUM(frais) AS fs,SUM(prix) as px FROM commande ";
@@ -921,6 +921,54 @@ public class ConnexionBDD {
         }
         catch (SQLException e) {}
 
+        return -1;
+    }
+
+    /**
+     * Crée une nouvelle palette
+     * @param id_colis liste des identifiants des colis qui sont sur
+     * cette palette
+     * @return identifiant de la palette, ou -1 s'il y a eu un problème
+     **/
+    public int nouvellePalette(LinkedList<Integer> id_colis) {
+
+        if (id_colis == null || id_colis.size() == 0) {
+            return -1;
+        }
+
+        try {
+            PreparedStatement ps
+                = co.prepareStatement("INSERT INTO palette DEFAULT VALUES;");
+            int result = ps.executeUpdate();
+            if (result != 1) {
+                return -1;
+            }
+            ps = co.prepareStatement("SELECT last_value FROM palette_id_seq;");
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                return -1;
+            }
+            int id_palette = rs.getInt("last_value");
+
+            String q = "INSERT INTO palette_colis VALUES ("+id_palette+",?)";
+
+            for (int i=1; i<id_colis.size(); i++) {
+                q += ",("+id_palette+",?)";
+            }
+
+            ps = co.prepareStatement(q+";");
+            for (int i=0; i<id_colis.size(); i++) {
+                ps.setInt(i+1, id_colis.get(i).intValue());
+            }
+            result = ps.executeUpdate();
+
+            if (result < 1) {
+                return -1;
+            }
+
+            return id_palette;
+        }
+        catch (SQLException e) {}
         return -1;
     }
 
