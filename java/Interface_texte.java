@@ -1,6 +1,9 @@
 import java.io.*;
 import java.util.Scanner;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+
 
 public class Interface_texte{
     static ConnexionBDD co;
@@ -194,6 +197,42 @@ public class Interface_texte{
             System.out.print("choix :");
 
             return in.nextInt();
+    }
+
+    public static void choix_client(){
+
+    }
+
+
+    public void affichage_less(LinkedList<HashMap<String,Object>> liste,String[] champ,int[] taille){
+        
+        int choix = -1;
+        int ligne = 0;
+        int total = 0;
+        while(choix != 0){
+            System.out.println("Affichage :");
+            System.out.println("-------------------------------------------------------------");
+            do{
+                HashMap<String,Object> hb = liste.get(total);
+                for(int i = 0; i < champ.length; i++){
+                    String mot = (String)hb.get(champ[i]);
+                    for ( int j = mot.length(); j < taille[i] ;j++){
+                        mot += " ";
+                    }
+                    System.out.print(mot+"| ");
+                }
+                System.out.println();
+                ligne++;
+                total++;
+
+            }while((ligne % 10 == 0 )||(total < liste.size()));
+            System.out.println("-------------------------------------------------------------");
+            System.out.println("0 - Continuer");
+            System.out.println("1 - Quitter"); 
+            System.out.println("-------------------------------------------------------------");
+            System.out.print("choix :"); 
+            choix = in.nextInt(); 
+        }
     }
 
     public static void main(String[]args)throws SQLException , ClassNotFoundException {
