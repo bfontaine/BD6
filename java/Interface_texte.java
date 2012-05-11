@@ -49,7 +49,7 @@ public class Interface_texte{
             while(choix != 3 ){
                 choix = menuTransporteur();
                 if((choix < 2) || (choix > -1)){
-                    choix_client(choix);
+                    choix_transporteur(choix);
                 }
             }
         }
@@ -57,7 +57,7 @@ public class Interface_texte{
             while(choix != 3 ){
                 choix = menuEmballeur();
                 if((choix < 2) || (choix > -1)){
-                    choix_client(choix);
+                    choix_emballeur(choix);
                 }
             }
         }
@@ -65,7 +65,7 @@ public class Interface_texte{
             while(choix != 5 ){
                 choix = menuGerant();
                 if((choix < 4) || (choix > -1)){
-                    choix_client(choix);
+                    choix_gerant(choix);
                 }
             }
         }
@@ -73,7 +73,7 @@ public class Interface_texte{
             while(choix != 5 ){
                 choix = menuDouane();
                 if((choix < 4) || (choix > -1)){
-                    choix_client(choix);
+                    choix_douane(choix);
                 }
             }
         }
@@ -120,7 +120,7 @@ public class Interface_texte{
         return in.nextInt();
     }
 
-    public static int  menuTransporteur(){
+    public static int  menuEmballeur(){
         System.out.print("\033c"); //nettoyage de l'ecran
 
         // -------------------
@@ -129,7 +129,7 @@ public class Interface_texte{
 
         System.out.println("Veuillez entrer votre choix :");
         System.out.println("-------------------------------------------------------------");
-        System.out.println("0 - Connaître la liste des commandes d'un client");
+        System.out.println("0 - Information sur un colis");
         System.out.println("1 - Entrer les colis emballés"); 
         System.out.println("2 - Entrer les palettes préparées");
         System.out.println("3 - quitter");
@@ -139,7 +139,7 @@ public class Interface_texte{
         return in.nextInt();
     }
 
-    public static int menuEmballeur(){
+    public static int menuTransporteur(){
         System.out.print("\033c"); //nettoyage de l'ecran
 
         // -------------------
@@ -217,6 +217,66 @@ public class Interface_texte{
         }
     }
 
+    public static void choix_transporteur(int choix){
+        if(choix == 2){
+            System.out.print("\033c"); //nettoyage de l'ecran
+            System.out.println("Changer situation d'une paletter");
+            System.out.println("-------------------------------------------------------------");
+            System.out.print("Indentification de la palette:");
+            int palette = in.nextInt();
+            if(co.livrerPalette(palette))
+                System.out.println("Modification effectuer");
+            else{
+                System.out.println("Modification echouer");
+            }
+
+        }
+        else if(choix == 1){
+            int [] taille = {5,20,21,10,22,22,22};
+            String[] champ = {"id","id_commande","produits","état","date d'emballage","date d'expédition","date de livraison"};
+            System.out.print("Identifiant du colis :"); 
+            int colis = in.nextInt();
+            affichage_less(co.infosColis(colis),champ,taille,"Information sur le colis :");
+
+        }
+        else if(choix == 0){
+            int [] taille = {5,20,21,10,22,22,22};
+            String[] champ = {"id","id_commande","produits","état","date d'emballage","date d'expédition","date de livraison"};
+            System.out.print("Identifiant de la commande:"); 
+            int commande = in.nextInt();
+            affichage_less(co.infosCommande(commande),champ,taille,"Information de la commande :");
+        }
+    }
+
+    public static void choix_emballeur(int choix){
+        if(choix == 2){
+
+        }
+        else if(choix == 1){
+
+        }
+
+    }
+
+    public static void choix_gerant(int choix){
+        if(choix == 2){
+
+        }
+        else if(choix == 1){
+
+        }
+
+    }
+
+    public static void choix_douane(int choix){
+        if(choix == 2){
+
+        }
+        else if(choix == 1){
+
+        }
+
+    }
 
     public static void affichage_less (LinkedList<HashMap<String,Object>> liste, String[] champ,int[] taille, String req){
         int choix = -1;
@@ -239,7 +299,11 @@ public class Interface_texte{
             do{
                 HashMap<String,Object> hb = liste.get(total);
                 for(int i = 0; i < champ.length; i++){
-                    String mot = (String) hb.get(champ[i]).toString();
+                    String mot;
+                    if(hb.get(champ[i]) != null)
+                        mot = (String) hb.get(champ[i]).toString();
+                    else
+                        mot = "null";
                     for ( int j = mot.length(); j < taille[i] ;j++){
                         mot += " ";
                     }
@@ -255,6 +319,42 @@ public class Interface_texte{
             System.out.println("-------------------------------------------------------------");
             System.out.println("0 - Continuer");
             System.out.println("1 - Quitter"); 
+            System.out.println("-------------------------------------------------------------");
+            System.out.print("choix :"); 
+            choix = in.nextInt(); 
+        }
+    }
+
+    public static void affichage_less (HashMap<String,Object> hb, String[] champ,int[] taille, String req){
+        int choix = -1;
+        while(choix != 0){
+            System.out.print("\033c"); //nettoyage de l'ecran
+            System.out.println(req);
+            System.out.println("-------------------------------------------------------------");
+            //affiche les nom de colonne
+            for(int i = 0; i < champ.length; i++){
+                String mot = champ[i];
+                for ( int j = mot.length(); j < taille[i] ;j++){
+                    mot += " ";
+                }
+                System.out.print(mot+"| ");
+            }
+            System.out.println();
+            //affiche le contenu du LinkedListe
+            for(int i = 0; i < champ.length; i++){
+                String mot;
+                if(hb.get(champ[i]) != null)
+                    mot = (String) hb.get(champ[i]).toString();
+                else
+                    mot = "null";
+                for ( int j = mot.length(); j < taille[i] ;j++){
+                    mot += " ";
+                }
+                System.out.print(mot+"| ");
+            }
+            System.out.println();
+            System.out.println("-------------------------------------------------------------");
+            System.out.println("0 - Continuer");
             System.out.println("-------------------------------------------------------------");
             System.out.print("choix :"); 
             choix = in.nextInt(); 
