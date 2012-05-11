@@ -8,6 +8,7 @@ import java.util.LinkedList;
 public class Interface_texte{
     static ConnexionBDD co;
     static Scanner in = new Scanner(System.in);
+    static String Login;
 
     /**
      * Imprime le menu de connection
@@ -16,7 +17,6 @@ public class Interface_texte{
 
         System.out.print("\033c"); //nettoyage de l'ecran
         String type;
-        String login;
         boolean mdp_incorrect = false; 
 
         do{
@@ -27,10 +27,10 @@ public class Interface_texte{
                 System.out.println("Login ou Password incorrecte");
 
             System.out.print("Utilisateur : ");
-            login = in.next();
+            Login = in.next();
             String password = PasswordField.readPassword(" Password : ");  
 
-            type = co.connecteUtilisateur(login,password);
+            type = co.connecteUtilisateur(Login,password);
             if(type == null)
                 mdp_incorrect = true;
 
@@ -38,7 +38,7 @@ public class Interface_texte{
         int choix = -1;
         if (type.equals("client")) {
             while(choix != 4 ){
-                choix = menuClient(login);
+                choix = menuClient();
                 if((choix < 4) || (choix > -1)){
                     choix_client(choix);
                 }
@@ -47,7 +47,7 @@ public class Interface_texte{
         }
         else if (type.equals("transporteur")) {
             while(choix != 3 ){
-                choix = menuTransporteur(login);
+                choix = menuTransporteur();
                 if((choix < 2) || (choix > -1)){
                     choix_client(choix);
                 }
@@ -55,7 +55,7 @@ public class Interface_texte{
         }
         else if (type.equals("emballeur")) {
             while(choix != 3 ){
-                choix = menuEmballeur(login);
+                choix = menuEmballeur();
                 if((choix < 2) || (choix > -1)){
                     choix_client(choix);
                 }
@@ -63,7 +63,7 @@ public class Interface_texte{
         }
         else if (type.equals("gerant")) {
             while(choix != 5 ){
-                choix = menuGerant(login);
+                choix = menuGerant();
                 if((choix < 4) || (choix > -1)){
                     choix_client(choix);
                 }
@@ -71,7 +71,7 @@ public class Interface_texte{
         }
         else if (type.equals("douane")) {
             while(choix != 5 ){
-                choix = menuDouane(login);
+                choix = menuDouane();
                 if((choix < 4) || (choix > -1)){
                     choix_client(choix);
                 }
@@ -79,7 +79,7 @@ public class Interface_texte{
         }
     }
 
-    public static int menuClient(String login){
+    public static int menuClient(){
         System.out.print("\033c"); //nettoyage de l'ecran
 
         // -------------------
@@ -99,7 +99,7 @@ public class Interface_texte{
         return in.nextInt();
     }
 
-    public static int menuGerant(String login){
+    public static int menuGerant(){
         System.out.print("\033c"); //nettoyage de l'ecran
 
         // -------------------
@@ -120,7 +120,7 @@ public class Interface_texte{
         return in.nextInt();
     }
 
-    public static int  menuTransporteur(String login){
+    public static int  menuTransporteur(){
         System.out.print("\033c"); //nettoyage de l'ecran
 
         // -------------------
@@ -139,7 +139,7 @@ public class Interface_texte{
         return in.nextInt();
     }
 
-    public static int menuEmballeur(String login){
+    public static int menuEmballeur(){
         System.out.print("\033c"); //nettoyage de l'ecran
 
         // -------------------
@@ -158,7 +158,7 @@ public class Interface_texte{
         return in.nextInt();
     }
 
-    public static int menuDouane(String login){
+    public static int menuDouane(){
         System.out.print("\033c"); //nettoyage de l'ecran
 
         // -------------------
@@ -187,22 +187,42 @@ public class Interface_texte{
 
         }
         else if(choix == 2){
-            int [] taille = {16,50,10,7,4,5};
+            int [] taille = {16,60,10,7,5,5};
             String[] champ = {"référence","description","qualifiant","prix","poids","quantité restante"};
 
             affichage_less(co.listeProduitsRestants(),champ,taille,"Liste des Produit disponible :");
         }
         else if(choix == 3){
+            System.out.print("\033c"); //nettoyage de l'ecran
+            System.out.println("Changement de password :");
+            System.out.println("-------------------------------------------------------------");
+            System.out.print("Nouveau login :");
+            String new_login = in.next();
+            String password = PasswordField.readPassword("Ancien Password : ");  
+            String new_password = PasswordField.readPassword("Nouveaux Password : ");  
+            if(co.changerLogin(Login,new_login)){
+                System.out.print("Changement Login effectuer");
+                Login = new_login;
+            }
+            else{
+                System.out.print("Erreur lors du changement de login");
+
+            }
+            if(co.changerMdp(new_login,password,new_password))
+                System.out.print("Changement Password effectuer:");
+            else{
+                System.out.print("Erreur lors du changement de password");
+            }
 
         }
     }
 
 
-    public static void affichage_less (LinkedList<HashMap<String,Object>> liste, String[] champ,int[] taille, String nom req){
+    public static void affichage_less (LinkedList<HashMap<String,Object>> liste, String[] champ,int[] taille, String req){
         int choix = -1;
         int ligne = 0;
         int total = 0;
-        while(choix != 0){
+        while(choix != 1){
             System.out.print("\033c"); //nettoyage de l'ecran
             System.out.println(req);
             System.out.println("-------------------------------------------------------------");
@@ -214,21 +234,24 @@ public class Interface_texte{
                 }
                 System.out.print(mot+"| ");
             }
+            System.out.println();
             //affiche le contenu du LinkedListe
             do{
                 HashMap<String,Object> hb = liste.get(total);
                 for(int i = 0; i < champ.length; i++){
-                    String mot = (String)hb.get(champ[i]);
+                    String mot = (String) hb.get(champ[i]).toString();
                     for ( int j = mot.length(); j < taille[i] ;j++){
                         mot += " ";
                     }
                     System.out.print(mot+"| ");
                 }
                 System.out.println();
+                System.out.println(1%10+" "+ total+" "+(ligne % 10 == 0 )+" "+(total < liste.size()));
+
                 ligne++;
                 total++;
 
-            }while((ligne % 10 == 0 )||(total < liste.size()));
+            }while((!(ligne% 10 == 0 )) || (total > liste.size()));
             System.out.println("-------------------------------------------------------------");
             System.out.println("0 - Continuer");
             System.out.println("1 - Quitter"); 
