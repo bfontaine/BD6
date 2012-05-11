@@ -3,7 +3,7 @@ Gérant
     - A accès à la liste des employés/clients | LinkedList<HashMap<String,Object>> listeEmployes()
                                               | LinkedList<HashMap<String,Object>> listeClients()
     - Voir les produits les plus vendus       | LinkedList<HashMap<String,Object>> produitPlusVendu()
-    - Voir les clients les plus dépensiés     | …
+    - Voir les clients les plus dépensiés     | LinkedList<HashMap<String,Object>> listeClientsPlusDepensier()
     - Voir les employés les moins actifs      | …
 
 Client
@@ -34,4 +34,4 @@ Douane
 Transporteur
     - Savoir si un colis est fragile ou dangereux                   | HashMap<String,Object> infosColis(int id)
     - Connaître la date limite de livraison souhaitée par le client | HashMap<String,Object> infosCommande(int id)
-    - S'occupe de la livraison des colis,palette et container       | ... 
+    - S'occupe de la livraison des colis,palette et container       | …
