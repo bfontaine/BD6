@@ -1,7 +1,7 @@
 -- CREATE DATABASE BD6;
 CREATE TYPE type_p AS ENUM('client', 'gerant', 'douane', 'transporteur', 'emballeur');
 CREATE TYPE qualif AS ENUM('normal', 'fragile', 'dangereux');
-CREATE TYPE etat_c AS ENUM('normal', 'renvoye' /*, … */);
+CREATE TYPE etat_c AS ENUM('normal', 'renvoye', 'livre' /*, … */);
 
 CREATE TABLE personne(
 
