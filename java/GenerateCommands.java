@@ -241,10 +241,14 @@ public class GenerateCommands {
          * À ce stade, on laisse 10 commandes sur des palettes, et
          * on en livre 200.
          * Il y en a donc 50 non expédiées, 10 dans des colis, 10 dans
-         * des palettes, et 200 (bientôt) livrées.
+         * des palettes, et 180 (bientôt) livrées.
          */
         System.out.println(palettes.size()+" palettes remplies.");
 
-        //TODO
+        while (palettes.size() > 10) {
+            co.livrerPalette(palettes.pop().intValue());
+        }
+
+        System.out.println("180 commandes livrées.");
     }
 }
