@@ -3,6 +3,7 @@ import java.util.Scanner;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Calendar;
 
 
 public class Interface_texte{
@@ -89,7 +90,7 @@ public class Interface_texte{
         System.out.println("Veuillez entrer votre choix :");
         System.out.println("-------------------------------------------------------------");
         System.out.println("0 - Passer une commande");
-        System.out.println("1 - Situation commande"); 
+        System.out.println("1 - Situation colis"); 
         System.out.println("2 - Lister les produits disponibles");
         System.out.println("3 - Changer son login/mdp");
         System.out.println("4 - quitter");
@@ -181,9 +182,41 @@ public class Interface_texte{
 
     public static void choix_client(int choix){
         if(choix == 0){
-
+            System.out.print("\033c"); //nettoyage de l'ecran
+            System.out.println("Insertion d'un commande :");
+            System.out.println("-------------------------------------------------------------");
+            System.out.println("Nombre de produit :");
+            int total_colis = in.nextInt();
+            HashMap<String,Integer> hb = new HashMap<String,Integer>();
+            for (int i = 0; i < total_colis; i++){;
+                System.out.println("Réference du produit "+i+" :");
+                String produit = in.next();
+                System.out.println("Quantite: ");
+                int quantite = in.nextInt();
+                hb.put(produit,quantite);
+            }
+            System.out.println("-------------------------------------------------------------");
+            System.out.println("Date de Livraison:");
+            System.out.println("-------------------------------------------------------------");
+            System.out.println("Annéé:");
+            int year = in.nextInt();
+            System.out.println("Mois:");
+            int mois = in.nextInt();
+            System.out.println("Jour:");
+            int jour = in.nextInt();
+            Calendar date = Calendar.getInstance();
+            date.set(year,mois,jour);
+            if(co.nouvelleCommande(Login,date,hb) > 0)
+                System.out.println("Commande valide");
+            else
+                System.out.println("Commande echoué");
         }
         else if(choix == 1){
+            int [] taille = {5,20,21,10,22,22,22};
+            String[] champ = {"id","id_commande","produits","état","date d'emballage","date d'expédition","date de livraison"};
+            System.out.print("Identifiant du colis :"); 
+            int colis = in.nextInt();
+            affichage_less(co.infosColis(colis),champ,taille,"Information sur le colis :");
 
         }
         else if(choix == 2){
@@ -219,7 +252,7 @@ public class Interface_texte{
 
     public static void choix_transporteur(int choix){
         if(choix == 2){
-            System.out.print("\033c"); //nettoyage de l'ecran
+             System.out.print("\033c"); //nettoyage de l'ecran
             System.out.println("Changer situation d'une paletter");
             System.out.println("-------------------------------------------------------------");
             System.out.print("Indentification de la palette:");
@@ -249,21 +282,67 @@ public class Interface_texte{
     }
 
     public static void choix_emballeur(int choix){
-        if(choix == 2){
+        if(choix == 0){
 
         }
         else if(choix == 1){
+
+        }
+        else if(choix == 2){
 
         }
 
     }
 
     public static void choix_gerant(int choix){
-        if(choix == 2){
+        if(choix == 0){
+            int pers = 1;
+            do{
+                System.out.println("Choix du type"); 
+                System.out.println(" 0 - client"); 
+                System.out.println(" 1 - employer"); 
+                System.out.print("Choix :");
+                pers= in.nextInt();
+            }while((pers < 0)&&(pers > 1));
+            if(pers == 1){
 
+            }
+            if(pers == 0){
+                int [] taille = {20,20,20,20,22,22,22,6};
+                String[] champ = {"prénom","nom","adresse","ville","code postal","pays","téléphone","Total depensiés"}; 
+                affichage_less(co.listeClientsPlusDepensies(),champ,taille,"Voir les clients les plus dépensiés :");
+
+            }
         }
         else if(choix == 1){
+            System.out.print("\033c"); //nettoyage de l'ecran
+            System.out.println("Changer Un prix de produit");
+            System.out.println("-------------------------------------------------------------");
+            System.out.print("Identification du produit:");
+            String prod = in.next();
+            System.out.print("Nouveau prix du produit :");
+            float new_prix = in.nextInt();
+            if(co.changePrix(prod,new_prix))
+                System.out.println("Modification effectuer");
+            else{
+                System.out.println("Modification echouer");
+            }
 
+        }
+        else if(choix == 2){
+            int [] taille = {16,60,10,7,5,5,7};
+            String[] champ = {"référence","description","qualifiant","prix","poids","quantité restante","quantite"};
+            affichage_less(co.produitPlusVendu(),champ,taille,"Voir les produits les plus vendus :");
+
+        }
+        else if(choix == 3){
+            int [] taille = {10,10,20,20,7,9,9,6};
+            String[] champ = {"prénom","nom","adresse","ville","code postal","pays","téléphone","Total depensiés"};
+            affichage_less(co.listeClientsPlusDepensies(),champ,taille,"Voir les clients les plus dépensiés :");
+
+        }
+        else if(choix == 4){
+            System.out.print("Pas Implementer"); 
         }
 
     }
