@@ -2,11 +2,13 @@ import java.io.*;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Calendar;
 
 public class GenerateCommands {
 
     private static int NB_COMMANDES = 250;
+    private static int NB_COMMANDES_NON_EXPEDIEES = 50;
 
     public static void main (String[] args) throws SQLException, ClassNotFoundException {
         String user = System.getProperty("user.name");
@@ -23,6 +25,10 @@ public class GenerateCommands {
         // liste des logins des clients
         LinkedList<String> logins = new LinkedList<String>();
 
+        // pour chaque ref de produit, [0] = quantité par carton,
+        //                             [1] = cartons par palettes
+        HashMap<String,Integer[]> qte_cartons_produits = new HashMap<String,Integer[]>();
+
         for (HashMap hm : lhm) {
             logins.push((String)hm.get("login"));
         }
@@ -30,10 +36,15 @@ public class GenerateCommands {
 
         int nb_clients = logins.size();
         int nb_produits = produits.size();
+        int i=0; // curseur sur le tableau des commandes
 
-        int[] commandes = new int[NB_COMMANDES];
+        // liste des commandes: associe l'identifiant de la commande
+        // à un mapping entre les références de produits et leur quantités
+        // dans cette commande
+        LinkedHashMap<Integer,HashMap<String,Integer>> commandes
+            = new LinkedHashMap<Integer,HashMap<String,Integer>>();
 
-        for (int i=0; i<commandes.length; i++) {
+        for (; i<NB_COMMANDES; i++) {
             String client = logins.get((int)(Math.random()*nb_clients));
             Calendar date_prevue = Calendar.getInstance();
 
@@ -72,6 +83,15 @@ public class GenerateCommands {
 
                 }
 
+                // on stocke les informations sur les quantités par cartons/palette
+                if (!qte_cartons_produits.containsKey(ref)) {
+                    HashMap<String,Object> produit = co.infosProduit(ref);
+                    Integer[] tmp = new Integer[2];
+                    tmp[0] = (Integer)produit.get("quantité par carton");
+                    tmp[1] = (Integer)produit.get("cartons par palette");
+                    qte_cartons_produits.put(ref, tmp);
+                }
+
                 produits_commande.put(ref, qte);
             }
 
@@ -90,13 +110,24 @@ public class GenerateCommands {
 
             } else {
                 //System.out.println("Commande OK pour client "+client+".");
-                commandes[i] = cmd;
+                //commandes[i] = cmd;
+            
+                commandes.put(cmd, produits_commande);
             }
         }
 
         /* 
          * À ce stade, `commandes` contient les identifiant de 250 commandes
          * pas encore expédiées.
+         *
+         * On en garde 50, et on en expédie 200.
          */
+        i = NB_COMMANDES_NON_EXPEDIEES;
+        
+        for (;i<NB_COMMANDES;i++) {
+
+
+
+        }
     }
 }
