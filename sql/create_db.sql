@@ -123,7 +123,7 @@ CREATE TABLE colis_produits(
 );
 
 CREATE TABLE palette(
-                id INTEGER UNIQUE NOT NULL,
+                id SERIAL UNIQUE NOT NULL,
                 /* … */
 
                 PRIMARY KEY(id)
@@ -216,14 +216,17 @@ Diminue le prix d'une commande en fonction des suppressions dans commande_produi
 
 CREATE FUNCTION update_prix_commande_down() RETURNS trigger AS $update_prix_commande_down$
 DECLARE
-  prix_produits FLOAT := OLD.quantite*(SELECT prix FROM catalogue WHERE ref=OLD.ref_produit);
+  prix_catalogue FLOAT := (SELECT prix FROM catalogue WHERE ref=OLD.ref_produit);
+  prix_produits FLOAT := OLD.quantite*prix_catalogue;
+  prix_cmd FLOAT := (SELECT prix FROM commande WHERE id=OLD.id_commande);
 BEGIN
-  IF prix_produits > prix THEN
-    UPDATE commande SET prix=0 WHERE id=NEW.id_commande;
-    RETURN NEW;
+  -- TODO utiliser 'CASE'
+  IF prix_produits > prix_cmd THEN
+    UPDATE commande SET prix=0 WHERE id=OLD.id_commande;
+    RETURN OLD;
   END IF;
-  UPDATE commande SET prix=prix-prix_produits WHERE id=NEW.id_commande;
-  RETURN NEW;
+  UPDATE commande SET prix=prix-prix_produits WHERE id=OLD.id_commande;
+  RETURN OLD;
 END
 $update_prix_commande_down$ LANGUAGE plpgsql;
 
@@ -233,14 +236,16 @@ CREATE TRIGGER update_prix_commande_down AFTER DELETE ON commande_produits
 /*
 Incrémente la quantité restante dans le catalogue quand on supprime une ligne
 dans commande_produits.
-*//*
+*/
 CREATE FUNCTION update_qte_catalogue_up() RETURNS trigger AS $update_qte_catalogue_up$
 BEGIN
   UPDATE catalogue SET quantite_restante=quantite_restante+OLD.quantite WHERE ref=OLD.ref_produit;
+  RETURN OLD;
 END
 $update_qte_catalogue_up$ LANGUAGE plpgsql;
 
 CREATE TRIGGER update_qte_catalogue_up AFTER DELETE ON commande_produits
   FOR EACH ROW EXECUTE PROCEDURE update_qte_catalogue_up();
-*/
+
 -- TODO si possible: idem quand on ajoute une ligne (supprimer l'équivalent dans Java)
+-- TODO supprimer les palettes/colis vides
