@@ -2,7 +2,6 @@ import java.io.*;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Calendar;
 
 public class GenerateCommands {
@@ -10,6 +9,7 @@ public class GenerateCommands {
     private static int NB_COMMANDES = 250;
     private static int NB_COMMANDES_NON_EXPEDIEES = 50;
 
+    @SuppressWarnings("unchecked")
     public static void main (String[] args) throws SQLException, ClassNotFoundException {
         String user = System.getProperty("user.name");
         ConnexionBDD co = new ConnexionBDD(user, user);
@@ -29,6 +29,10 @@ public class GenerateCommands {
         //                             [1] = cartons par palettes
         HashMap<String,Integer[]> qte_cartons_produits = new HashMap<String,Integer[]>();
 
+        // association id commande -> ids des colis concernés
+        HashMap<Integer,LinkedList<Integer>> commandes_colis
+            = new HashMap<Integer,LinkedList<Integer>>();
+
         for (HashMap hm : lhm) {
             logins.push((String)hm.get("login"));
         }
@@ -41,8 +45,9 @@ public class GenerateCommands {
         // liste des commandes: associe l'identifiant de la commande
         // à un mapping entre les références de produits et leur quantités
         // dans cette commande
-        LinkedHashMap<Integer,HashMap<String,Integer>> commandes
-            = new LinkedHashMap<Integer,HashMap<String,Integer>>();
+        // commandes[i].get("_id") == l'id de la commande
+        LinkedList<HashMap<String,Integer>> commandes
+            = new LinkedList<HashMap<String,Integer>>();
 
         for (; i<NB_COMMANDES; i++) {
             String client = logins.get((int)(Math.random()*nb_clients));
@@ -112,7 +117,9 @@ public class GenerateCommands {
                 //System.out.println("Commande OK pour client "+client+".");
                 //commandes[i] = cmd;
             
-                commandes.put(cmd, produits_commande);
+                produits_commande.put("_id", cmd);
+
+                commandes.push(produits_commande);
             }
         }
 
@@ -126,7 +133,36 @@ public class GenerateCommands {
         
         for (;i<NB_COMMANDES;i++) {
 
+            // colis de cette commande
+            LinkedList<Integer> cmd_colis = new LinkedList<Integer>();
 
+            // références des produits de cette commande
+            HashMap<String,Integer> cmd_produits = commandes.get(i);
+
+            for (String ref : cmd_produits.keySet()) {
+                if (ref.equals("_id")) { continue; }
+                
+                // pour chaque produit
+
+                int qte_par_carton = qte_cartons_produits.get(ref)[0];
+                int qte = cmd_produits.get(ref);
+
+                int tmp,nb_cartons = qte/qte_par_carton + 1; 
+
+                while (nb_cartons > 0) {
+                    tmp = Math.min(qte_par_carton, qte); // nb de produits dans ce carton
+                    qte -= tmp;
+                    nb_cartons--;
+
+                    HashMap<String,Integer> colis_produits
+                        = new HashMap<String,Integer>();
+                    colis_produits.put(ref, tmp);
+
+                    cmd_colis.push(co.nouveauColis(cmd_produits.get("_id"), colis_produits));
+                }
+            }
+
+            commandes_colis.put(cmd_produits.get("_id"), cmd_colis);
 
         }
     }
