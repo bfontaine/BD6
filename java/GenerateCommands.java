@@ -8,8 +8,7 @@ public class GenerateCommands {
 
     private static int NB_COMMANDES = 250;
     private static int NB_COMMANDES_NON_EXPEDIEES = 50;
-    private static int NB_COMMANDES_EN_COLIS = 10;
-    private static int NB_COMMANDES_EN_PALETTES = 10;
+    private static int NB_COMMANDES_EN_COLIS = 20;
 
     public static void main (String[] args) throws SQLException, ClassNotFoundException {
         String user = System.getProperty("user.name");
@@ -181,7 +180,7 @@ public class GenerateCommands {
 
         /*
          * À ce stade, on a toujours 50 commandes non emballées, et
-         * 200 commandes dans des colis. On en laisse 10 dans des colis,
+         * 200 commandes dans des colis. On en laisse 1=20 dans des colis,
          * et on continue;
          */
         System.out.println(commandes_refs_colis.size()+" commandes emballées dans des colis.");
@@ -238,14 +237,12 @@ public class GenerateCommands {
         }
 
         /*
-         * À ce stade, on laisse 10 commandes sur des palettes, et
-         * on en livre 200.
-         * Il y en a donc 50 non expédiées, 10 dans des colis, 10 dans
-         * des palettes, et 180 (bientôt) livrées.
+         * À ce stade, il y a50 commandes non expédiées, 20 dans des colis,
+         * et 180 (bientôt) livrées.
          */
         System.out.println(palettes.size()+" palettes remplies.");
 
-        while (palettes.size() > 10) {
+        while (palettes.size() > 0) {
             co.livrerPalette(palettes.pop().intValue());
         }
 
