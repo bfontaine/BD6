@@ -77,6 +77,8 @@ CREATE TABLE commande(
                 date_commande DATE NOT NULL DEFAULT current_date, -- défaut: aujourd'hui
                 date_prevue DATE NOT NULL DEFAULT current_date + integer '30', -- défaut: dans 30 jours
 
+                date_livree DATE DEFAULT NULL, -- null tant que non livrée
+
                 frais FLOAT CONSTRAINT frais_positifs CHECK (frais >= 0),
                 prix FLOAT CONSTRAINT prix_positif CHECK (prix >= 0) DEFAULT 0,
 
@@ -124,8 +126,6 @@ CREATE TABLE colis_produits(
 
 CREATE TABLE palette(
                 id SERIAL UNIQUE NOT NULL,
-                /* … */
-
                 PRIMARY KEY(id)
 );
 
@@ -248,4 +248,58 @@ CREATE TRIGGER update_qte_catalogue_up AFTER DELETE ON commande_produits
   FOR EACH ROW EXECUTE PROCEDURE update_qte_catalogue_up();
 
 -- TODO si possible: idem quand on ajoute une ligne (supprimer l'équivalent dans Java)
--- TODO supprimer les palettes/colis vides
+
+/*
+Supprime une palette quand il n'y a plus aucun colis dedans
+*/
+CREATE FUNCTION del_palette_vide() RETURNS trigger AS $del_palette_vide$
+DECLARE
+  nb_colis INTEGER := (SELECT SUM(1) FROM palette_colis WHERE id_palette=OLD.id_palette);
+BEGIN
+  IF nb_colis=0 THEN
+    DELETE FROM palette WHERE id=OLD.id_palette;
+  END IF;
+  RETURN OLD;
+END
+$del_palette_vide$ LANGUAGE plpgsql;
+
+CREATE TRIGGER del_palette_vide AFTER DELETE ON palette_colis
+  FOR EACH ROW EXECUTE PROCEDURE del_palette_vide();
+
+/*
+Supprime un colis quand il n'y a plus de produits dedans
+*/
+CREATE FUNCTION del_colis_vide() RETURNS trigger AS $del_colis_vide$
+DECLARE
+  nb_produits INTEGER := (SELECT SUM(1) FROM colis_produits WHERE id_colis=OLD.id_colis);
+BEGIN
+  IF nb_produits=0 THEN
+    DELETE FROM colis WHERE id=OLD.id_colis;
+  END IF;
+  RETURN OLD;
+END
+$del_colis_vide$ LANGUAGE plpgsql;
+
+CREATE TRIGGER del_colis_vide AFTER DELETE ON colis_produits
+  FOR EACH ROW EXECUTE PROCEDURE del_colis_vide();
+
+/*
+Quand un colis est marqué 'livre' et que tous les autres correspondant à la même commande
+le sont aussi, la commande est marquée comme livrée et les colis sont supprimés.
+*/
+CREATE FUNCTION livre_colis() RETURNS trigger AS $livre_colis$
+BEGIN
+  IF NEW.etat<>'livre' THEN
+    RETURN NEW; -- si le colis n'est pas livré, ne rien faire
+  END IF;
+  IF ('livre'=ALL(SELECT etat FROM colis WHERE id_commande=NEW.id_commande)) THEN
+    DELETE FROM colis WHERE id_commande=NEW.id_commande;
+    UPDATE commande SET date_livree=current_date WHERE id=NEW.id_commande;
+  END IF;
+  RETURN NEW;
+END
+$livre_colis$ LANGUAGE plpgsql;
+
+CREATE TRIGGER livre_colis AFTER UPDATE ON colis
+  FOR EACH ROW EXECUTE PROCEDURE livre_colis();
+
