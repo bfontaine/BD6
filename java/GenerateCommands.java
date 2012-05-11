@@ -30,13 +30,11 @@ public class GenerateCommands {
         //                             [1] = cartons par palettes
         HashMap<String,Integer[]> qte_cartons_produits = new HashMap<String,Integer[]>();
 
-        // association id commande -> ids des colis concernés
-        HashMap<Integer,LinkedList<Integer>> commandes_colis
-            = new HashMap<Integer,LinkedList<Integer>>();
-
-        // association id des colis -> ref des produits dedans
-        HashMap<Integer,String> colis_produits
-            = new HashMap<Integer,String>();
+        // associe, pour chaque id de commande, les références de produits avec
+        // une liste d'identifiants de colis qui contiennent ce produit
+        // {id_commande: {ref_produit:[id_c1, id_c2, …], … }, …}
+        HashMap<Integer,HashMap<String,LinkedList<Integer>>> commandes_refs_colis
+            = new HashMap<Integer,HashMap<String,LinkedList<Integer>>>();
 
         for (HashMap hm : lhm) {
             logins.push((String)hm.get("login"));
@@ -50,7 +48,7 @@ public class GenerateCommands {
         // liste des commandes: associe l'identifiant de la commande
         // à un mapping entre les références de produits et leur quantités
         // dans cette commande
-        // commandes[i].get("_id") == l'id de la commande
+        // commandes.get(i).get("_id") == l'id de la commande
         LinkedList<HashMap<String,Integer>> commandes
             = new LinkedList<HashMap<String,Integer>>();
 
@@ -134,9 +132,13 @@ public class GenerateCommands {
          *
          * On en garde 50, et on en expédie 200.
          */
+        System.out.println(commandes.size()+" commandes réalisées.");
         i = NB_COMMANDES_NON_EXPEDIEES;
         
         for (;i<NB_COMMANDES;i++) {
+
+            HashMap<String,LinkedList<Integer>> current_cmd_refs_colis = new HashMap<String,LinkedList<Integer>>();
+            commandes_refs_colis.put(commandes.get(i).get("_id"), current_cmd_refs_colis);
 
             // colis de cette commande
             LinkedList<Integer> cmd_colis = new LinkedList<Integer>();
@@ -156,6 +158,7 @@ public class GenerateCommands {
 
                 while (nb_cartons > 0) {
                     tmp = Math.min(qte_par_carton, qte); // nb de produits dans ce carton
+                    if (tmp == 0) { break; }
                     qte -= tmp;
                     nb_cartons--;
 
@@ -163,15 +166,17 @@ public class GenerateCommands {
                         = new HashMap<String,Integer>();
                     current_colis_produits.put(ref, tmp);
                     
+                    // nouveau colis
                     int id_colis = co.nouveauColis(cmd_produits.get("_id"), current_colis_produits);
+
+                    if (!current_cmd_refs_colis.containsKey(ref)) {
+                        current_cmd_refs_colis.put(ref, new LinkedList<Integer>());
+                    }
+                    current_cmd_refs_colis.get(ref).push(id_colis);
                     
                     cmd_colis.push(id_colis);
-
-                    colis_produits.put(new Integer(id_colis), ref);
                 }
             }
-
-            commandes_colis.put(cmd_produits.get("_id"), cmd_colis);
         }
 
         /*
@@ -179,8 +184,67 @@ public class GenerateCommands {
          * 200 commandes dans des colis. On en laisse 10 dans des colis,
          * et on continue;
          */
+        System.out.println(commandes_refs_colis.size()+" commandes emballées dans des colis.");
         i = NB_COMMANDES_NON_EXPEDIEES + NB_COMMANDES_EN_COLIS;
 
+        LinkedList<Integer> palettes = new LinkedList<Integer>();
 
+        for (; i<NB_COMMANDES;i++) {
+
+            // commande courante
+            HashMap<String,Integer> cmd = commandes.get(i);
+            // on recupere les colis de cette commande
+            HashMap<String,LinkedList<Integer>> cmd_colis = commandes_refs_colis.get(cmd.get("_id"));
+
+            // pour chaque référence différente
+            for (String curr_ref : cmd_colis.keySet()) {
+                int cartons_par_palette = qte_cartons_produits.get(curr_ref)[1];
+
+                int qte_cartons = cmd_colis.get(curr_ref).size();
+
+                while (qte_cartons > 0) {
+                    int tmp = Math.min(cartons_par_palette, qte_cartons);
+
+                    LinkedList<Integer> current_palette_colis
+                        = new LinkedList<Integer>();
+
+                    for (int k=0;k<tmp;k++) {
+                        current_palette_colis.push(cmd_colis.get(curr_ref).pop());
+                    }
+
+                    int id_palette = co.nouvellePalette(current_palette_colis);
+
+                    // debug
+                    if (id_palette == -1) {
+                        System.err.println("Erreur avec une palette (ref produit:"+curr_ref+").");
+                        System.err.println(qte_cartons+" cartons, "+cartons_par_palette+" par palette.");
+                        System.err.println("On essaye d'y mettre "+tmp+" cartons.");
+                        System.err.println("(length="+current_palette_colis.size()+")");
+                        System.err.print("Ids des colis: ");
+                        for (int l=0;l<current_palette_colis.size();l++) {
+                            System.err.print(current_palette_colis.get(l)+",");
+                        }
+                        System.err.println(".");
+
+                        System.exit(-1);
+                    }
+                    // fin debug
+                    
+                    palettes.push(new Integer(id_palette));
+
+                    qte_cartons -= tmp;
+                }
+            }
+        }
+
+        /*
+         * À ce stade, on laisse 10 commandes sur des palettes, et
+         * on en livre 200.
+         * Il y en a donc 50 non expédiées, 10 dans des colis, 10 dans
+         * des palettes, et 200 (bientôt) livrées.
+         */
+        System.out.println(palettes.size()+" palettes remplies.");
+
+        //TODO
     }
 }
