@@ -436,6 +436,34 @@ public class ConnexionBDD {
         return liste;
     }
 
+    /**
+     * Liste les identifiants des colis d'une palette
+     * @param id identifiant de la palette
+     **/
+    public LinkedList<Integer> listePalette(int id) {
+        if (id <= 0) {
+            return null;
+        }
+
+        try {
+            LinkedList<Integer> liste = new LinkedList<Integer>();
+
+            PreparedStatement ps
+                = co.prepareStatement("SELECT id_colis FROM palette_colis WHERE id_palette=?;");
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                liste.push(new Integer(rs.getInt("id_colis")));
+            }
+            return liste;
+        }
+        catch (SQLException e) {}
+
+        return null;
+    }
+
     // === Informations === //
 
     /**
@@ -522,7 +550,7 @@ public class ConnexionBDD {
         catch (SQLException e) {}
         return null;
     }
-    
+
     /**
      * Retourne des informations sur le produit
      * @param ref référence du produit
@@ -995,5 +1023,25 @@ public class ConnexionBDD {
         catch (SQLException e) {
             return false;
         }
+    }
+
+    /**
+     * Marque un colis comme étant livré (si tous les autres colis de la
+     * commande ont aussi étés livrés, tous les colis seront supprimés et
+     * la date de livraison de la commande sera remplie).
+     * @param id identifiant du colis
+     * @return true si la livraison s'est déroulée avec succès
+     **/
+    public boolean livreColis(int id) {
+        return false;
+    }
+
+    /**
+     * Livre tous les colis d'une palette et la supprime.
+     * @param id identifiant de la palette
+     * @return true si la livraison s'est déroulée avec succès
+     **/
+    public boolean livrePalette(int id) {
+        return false;
     }
 }

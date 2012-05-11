@@ -551,4 +551,24 @@ public class ConnexionBDD_tests {
 
         assertFalse(-1 == id_p);
     }
+    
+    @Test
+    public void testListePaletteOk() {
+        HashMap<String,Integer> hm = new HashMap<String,Integer>(); 
+        hm.put(refOk, 2);
+
+        int id_c = co.nouveauColis(cmdOk, hm);
+
+        LinkedList<Integer> liste_colis = new LinkedList<Integer>();
+
+        liste_colis.push(new Integer(id_c));
+
+        int id_p = co.nouvellePalette(liste_colis);
+
+        LinkedList<Integer> liste_colis2 = co.listePalette(id_p);
+
+        assertNotNull(liste_colis2);
+        assertEquals(liste_colis, liste_colis2);
+    }
+
 }
