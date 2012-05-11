@@ -571,4 +571,14 @@ public class ConnexionBDD_tests {
         assertEquals(liste_colis, liste_colis2);
     }
 
+    @Test
+    public void testLivrerColisOk() {
+
+        HashMap<String,Integer> hm = new HashMap<String,Integer>(); 
+        hm.put(refOk, 2);
+
+        int id = co.nouveauColis(cmdOk, hm);
+
+        assertTrue(co.livrerColis(id));
+    }
 }

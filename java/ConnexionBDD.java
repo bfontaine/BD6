@@ -1032,16 +1032,47 @@ public class ConnexionBDD {
      * @param id identifiant du colis
      * @return true si la livraison s'est déroulée avec succès
      **/
-    public boolean livreColis(int id) {
+    public boolean livrerColis(int id) {
+
+        if (id <= 0) {
+            return false;
+        }
+
+        try {
+            PreparedStatement ps
+                = co.prepareStatement("UPDATE colis SET etat='livre'::etat_c WHERE id=?;");
+            ps.setInt(1, id);
+
+            int result = ps.executeUpdate();
+
+            return (result == 1);
+        }
+        catch (SQLException e) {}
+
         return false;
     }
 
     /**
-     * Livre tous les colis d'une palette et la supprime.
+     * Livre tous les colis d'une palette (et la supprime).
      * @param id identifiant de la palette
      * @return true si la livraison s'est déroulée avec succès
      **/
-    public boolean livrePalette(int id) {
-        return false;
+    public boolean livrerPalette(int id) {
+
+        LinkedList<Integer> colis = listePalette(id);
+
+        if (colis == null) {
+            return false;
+        }
+
+        for (Integer i : colis) {
+            if (!livrerColis(i.intValue())) {
+                return false;
+            }
+        }
+
+        // la suppression est faite par un trigger
+
+        return true;
     }
 }
