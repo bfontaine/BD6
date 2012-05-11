@@ -32,11 +32,12 @@ generate: GenerateCommands.class ConnexionBDD.class
 fenetretest: interface
 	cd ${INTERFACE_DIR};java -cp ${INTERFACE_CLASSPATH} inter_princ bd6 ${USER} ${USER}
 
-# alias
-fenetre: interface
+
+#
+fenetre: Interface/inter_princ.class
 
 # compile l'interface
-interface: Interface/inter_princ.class
+interface: Interface_texte.class
 
 Interface/inter_princ.class: ${INTERFACE_DIR}/inter_princ.java
 	cd ${INTERFACE_DIR};javac -cp ${INTERFACE_CLASSPATH} inter_princ.java
