@@ -230,5 +230,17 @@ $update_prix_commande_down$ LANGUAGE plpgsql;
 CREATE TRIGGER update_prix_commande_down AFTER DELETE ON commande_produits
   FOR EACH ROW EXECUTE PROCEDURE update_prix_commande_down();
 
--- TODO quand on supprime commande_produit, incrémente la valeur du catalogue
--- si possible: idem quand on ajoute une ligne (supprimer l'équivalent dans Java)
+/*
+Incrémente la quantité restante dans le catalogue quand on supprime une ligne
+dans commande_produits.
+*//*
+CREATE FUNCTION update_qte_catalogue_up() RETURNS trigger AS $update_qte_catalogue_up$
+BEGIN
+  UPDATE catalogue SET quantite_restante=quantite_restante+OLD.quantite WHERE ref=OLD.ref_produit;
+END
+$update_qte_catalogue_up$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_qte_catalogue_up AFTER DELETE ON commande_produits
+  FOR EACH ROW EXECUTE PROCEDURE update_qte_catalogue_up();
+*/
+-- TODO si possible: idem quand on ajoute une ligne (supprimer l'équivalent dans Java)

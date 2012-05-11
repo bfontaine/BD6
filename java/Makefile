@@ -11,10 +11,8 @@ TESTS_CLASSPATH=${CLASSPATH}:/usr/share/java/junit4.jar
 INTERFACE_DIR=$(shell pwd)/Interface
 INTERFACE_CLASSPATH=.:..:../${PG_DRIVER_NAME}
 
-default: all
-
-# compiler tout les .java
-all: ConnexionBDD.class java/inter_princ.class
+# remplie la bdd
+default: reset generate
 
 # reset la BDD
 reset: ../scripts/reset.sh
