@@ -246,6 +246,33 @@ public class ConnexionBDD {
     }
 
     /**
+     * Liste les clients dans l'ordre de depense
+     * @return une liste de `HashMap` avec une correspondance entre nom de
+     * colonnes et valeurs
+     **/
+    public LinkedList<HashMap<String,Object>> listeClientsPlusDepensier() {
+
+        PreparedStatement ps = null;
+        String q = "SELECT SUM(frais) AS fs,SUM(prix) as px FROM commande ";
+        q += "WHERE id_client=? GROUP BY id_client;"; 
+
+        ResultSet rs = null;
+
+        LinkedList<HashMap<String,Object>> liste = listeClients(true); 
+        int size = liste.size();
+        for (int i = 0; i < size; i++){
+            HashMap<String,Object> hm = list.get(i);
+            String login = hm.get("login");
+            ps = co.prepareStatement(q);
+            ps.setString(1, login);
+            rs = ps.executeQuery();
+            rs.next();
+            hm.add(ps.getInt("fs") + ps.getInt("px"));
+        }
+        return liste;
+    }
+
+    /**
      * Liste les clients
      * @return une liste de `HashMap` avec une correspondance entre nom de
      * colonnes et valeurs
