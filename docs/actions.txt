@@ -34,4 +34,4 @@ Douane
 Transporteur
     - Savoir si un colis est fragile ou dangereux                   | HashMap<String,Object> infosColis(int id)
     - Connaître la date limite de livraison souhaitée par le client | HashMap<String,Object> infosCommande(int id)
-    - S'occupe de la livraison des colis,palette et container       | …
+    - S'occupe de la livraison des colis,palette et container       | boolean livrerPalette(id) (livre les colis qui sont dedans)
