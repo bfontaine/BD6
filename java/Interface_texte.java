@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.Scanner;
 import java.sql.*;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.LinkedList;
 import java.util.Calendar;
 
@@ -87,6 +88,8 @@ public class Interface_texte{
         // Impression du menu   
         // -------------------
 
+        System.out.println("CLIENT");
+        System.out.println();
         System.out.println("Veuillez entrer votre choix :");
         System.out.println("-------------------------------------------------------------");
         System.out.println("0 - Passer une commande");
@@ -95,7 +98,7 @@ public class Interface_texte{
         System.out.println("3 - Changer son login/mdp");
         System.out.println("4 - quitter");
         System.out.println("-------------------------------------------------------------");
-        System.out.print("choix :");
+        System.out.print("choix : ");
 
         return in.nextInt();
     }
@@ -106,6 +109,8 @@ public class Interface_texte{
         // -------------------
         // Impression du menu   
         // -------------------
+        System.out.println("GERANT");
+        System.out.println();
 
         System.out.println("Veuillez entrer votre choix :");
         System.out.println("-------------------------------------------------------------");
@@ -116,7 +121,7 @@ public class Interface_texte{
         System.out.println("4 - Voir les employés les moins actifs");
         System.out.println("5 - quitter");
         System.out.println("-------------------------------------------------------------");
-        System.out.print("choix :");
+        System.out.print("choix : ");
 
         return in.nextInt();
     }
@@ -127,6 +132,8 @@ public class Interface_texte{
         // -------------------
         // Impression du menu   
         // -------------------
+        System.out.println("EMBALLEUR");
+        System.out.println();
 
         System.out.println("Veuillez entrer votre choix :");
         System.out.println("-------------------------------------------------------------");
@@ -135,7 +142,7 @@ public class Interface_texte{
         System.out.println("2 - Entrer les palettes préparées");
         System.out.println("3 - quitter");
         System.out.println("-------------------------------------------------------------");
-        System.out.print("choix :");
+        System.out.print("choix : ");
 
         return in.nextInt();
     }
@@ -146,6 +153,8 @@ public class Interface_texte{
         // -------------------
         // Impression du menu   
         // -------------------
+        System.out.println("TRANSPORTEUR");
+        System.out.println();
 
         System.out.println("Veuillez entrer votre choix :");
         System.out.println("-------------------------------------------------------------");
@@ -154,7 +163,7 @@ public class Interface_texte{
         System.out.println("2 - Changer situation du colis");
         System.out.println("3 - quitter");
         System.out.println("-------------------------------------------------------------");
-        System.out.print("choix :");
+        System.out.print("choix : ");
 
         return in.nextInt();
     }
@@ -165,6 +174,8 @@ public class Interface_texte{
         // -------------------
         // Impression du menu   
         // -------------------
+        System.out.println("DOUANE");
+        System.out.println();
 
         System.out.println("Veuillez entrer votre choix :");
         System.out.println("-------------------------------------------------------------");
@@ -175,9 +186,16 @@ public class Interface_texte{
         System.out.println("4 - ");
         System.out.println("5 - quitter");
         System.out.println("-------------------------------------------------------------");
-        System.out.print("choix :");
+        System.out.print("choix : ");
 
         return in.nextInt();
+    }
+
+    public static void Pause(int n){
+        try{
+           Thread.sleep(n); 
+        }catch(Exception e){}
+
     }
 
     public static void choix_client(int choix){
@@ -185,24 +203,24 @@ public class Interface_texte{
             System.out.print("\033c"); //nettoyage de l'ecran
             System.out.println("Insertion d'un commande :");
             System.out.println("-------------------------------------------------------------");
-            System.out.println("Nombre de produit :");
+            System.out.print("Nombre de produit :");
             int total_colis = in.nextInt();
             HashMap<String,Integer> hb = new HashMap<String,Integer>();
             for (int i = 0; i < total_colis; i++){;
-                System.out.println("Réference du produit "+i+" :");
+                System.out.print("Réference du produit "+i+" :");
                 String produit = in.next();
-                System.out.println("Quantite: ");
+                System.out.print("Quantite: ");
                 int quantite = in.nextInt();
                 hb.put(produit,quantite);
             }
             System.out.println("-------------------------------------------------------------");
             System.out.println("Date de Livraison:");
             System.out.println("-------------------------------------------------------------");
-            System.out.println("Annéé:");
+            System.out.print("Annéé:");
             int year = in.nextInt();
-            System.out.println("Mois:");
+            System.out.print("Mois:");
             int mois = in.nextInt();
-            System.out.println("Jour:");
+            System.out.print("Jour:");
             int jour = in.nextInt();
             Calendar date = Calendar.getInstance();
             date.set(year,mois,jour);
@@ -210,6 +228,7 @@ public class Interface_texte{
                 System.out.println("Commande valide");
             else
                 System.out.println("Commande echoué");
+            Pause(1000);
         }
         else if(choix == 1){
             int [] taille = {5,20,21,10,22,22,22};
@@ -220,7 +239,7 @@ public class Interface_texte{
 
         }
         else if(choix == 2){
-            int [] taille = {16,60,10,7,5,5};
+            int [] taille = {16,78,10,7,5,17};
             String[] champ = {"référence","description","qualifiant","prix","poids","quantité restante"};
 
             affichage_less(co.listeProduitsRestants(),champ,taille,"Liste des Produit disponible :");
@@ -229,9 +248,20 @@ public class Interface_texte{
             System.out.print("\033c"); //nettoyage de l'ecran
             System.out.println("Changement de password :");
             System.out.println("-------------------------------------------------------------");
+            System.out.println("Authentification:");
+            String mdp = PasswordField.readPassword("Password : ");  
+            String t = co.connecteUtilisateur(Login,mdp);
+            System.out.println(Login+" "+mdp+" "+t);
+            if(t != null)
+                System.out.println("Authentification: validé");
+            else{
+                System.out.println("Authentification: rejeté");
+                Pause(1000);
+                return ;
+            }
+            System.out.println("-------------------------------------------------------------");
             System.out.print("Nouveau login :");
             String new_login = in.next();
-            String password = PasswordField.readPassword("Ancien Password : ");  
             String new_password = PasswordField.readPassword("Nouveaux Password : ");  
             if(co.changerLogin(Login,new_login)){
                 System.out.print("Changement Login effectuer");
@@ -241,12 +271,12 @@ public class Interface_texte{
                 System.out.print("Erreur lors du changement de login");
 
             }
-            if(co.changerMdp(new_login,password,new_password))
+            if(co.changerMdp(Login,mdp,new_password))
                 System.out.print("Changement Password effectuer:");
             else{
                 System.out.print("Erreur lors du changement de password");
             }
-
+            Pause(1000);
         }
     }
 
@@ -255,7 +285,7 @@ public class Interface_texte{
              System.out.print("\033c"); //nettoyage de l'ecran
             System.out.println("Changer situation d'une paletter");
             System.out.println("-------------------------------------------------------------");
-            System.out.print("Indentification de la palette:");
+            System.out.print("Indentification de la palette: ");
             int palette = in.nextInt();
             if(co.livrerPalette(palette))
                 System.out.println("Modification effectuer");
@@ -267,15 +297,15 @@ public class Interface_texte{
         else if(choix == 1){
             int [] taille = {5,20,21,10,22,22,22};
             String[] champ = {"id","id_commande","produits","état","date d'emballage","date d'expédition","date de livraison"};
-            System.out.print("Identifiant du colis :"); 
+            System.out.print("Identifiant du colis : "); 
             int colis = in.nextInt();
             affichage_less(co.infosColis(colis),champ,taille,"Information sur le colis :");
 
         }
         else if(choix == 0){
-            int [] taille = {5,20,21,10,22,22,22};
-            String[] champ = {"id","id_commande","produits","état","date d'emballage","date d'expédition","date de livraison"};
-            System.out.print("Identifiant de la commande:"); 
+            int [] taille = {5,15,20,25,10};
+            String[] champ = {"id","login client","produits","date de livraison prévue","frais"};
+            System.out.print("Identifiant de la commande: "); 
             int commande = in.nextInt();
             affichage_less(co.infosCommande(commande),champ,taille,"Information de la commande :");
         }
@@ -327,22 +357,24 @@ public class Interface_texte{
             else{
                 System.out.println("Modification echouer");
             }
+            Pause(1000);
 
         }
         else if(choix == 2){
-            int [] taille = {16,60,10,7,5,5,7};
+            int [] taille = {16,70,10,5,5,17,8};
             String[] champ = {"référence","description","qualifiant","prix","poids","quantité restante","quantite"};
             affichage_less(co.produitPlusVendu(),champ,taille,"Voir les produits les plus vendus :");
 
         }
         else if(choix == 3){
-            int [] taille = {10,10,20,20,7,9,9,6};
-            String[] champ = {"prénom","nom","adresse","ville","code postal","pays","téléphone","Total depensiés"};
+            int [] taille = {10,17,35,15,11,7,18,10};
+            String[] champ = {"login","nom","adresse","ville","code postal","pays","téléphone","Total dépensé"};
             affichage_less(co.listeClientsPlusDepensies(),champ,taille,"Voir les clients les plus dépensiés :");
 
         }
         else if(choix == 4){
             System.out.print("Pas Implementer"); 
+            Pause(1000);
         }
 
     }
@@ -377,6 +409,11 @@ public class Interface_texte{
             //affiche le contenu du LinkedListe
             do{
                 HashMap<String,Object> hb = liste.get(total);
+                Object[] so = hb.keySet().toArray();
+                for(int i =0 ; i< so.length;i++){
+                    //System.out.print(so[i].toString()+" ° ");
+                }
+                //System.out.println();
                 for(int i = 0; i < champ.length; i++){
                     String mot;
                     if(hb.get(champ[i]) != null)
@@ -384,37 +421,52 @@ public class Interface_texte{
                     else
                         mot = "null";
                     for ( int j = mot.length(); j < taille[i] ;j++){
-                        mot += " ";
+                        mot = " "+ mot;
                     }
                     System.out.print(mot+"| ");
                 }
                 System.out.println();
-                System.out.println(1%10+" "+ total+" "+(ligne % 10 == 0 )+" "+(total < liste.size()));
 
                 ligne++;
                 total++;
 
-            }while((!(ligne% 10 == 0 )) || (total > liste.size()));
-            System.out.println("-------------------------------------------------------------");
-            System.out.println("0 - Continuer");
-            System.out.println("1 - Quitter"); 
-            System.out.println("-------------------------------------------------------------");
-            System.out.print("choix :"); 
-            choix = in.nextInt(); 
+            }while((total < liste.size()) && (!(ligne% 15 == 0 )));
+            if(total < liste.size()){
+                System.out.println("-------------------------------------------------------------");
+                System.out.println("0 - Continuer");
+                System.out.println("1 - Quitter"); 
+                System.out.println("-------------------------------------------------------------");
+                System.out.print("choix : "); 
+                choix = in.nextInt(); 
+            }
+            else{
+                System.out.println("-------------------------------------------------------------");
+                System.out.println("1 - Quitter"); 
+                System.out.println("-------------------------------------------------------------");
+                System.out.print("choix : "); 
+                choix = in.nextInt(); 
+
+            }
         }
     }
 
     public static void affichage_less (HashMap<String,Object> hb, String[] champ,int[] taille, String req){
         int choix = -1;
+
         while(choix != 0){
             System.out.print("\033c"); //nettoyage de l'ecran
+            Object[] so = hb.keySet().toArray();
+            for(int i =0 ; i< so.length;i++){
+                System.out.print(so[i].toString()+" | ");
+            }
+            System.out.println();
             System.out.println(req);
             System.out.println("-------------------------------------------------------------");
             //affiche les nom de colonne
             for(int i = 0; i < champ.length; i++){
                 String mot = champ[i];
                 for ( int j = mot.length(); j < taille[i] ;j++){
-                    mot += " ";
+                    mot = " "+mot;
                 }
                 System.out.print(mot+"| ");
             }
@@ -433,9 +485,9 @@ public class Interface_texte{
             }
             System.out.println();
             System.out.println("-------------------------------------------------------------");
-            System.out.println("0 - Continuer");
+            System.out.println("0 - Quitter");
             System.out.println("-------------------------------------------------------------");
-            System.out.print("choix :"); 
+            System.out.print("choix : "); 
             choix = in.nextInt(); 
         }
     }
