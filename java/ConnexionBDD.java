@@ -579,6 +579,37 @@ p_err(e.getMessage());
         return null;
     }
 
+    /**
+     * Retourne une liste des produits associés à une commande
+     * @param id identifiant d'une commande
+     * @return 
+     **/
+    public LinkedList<HashMap<String,Object>> listerProduitsParCommande(int id) {
+        if (id <= 0) {
+            p_err("Id de commande négatif ou nul.");
+            return null;
+        }
+
+        String q = "SELECT ref_produit,quantite FROM commande_produits WHERE id_commande=?;";
+        try {
+            PreparedStatement ps = co.prepareStatement(q);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            LinkedList<HashMap<String,Object>> liste
+                = new LinkedList<HashMap<String,Object>>();
+
+            while (rs.next()) {
+                HashMap<String,Object> prod = infosProduit(rs.getString("ref_produit"));
+                prod.put("quantité demandée", rs.getInt("quantite"));
+            }
+            return liste;
+        }
+        catch (SQLException e) {
+            p_err(e.getMessage());
+        }
+        return null;
+    }
+
     // === Informations === //
 
     /**
