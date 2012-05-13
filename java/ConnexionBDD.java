@@ -1000,13 +1000,19 @@ public class ConnexionBDD {
             }
             result = ps.executeUpdate();
 
-            if (result < 1) {
-                return -1;
-            }
-
-            return id_palette;
+            return (result > 0) ? id_palette : -1;
         }
         catch (SQLException e) {}
+        return -1;
+    }
+
+    /**
+     * Crée un nouveau container et retourne son identifiant
+     * @param id_palettes identifiants des palettes
+     * @return identifiant du nouveau container ou -1 s'il y a
+     * eu un problème
+     **/
+    public int nouveauContainer(LinkedList<Integer> id_palettes) {
         return -1;
     }
 

@@ -590,4 +590,22 @@ public class ConnexionBDD_tests {
         assertNull(co.listerColisParCommande(0));
         assertNull(co.listerColisParCommande(-42));
     }
+
+    @Test
+    public void testNouveauContainerIdsPalettesNulles() {
+        assertEquals(-1, co.nouveauContainer(null));
+    }
+
+    @Test
+    public void testNouveauContainerIdsPalettesNegatives() {
+        LinkedList<Integer> palettes = new LinkedList<Integer>();
+        palettes.push(new Integer(-42));
+        assertEquals(-1, co.nouveauContainer(palettes));
+    }
+
+    @Test
+    public void testNouveauContainerPalettesVides() {
+        LinkedList<Integer> palettes = new LinkedList<Integer>();
+        assertEquals(-1, co.nouveauContainer(palettes));
+    }
 }
