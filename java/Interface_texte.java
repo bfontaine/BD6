@@ -215,7 +215,7 @@ public class Interface_texte{
             System.out.print("\033c"); //nettoyage de l'ecran
             System.out.println("Insertion d'un commande :");
             System.out.println("-------------------------------------------------------------");
-            int total_colis = priseEntier("Nombre de produit : ");
+            int total_colis = priseEntier("Nombre de produits : ");
             HashMap<String,Integer> hb = new HashMap<String,Integer>();
             for (int i = 0; i < total_colis; i++){
                 int quantite;
@@ -243,11 +243,20 @@ public class Interface_texte{
             Pause(1000);
         }
         else if(choix == 1){
-            int [] taille = {5,20,21,10,22,22,22};
-            String[] champ = {"id","id_commande","produits","état","date d'emballage","date d'expédition","date de livraison"};
-            int colis = priseEntier("Identifiant du colis : ");
-            affichage_less(co.infosColis(colis),champ,taille,"Information sur le colis :");
-
+            int [] taille = {5,15,25,10};
+            String[] champ = {"id","login client","date de livraison prévue","frais"};
+            affichage_less(co.listeCommandesClient(Login),champ,taille,"Information des commandes "+Login+" :");
+            int id_commande;
+            HashMap<String,Object> h;
+            do{
+                id_commande = priseEntier("Identification de la commande : ");
+                h = co.infosCommande(id_commande);
+                if(h == null)
+                    System.out.println("Commande non reconnu");
+            }while(h == null);
+            int [] taille_commande = {5,20,21,10,22,22,22};
+            String [] champ_commande = {"id","id commande","référence produit","qualifiant","date d'emballage","date d'expédition","date de livraison"};
+            affichage_less(co.listerColisParCommande(id_commande),champ_commande,taille_commande,"Information des colis de la commande :");
         }
         else if(choix == 2){
             int [] taille = {16,78,10,7,5,17};
@@ -496,9 +505,9 @@ public class Interface_texte{
                 HashMap<String,Object> hb = liste.get(total);
                 Object[] so = hb.keySet().toArray();
                 for(int i =0 ; i< so.length;i++){
-                    //System.out.print(so[i].toString()+" ° ");
+                    System.out.print(so[i].toString()+" ° ");
                 }
-                //System.out.println();
+                System.out.println();
                 for(int i = 0; i < champ.length; i++){
                     String mot;
                     if(hb.get(champ[i]) != null)
@@ -587,7 +596,7 @@ public class Interface_texte{
             String user = args[1];
             String mdp_bdd = args[2];
             //crée notre interface et la lance
-            co = new ConnexionBDD(nom_bdd, user, mdp_bdd);
+            co = new ConnexionBDD(nom_bdd, user, mdp_bdd,true);
             menuConnexion();
         }
     }
