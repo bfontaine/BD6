@@ -242,6 +242,9 @@ public class GenerateCommands {
          */
         System.out.println(palettes.size()+" palettes remplies.");
 
+        //TODO mettre les palettes dans les containers
+        //     et livrer les containers
+
         while (palettes.size() > 0) {
             co.livrerPalette(palettes.pop().intValue());
         }
