@@ -1135,6 +1135,44 @@ p_err(e.getMessage());
     public int nouveauContainer(LinkedList<Integer> id_palettes,
             String login_emballeur,
             String login_transporteur) {
+
+        if (id_palettes == null || id_palettes.size() == 0) {
+            return -1;
+        }
+
+        try {
+            PreparedStatement ps
+                = co.prepareStatement("INSERT INTO container (id_emballeur,id_transporteur) VALUES(?,?);");
+            ps.setString(1, login_emballeur);
+            ps.setString(2, login_transporteur);
+            int result = ps.executeUpdate();
+            if (result != 1) {
+                return -1;
+            }
+            ps = co.prepareStatement("SELECT last_value FROM container_id_seq;");
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                return -1;
+            }
+            int id_container = rs.getInt("last_value");
+
+            String q = "INSERT INTO container_palettes VALUES ("+id_container+",?)";
+
+            for (int i=1; i<id_palettes.size(); i++) {
+                q += ",("+id_container+",?)";
+            }
+
+            ps = co.prepareStatement(q+";");
+            for (int i=0; i<id_palettes.size(); i++) {
+                ps.setInt(i+1, id_palettes.get(i).intValue());
+            }
+            result = ps.executeUpdate();
+
+            return (result > 0) ? id_container : -1;
+        }
+        catch (SQLException e) {
+            p_err(e.getMessage());
+        }
         return -1;
     }
 
@@ -1216,6 +1254,31 @@ p_err(e.getMessage());
 
         return true;
     }
+
+    /**
+     * Livre toutes les palettes d'un container (et le supprime)
+     * @param id identifiant du container
+     * @return true si la livraison s'est déroulée avec succès
+     **/
+    /*
+    public boolean livrerContainer(int id) {
+
+        LinkedList<Integer> palettes = listeContainer(id); // <- n'existe pas
+
+        if (palettes == null) {
+            return false;
+        }
+
+        for (Integer i : palettes) {
+            if (!livrerPalette(i.intValue())) {
+                return false;
+            }
+        }
+        // la suppression est faite par un trigger
+
+        return true;
+    }
+    */
 
     // === Debug/Affichage === //
 
