@@ -107,4 +107,6 @@ Organisation
 La structure de la base de données et l'architecture générale du projet ont été
 choisies conjointement. David s'est principalement occupé des interfaces avec
 l'utilisateur (graphique et textuelle), tandis que Baptiste s'est occupé de
-l'interface du programme avec la base de données (schéma et *triggers* PostgreSQL). L'écriture des méthodes d'interaction avec la base de données s'est faite à deux.
+l'interface du programme avec la base de données (schéma et *triggers*
+PostgreSQL). L'écriture des méthodes d'interaction avec la base de données
+s'est faite à deux.
