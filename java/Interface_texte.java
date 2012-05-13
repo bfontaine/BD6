@@ -14,7 +14,20 @@ public class Interface_texte{
     static String Login;
 
     /**
-     * Imprime le menu de connection
+     * Demande un mot de passe à l'utilisateur
+     *@param prompt L'invite de commande à afficher
+     *@return le mot de passe entré par l'utilisateur
+     */
+    public static String readPassword(String prompt) {
+        try {
+            return new String(System.console().readPassword("%s", prompt));
+        }
+        catch (IOError e) {}
+        return "";
+    }
+
+    /**
+     * Affiche le menu de connection
      **/
     public static void menuConnexion(){
         String type;
@@ -25,11 +38,11 @@ public class Interface_texte{
             System.out.println("Connexion Projet BDD :");
             System.out.println("-------------------------------------------------------------");
             if(mdp_incorrect)
-                System.out.println("Login ou Password incorrect");
+                System.out.println("Login ou Mot de passe incorrect.");
 
             System.out.print("Utilisateur : ");
             Login = in.next();
-            String password = PasswordField.readPassword("Mot de passe : ");  
+            String password = readPassword("Mot de passe : ");  
 
             type = co.connecteUtilisateur(Login,password);
             if(type == null)
@@ -269,7 +282,7 @@ public class Interface_texte{
             System.out.println("Changement de mot de passe :");
             System.out.println("-------------------------------------------------------------");
             System.out.println("Authentification:");
-            String mdp = PasswordField.readPassword("Mot de passe : ");  
+            String mdp = readPassword("Mot de passe : ");  
             String t = co.connecteUtilisateur(Login,mdp);
             System.out.println(Login+" "+mdp+" "+t);
             if(t != null)
@@ -282,7 +295,7 @@ public class Interface_texte{
             System.out.println("-------------------------------------------------------------");
             System.out.print("Nouveau login :");
             String new_login = in.next();
-            String new_password = PasswordField.readPassword("Nouveaux mot de passe : ");  
+            String new_password = readPassword("Nouveau mot de passe : ");  
             if(co.changerLogin(Login,new_login)){
                 System.out.print("Changement Login effectué");
                 Login = new_login;
