@@ -462,6 +462,15 @@ public class ConnexionBDD_tests {
         assertEquals(id, ((Integer)colis.get("id")).intValue());
 
         assertEquals(hm, (HashMap<String,Integer>)colis.get("produits"));
+
+        assertTrue(colis.containsKey("date d'emballage"));
+        assertTrue(colis.containsKey("date d'expédition"));
+        assertTrue(colis.containsKey("date de livraison"));
+        assertTrue(colis.containsKey("état"));
+        assertTrue(colis.containsKey("qualifiant"));
+        assertTrue(colis.containsKey("id commande"));
+        assertTrue(colis.containsKey("id"));
+        assertTrue(colis.containsKey("produits"));
     }
 
     @Test
