@@ -38,7 +38,9 @@ fenetre: Interface/inter_princ.class
 
 # compile l'interface
 interface: Interface_texte.class
+	java Interface_texte bd6 ${USER} ${USER}
 
+#
 Interface/inter_princ.class: ${INTERFACE_DIR}/inter_princ.java
 	cd ${INTERFACE_DIR};javac -cp ${INTERFACE_CLASSPATH} inter_princ.java
 

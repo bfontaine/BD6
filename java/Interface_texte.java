@@ -1,10 +1,11 @@
 import java.io.*;
-import java.util.Scanner;
 import java.sql.*;
+import java.util.Scanner;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.LinkedList;
 import java.util.Calendar;
+import java.util.InputMismatchException;
 
 
 public class Interface_texte{
@@ -98,9 +99,8 @@ public class Interface_texte{
         System.out.println("3 - Changer son login/mdp");
         System.out.println("4 - quitter");
         System.out.println("-------------------------------------------------------------");
-        System.out.print("choix : ");
 
-        return in.nextInt();
+        return priseEntier("choix : ");
     }
 
     public static int menuGerant(){
@@ -114,16 +114,15 @@ public class Interface_texte{
 
         System.out.println("Veuillez entrer votre choix :");
         System.out.println("-------------------------------------------------------------");
-        System.out.println("0 - A accès à la liste des employés/clients");
+        System.out.println("0 - Accès à la liste des employés/clients");
         System.out.println("1 - Changer le prix des produits"); 
         System.out.println("2 - Voir les produits les plus vendus");
         System.out.println("3 - Voir les clients les plus depensiés");
         System.out.println("4 - Voir les employés les moins actifs");
         System.out.println("5 - quitter");
         System.out.println("-------------------------------------------------------------");
-        System.out.print("choix : ");
 
-        return in.nextInt();
+        return priseEntier("choix : ");
     }
 
     public static int  menuEmballeur(){
@@ -137,14 +136,13 @@ public class Interface_texte{
 
         System.out.println("Veuillez entrer votre choix :");
         System.out.println("-------------------------------------------------------------");
-        System.out.println("0 - Information sur un colis");
+        System.out.println("0 - Information sur les commandes d'un client");
         System.out.println("1 - Entrer les colis emballés"); 
         System.out.println("2 - Entrer les palettes préparées");
         System.out.println("3 - quitter");
         System.out.println("-------------------------------------------------------------");
-        System.out.print("choix : ");
 
-        return in.nextInt();
+        return priseEntier("choix : ");
     }
 
     public static int menuTransporteur(){
@@ -163,9 +161,8 @@ public class Interface_texte{
         System.out.println("2 - Changer situation du colis");
         System.out.println("3 - quitter");
         System.out.println("-------------------------------------------------------------");
-        System.out.print("choix : ");
 
-        return in.nextInt();
+        return priseEntier("choix : ");
     }
 
     public static int menuDouane(){
@@ -186,9 +183,8 @@ public class Interface_texte{
         System.out.println("4 - ");
         System.out.println("5 - quitter");
         System.out.println("-------------------------------------------------------------");
-        System.out.print("choix : ");
 
-        return in.nextInt();
+        return priseEntier("choix : ");
     }
 
     public static void Pause(int n){
@@ -198,33 +194,51 @@ public class Interface_texte{
 
     }
 
+    public static int priseEntier(String demande){
+        boolean valide = false ;
+        int valeur = -1;
+        do{
+            try{
+                System.out.print(demande);
+                valeur = in.nextInt();
+                in.nextLine();
+                valide = false;
+            }catch(InputMismatchException e){
+                System.out.println("Un entier est demandé");     
+                in.nextLine();
+                valide = true;
+            }
+        }while(valide);
+        return valeur;
+    }
+
     public static void choix_client(int choix){
         if(choix == 0){
             System.out.print("\033c"); //nettoyage de l'ecran
             System.out.println("Insertion d'un commande :");
             System.out.println("-------------------------------------------------------------");
-            System.out.print("Nombre de produit :");
-            int total_colis = in.nextInt();
+            int total_colis = priseEntier("Nombre de produit : ");
             HashMap<String,Integer> hb = new HashMap<String,Integer>();
-            for (int i = 0; i < total_colis; i++){;
-                System.out.print("Réference du produit "+i+" :");
-                String produit = in.next();
-                System.out.print("Quantite: ");
-                int quantite = in.nextInt();
-                hb.put(produit,quantite);
+            for (int i = 0; i < total_colis; i++){
+                int quantite;
+                String produit;
+                do{
+                    System.out.print("Réference du produit "+(i+1)+" :");
+                    produit = in.next();
+                    quantite = priseEntier("Quantite : ");
+                }while(!produitsExiste(produit,quantite));
+                    hb.put(produit,quantite);
             }
             System.out.println("-------------------------------------------------------------");
             System.out.println("Date de Livraison:");
             System.out.println("-------------------------------------------------------------");
-            System.out.print("Annéé:");
-            int year = in.nextInt();
-            System.out.print("Mois:");
-            int mois = in.nextInt();
-            System.out.print("Jour:");
-            int jour = in.nextInt();
+            int year = priseEntier("Année : ");
+            int mois = priseEntier("Mois : ");
+            int jour = priseEntier("Jours : ");
             Calendar date = Calendar.getInstance();
             date.set(year,mois,jour);
-            if(co.nouvelleCommande(Login,date,hb) > 0)
+            int id_commande = co.nouvelleCommande(Login,date,hb); 
+            if(id_commande > 0)
                 System.out.println("Commande valide");
             else
                 System.out.println("Commande echoué");
@@ -233,8 +247,7 @@ public class Interface_texte{
         else if(choix == 1){
             int [] taille = {5,20,21,10,22,22,22};
             String[] champ = {"id","id_commande","produits","état","date d'emballage","date d'expédition","date de livraison"};
-            System.out.print("Identifiant du colis :"); 
-            int colis = in.nextInt();
+            int colis = priseEntier("Identifiant du colis : ");
             affichage_less(co.infosColis(colis),champ,taille,"Information sur le colis :");
 
         }
@@ -285,28 +298,34 @@ public class Interface_texte{
              System.out.print("\033c"); //nettoyage de l'ecran
             System.out.println("Changer situation d'une paletter");
             System.out.println("-------------------------------------------------------------");
-            System.out.print("Indentification de la palette: ");
-            int palette = in.nextInt();
+            System.out.print("Identification de la palette: ");
+            int palette = priseEntier("Identification de la palette");
             if(co.livrerPalette(palette))
-                System.out.println("Modification effectuer");
+                System.out.println("Livraison palette "+palette+" effectuer");
             else{
-                System.out.println("Modification echouer");
+                System.out.println("Palette non reconnu");
             }
+            Pause(1000);
 
         }
         else if(choix == 1){
             int [] taille = {5,20,21,10,22,22,22};
-            String[] champ = {"id","id_commande","produits","état","date d'emballage","date d'expédition","date de livraison"};
-            System.out.print("Identifiant du colis : "); 
-            int colis = in.nextInt();
-            affichage_less(co.infosColis(colis),champ,taille,"Information sur le colis :");
+            String[] champ = {"id","id commande","référence produit","qualifiant","date d'emballage","date d'expédition","date de livraison"};
+            int colis;
+            HashMap<String,Object> hb;
+            do{
+                colis = priseEntier("Identifiant du colis : ");
+                hb = co.infosColis(colis);
+                if(hb == null)
+                    System.out.println("Colis non reconnu");
+            }while(hb == null);
+            affichage_less(hb,champ,taille,"Information sur le colis :");
 
         }
         else if(choix == 0){
             int [] taille = {5,15,20,25,10};
             String[] champ = {"id","login client","produits","date de livraison prévue","frais"};
-            System.out.print("Identifiant de la commande: "); 
-            int commande = in.nextInt();
+            int commande = priseEntier("Identifiant de la commande : ");
             affichage_less(co.infosCommande(commande),champ,taille,"Information de la commande :");
         }
     }
@@ -331,16 +350,18 @@ public class Interface_texte{
                 System.out.println("Choix du type"); 
                 System.out.println(" 0 - client"); 
                 System.out.println(" 1 - employer"); 
-                System.out.print("Choix :");
-                pers= in.nextInt();
+                pers= priseEntier("Choix : ");
             }while((pers < 0)&&(pers > 1));
             if(pers == 1){
+                int [] taille ={15,15,15,15};
+                String [] champ = {"login","prénom","nom","type"};
+                affichage_less(co.listeEmployes(),champ,taille,"Voir les clients les plus dépensiés :");
 
             }
             if(pers == 0){
-                int [] taille = {20,20,20,20,22,22,22,6};
-                String[] champ = {"prénom","nom","adresse","ville","code postal","pays","téléphone","Total depensiés"}; 
-                affichage_less(co.listeClientsPlusDepensies(),champ,taille,"Voir les clients les plus dépensiés :");
+                int [] taille = {10,16,34,16,11,10,18};
+                String[] champ = {"login","nom","adresse","ville","code postal","pays","téléphone"}; 
+                affichage_less(co.listeClients(),champ,taille,"Voir les clients les plus dépensiés :");
 
             }
         }
@@ -348,10 +369,13 @@ public class Interface_texte{
             System.out.print("\033c"); //nettoyage de l'ecran
             System.out.println("Changer Un prix de produit");
             System.out.println("-------------------------------------------------------------");
-            System.out.print("Identification du produit:");
-            String prod = in.next();
-            System.out.print("Nouveau prix du produit :");
-            float new_prix = in.nextInt();
+            String prod;
+            do{
+                System.out.print("Identification du produit: ");
+                prod = in.next();
+            }while(!produitsExiste(prod,0));
+            System.out.print("Nouveau prix du produit : ");
+            float new_prix = in.nextFloat();
             if(co.changePrix(prod,new_prix))
                 System.out.println("Modification effectuer");
             else{
@@ -367,8 +391,8 @@ public class Interface_texte{
 
         }
         else if(choix == 3){
-            int [] taille = {10,17,35,15,11,7,18,10};
-            String[] champ = {"login","nom","adresse","ville","code postal","pays","téléphone","Total dépensé"};
+            int [] taille = {10,16,34,16,11,10,18,13};
+            String[] champ = {"login","nom","adresse","ville","code postal","pays","téléphone","Total dépensé"}; 
             affichage_less(co.listeClientsPlusDepensies(),champ,taille,"Voir les clients les plus dépensiés :");
 
         }
@@ -386,6 +410,21 @@ public class Interface_texte{
         else if(choix == 1){
 
         }
+
+    }
+
+    public static boolean produitsExiste(String ref,int quantite){
+        HashMap<String,Object> hb = co.infosProduit(ref);
+        if(hb == null){
+            System.out.println("Le produit n'existe pas");
+            return false;
+        }
+        int quantite_max = ((Integer) hb.get("quantité restante")).intValue();
+        if(quantite > quantite_max){
+            System.out.println("Il ne reste "+quantite_max+" au produit "+ref);
+            return false;
+        }
+        return true;
 
     }
 
@@ -411,9 +450,9 @@ public class Interface_texte{
                 HashMap<String,Object> hb = liste.get(total);
                 Object[] so = hb.keySet().toArray();
                 for(int i =0 ; i< so.length;i++){
-                    //System.out.print(so[i].toString()+" ° ");
+                    System.out.print(so[i].toString()+" ° ");
                 }
-                //System.out.println();
+                System.out.println();
                 for(int i = 0; i < champ.length; i++){
                     String mot;
                     if(hb.get(champ[i]) != null)
@@ -436,15 +475,17 @@ public class Interface_texte{
                 System.out.println("0 - Continuer");
                 System.out.println("1 - Quitter"); 
                 System.out.println("-------------------------------------------------------------");
-                System.out.print("choix : "); 
-                choix = in.nextInt(); 
+                do{
+                    choix = priseEntier("choix : "); 
+                }while((choix != 0 )&&( choix != 1));
             }
             else{
                 System.out.println("-------------------------------------------------------------");
                 System.out.println("1 - Quitter"); 
                 System.out.println("-------------------------------------------------------------");
-                System.out.print("choix : "); 
-                choix = in.nextInt(); 
+                do{
+                    choix = priseEntier("choix : "); 
+                }while(( choix != 1));
 
             }
         }
@@ -462,11 +503,11 @@ public class Interface_texte{
             System.out.println();
             System.out.println(req);
             System.out.println("-------------------------------------------------------------");
-            //affiche les nom de colonne
+            //affiche le nom de colonne
             for(int i = 0; i < champ.length; i++){
                 String mot = champ[i];
                 for ( int j = mot.length(); j < taille[i] ;j++){
-                    mot = " "+mot;
+                    mot+= " ";
                 }
                 System.out.print(mot+"| ");
             }
@@ -479,7 +520,7 @@ public class Interface_texte{
                 else
                     mot = "null";
                 for ( int j = mot.length(); j < taille[i] ;j++){
-                    mot += " ";
+                    mot = " "+mot;
                 }
                 System.out.print(mot+"| ");
             }
@@ -487,8 +528,9 @@ public class Interface_texte{
             System.out.println("-------------------------------------------------------------");
             System.out.println("0 - Quitter");
             System.out.println("-------------------------------------------------------------");
-            System.out.print("choix : "); 
-            choix = in.nextInt(); 
+            do{
+                choix = priseEntier("choix : "); 
+            }while((choix != 0 ));
         }
     }
 
