@@ -510,7 +510,7 @@ public class ConnexionBDD {
             return null;
         }
         String q = "SELECT id_commande,date_emballage,date_expedie,date_livraison";
-        q += ",etat FROM colis WHERE id=?;";
+        q += ",etat,qualifiant FROM colis WHERE id=?;";
 
         try {
             PreparedStatement ps = co.prepareStatement(q);
@@ -528,6 +528,7 @@ public class ConnexionBDD {
             c.put("date d'expédition", rs.getDate("date_expedie"));
             c.put("date de livraison", rs.getDate("date_livraison"));
             c.put("état", rs.getString("etat"));
+            c.put("qualifiant", rs.getString("qualifiant"));
             c.put("id commande", rs.getInt("id_commande"));
             c.put("id", id);
             c.put("produits", produits);
