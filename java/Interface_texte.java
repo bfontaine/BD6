@@ -243,8 +243,8 @@ public class Interface_texte{
             Pause(1000);
         }
         else if(choix == 1){
-            int [] taille = {5,15,25,10};
-            String[] champ = {"id","login client","date de livraison prévue","frais"};
+            int [] taille = {5,15,15,15,10};
+            String[] champ = {"id","date de commande","date de livraison prévue","date de livraison","frais"};
             affichage_less(co.listeCommandesClient(Login),champ,taille,"Information des commandes "+Login+" :");
             int id_commande;
             HashMap<String,Object> h;
@@ -501,13 +501,8 @@ public class Interface_texte{
             }
             System.out.println();
             //affiche le contenu du LinkedListe
-            do{
+            while((total < liste.size()) && (!(ligne% 15 == 0 ))){
                 HashMap<String,Object> hb = liste.get(total);
-                Object[] so = hb.keySet().toArray();
-                for(int i =0 ; i< so.length;i++){
-                    System.out.print(so[i].toString()+" ° ");
-                }
-                System.out.println();
                 for(int i = 0; i < champ.length; i++){
                     String mot;
                     if(hb.get(champ[i]) != null)
@@ -524,7 +519,7 @@ public class Interface_texte{
                 ligne++;
                 total++;
 
-            }while((total < liste.size()) && (!(ligne% 15 == 0 )));
+            }
             if(total < liste.size()){
                 System.out.println("-------------------------------------------------------------");
                 System.out.println("0 - Continuer");
@@ -551,10 +546,6 @@ public class Interface_texte{
 
         while(choix != 0){
             System.out.print("\033c"); //nettoyage de l'ecran
-            Object[] so = hb.keySet().toArray();
-            for(int i =0 ; i< so.length;i++){
-                System.out.print(so[i].toString()+" | ");
-            }
             System.out.println();
             System.out.println(req);
             System.out.println("-------------------------------------------------------------");
