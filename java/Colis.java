@@ -1,3 +1,3 @@
-class Colis {
+class Colis extends ObjetBDD {
 
 }

@@ -1,3 +1,3 @@
-class Produit {
+class Produit extends ObjetBDD {
 
 }

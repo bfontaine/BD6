@@ -1,3 +1,3 @@
-class Catalogue {
+class Catalogue extends ObjetBDD {
 
 }
