@@ -8,7 +8,7 @@ USER=$(shell whoami)
 CLASSPATH=.:./${PG_DRIVER_NAME}
 TESTS_CLASSPATH=${CLASSPATH}:/usr/share/java/junit4.jar
 
-INTERFACE_DIR=$(shell pwd)/Interface
+INTERFACE_DIR=$(shell pwd)/Interface_graphique
 INTERFACE_CLASSPATH=.:..:../${PG_DRIVER_NAME}
 
 # remplie la bdd
@@ -34,7 +34,7 @@ fenetretest: interface
 
 
 #
-fenetre: Interface/inter_princ.class
+fenetre: ${INTERFACE_DIR}/inter_princ.class
 
 # compile l'interface
 interface: Interface_texte.class
