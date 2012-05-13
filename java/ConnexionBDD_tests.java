@@ -584,4 +584,10 @@ public class ConnexionBDD_tests {
 
         assertTrue(co.livrerColis(id));
     }
+
+    @Test
+    public void testListeColisCommandeIdNegatif() {
+        assertNull(co.listerColisParCommande(0));
+        assertNull(co.listerColisParCommande(-42));
+    }
 }

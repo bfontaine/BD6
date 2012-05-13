@@ -348,17 +348,6 @@ public class ConnexionBDD {
                         return null;
                     }
                     hm.put("produits", rs2.getInt(1));
-
-                    //TODO ajouter le total (prix) commandé
-                    /*
-                         Récupérer les frais d'une commande:
-                         SELECT (SELECT SUM(frais) FROM commande WHERE
-                                 id=cp.id_commande) AS frais, id_commande
-                         FROM commande_produits AS cp GROUP BY id_commande;
-
-                         à faire: y associer les refs des produits concernés, et de là
-                         récupérer la somme dépensée.
-                    */
                 }
 
                 liste.add(hm);
@@ -490,6 +479,33 @@ public class ConnexionBDD {
                 if (cmd != null) {
                     liste.push(cmd);
                 }
+            }
+            return liste;
+        }
+        catch (SQLException e) {}
+        return null;
+    }
+
+    /**
+     * Retourne une liste des colis associés à une commande
+     * @param id identifiant d'une commande
+     * @return 
+     **/
+    public LinkedList<HashMap<String,Object>> listerColisParCommande(int id) {
+        if (id <= 0) {
+            return null;
+        }
+
+        String q = "SELECT id FROM colis WHERE id_commande=?;";
+        try {
+            PreparedStatement ps = co.prepareStatement(q);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            LinkedList<HashMap<String,Object>> liste
+                = new LinkedList<HashMap<String,Object>>();
+
+            while (rs.next()) {
+                liste.push(infosColis(rs.getInt("id")));
             }
             return liste;
         }
