@@ -1009,10 +1009,26 @@ public class ConnexionBDD {
     /**
      * Crée un nouveau container et retourne son identifiant
      * @param id_palettes identifiants des palettes
+     * @param login_emballeur login de l'emballeur
      * @return identifiant du nouveau container ou -1 s'il y a
      * eu un problème
      **/
-    public int nouveauContainer(LinkedList<Integer> id_palettes) {
+    public int nouveauContainer(LinkedList<Integer> id_palettes,
+                                    String login_emballeur) {
+        return nouveauContainer(id_palettes, login_emballeur, null);
+    }
+
+    /**
+     * Crée un nouveau container et retourne son identifiant
+     * @param id_palettes identifiants des palettes
+     * @param login_emballeur login de l'emballeur
+     * @param login_transporteur login du transporteur
+     * @return identifiant du nouveau container ou -1 s'il y a
+     * eu un problème
+     **/
+    public int nouveauContainer(LinkedList<Integer> id_palettes,
+                                    String login_emballeur,
+                                    String login_transporteur) {
         return -1;
     }
 
