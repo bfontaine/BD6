@@ -107,6 +107,7 @@ public class ConnexionBDD {
      **/
     public boolean changePrix(String ref, float nouveauPrix) {
         if (nouveauPrix < 0) {
+            p_err("Nouveau prix négatif.");
             return false;
         }
 
@@ -130,8 +131,8 @@ public class ConnexionBDD {
      * la nouvelle quantité est négative)
      **/
     public boolean changerQuantiteProduit(String ref, int nouvelleQuantite) {
-
         if (nouvelleQuantite < 0) {
+            p_err("Nouvelle quantité négative.");
             return false;
         }
 
@@ -144,7 +145,7 @@ public class ConnexionBDD {
             return (result == 1);
 
         } catch (SQLException e) {
-p_err(e.getMessage());
+            p_err(e.getMessage());
             return false;
         }
     }
@@ -191,6 +192,7 @@ p_err(e.getMessage());
     public boolean changerMdp(String login, String ancienMdp, String nouveauMdp) {
 
         if (login == null || ancienMdp == null || nouveauMdp == null) {
+            p_err("Login ou Mdp null.");
             return false;
         } else if (ancienMdp.equals(nouveauMdp)) {
             return true;
@@ -235,8 +237,10 @@ p_err(e.getMessage());
      **/
     public LinkedList<HashMap<String,Object>> listeEmployes(String type) {
 
-        if (type == null)
+        if (type == null) {
+            p_err("type d'employé vide.");
             return null;
+        }
 
         PreparedStatement ps = null;
         String q = "SELECT prenom,nom,login,type_personne FROM personne";
@@ -258,7 +262,7 @@ p_err(e.getMessage());
             }
             rs = ps.executeQuery();
         } catch (SQLException e) {
-p_err(e.getMessage());
+            p_err(e.getMessage());
             return null;
         }
 
@@ -277,7 +281,7 @@ p_err(e.getMessage());
                 liste.add(hm);
             }
         } catch (SQLException e) {
-p_err(e.getMessage());
+            p_err(e.getMessage());
             return null;
         }
 
@@ -309,7 +313,9 @@ p_err(e.getMessage());
                 int depense = rs.getInt("fs") + rs.getInt("px");
                 hm.put("Total dépensé",new Integer(depense));
             }
-        }catch(SQLException e){}
+        }catch(SQLException e) {
+            p_err(e.getMessage());
+        }
         return liste;
     }
 
@@ -344,7 +350,7 @@ p_err(e.getMessage());
             ps = co.prepareStatement(q);
             rs = ps.executeQuery();
         } catch (SQLException e) {
-p_err(e.getMessage());
+            p_err(e.getMessage());
             return null;
         }
 
@@ -370,10 +376,9 @@ p_err(e.getMessage());
                     ps = co.prepareStatement(q);
                     ps.setString(1, login);
                     rs2 = ps.executeQuery();
-                    if (!rs2.next()) {
-                        return null;
+                    if (rs2.next()) {
+                        hm.put("commandes", rs2.getInt(1));
                     }
-                    hm.put("commandes", rs2.getInt(1));
 
                     q = "SELECT COUNT(*) FROM commande_produits WHERE";
                     q += " id_commande = ANY (SELECT id FROM commande WHERE";
@@ -382,15 +387,14 @@ p_err(e.getMessage());
                     ps.setString(1, login);
                     rs2 = ps.executeQuery();
                     if (!rs2.next()) {
-                        return null;
+                        hm.put("produits", rs2.getInt(1));
                     }
-                    hm.put("produits", rs2.getInt(1));
                 }
 
                 liste.add(hm);
             }
         } catch (SQLException e) {
-p_err(e.getMessage());
+            p_err(e.getMessage());
             return null;
         }
 
@@ -537,6 +541,7 @@ p_err(e.getMessage());
      **/
     public LinkedList<HashMap<String,Object>> listerColisParCommande(int id) {
         if (id <= 0) {
+            p_err("Id de commande négatif ou nul.");
             return null;
         }
 
