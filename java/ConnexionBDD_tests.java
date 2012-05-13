@@ -17,6 +17,22 @@ public class ConnexionBDD_tests {
     private static int cmdOk = 0; // initialisé plus tard
     
     @Test
+    public void testCreationAfficheErreurs() {
+        String username = System.getProperty("user.name");
+        try {
+            co = new ConnexionBDD(username, username, true);
+        }
+        catch(SQLException e) {
+            fail("SQLException: "+e.getMessage());
+        }
+        catch (ClassNotFoundException e) {
+            fail("ClassNotFoundException: "+e.getMessage());
+        }
+
+        assertNotNull(co);
+    }
+    
+    @Test
     public void testCreation() {
         String username = System.getProperty("user.name");
         try {

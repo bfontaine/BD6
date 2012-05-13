@@ -11,6 +11,8 @@ import java.util.Calendar;
 public class ConnexionBDD {
     private Connection co; //la connexion à la base
 
+    private boolean err_print = false;
+
     /**
      * Types autorisés pour les personnes
      **/
@@ -23,7 +25,7 @@ public class ConnexionBDD {
         typePersonnes.add("gerant");
         typePersonnes.add("transporteur");
     }
-    
+
     /**
      * Crée une nouvelle connexion à une base de données locale donnée
      * @param bd nom de la base de données
@@ -34,17 +36,41 @@ public class ConnexionBDD {
         Class.forName("org.postgresql.Driver");
         co = DriverManager.getConnection("jdbc:postgresql://localhost/"+bd,utilisateur,mdp); 
     }
-    
+
+    /**
+     * Crée une nouvelle connexion à une base de données locale donnée
+     * @param bd nom de la base de données
+     * @param utilisateur nom de l'utilisateur
+     * @param mdp mot de passe
+     * @param err_print <code>true</code> si l'affichage des erreurs est activé
+     **/
+    public ConnexionBDD(String bd, String utilisateur, String mdp, boolean err_print)
+            throws SQLException, ClassNotFoundException {
+        this(bd, utilisateur, mdp);
+        this.err_print = err_print;
+    }
+
     /**
      * Crée une nouvelle connexion à la base de données 'bd6'
      * @param utilisateur nom de l'utilisateur
      * @param mdp mot de passe
      **/
     public ConnexionBDD(String utilisateur, String mdp) throws SQLException, ClassNotFoundException {
-        Class.forName("org.postgresql.Driver");
-        co = DriverManager.getConnection("jdbc:postgresql://localhost/bd6",utilisateur,mdp); 
+        this("bd6", utilisateur, mdp);
     }
-    
+
+    /**
+     * Crée une nouvelle connexion à la base de données 'bd6'
+     * @param utilisateur nom de l'utilisateur
+     * @param mdp mot de passe
+     * @param err_print <code>true</code> si l'affichage des erreurs est activé
+     **/
+    public ConnexionBDD(String utilisateur, String mdp, boolean err_print)
+            throws SQLException, ClassNotFoundException {
+        this("bd6", utilisateur, mdp);
+        this.err_print = err_print;
+    }
+
     /**
      * Teste si la connexion de l'utilisateur donné est acceptée
      * @param login login de l'utilisateur
@@ -65,6 +91,7 @@ public class ConnexionBDD {
             return rs.getString("type_personne");
 
         } catch (SQLException e) {
+            p_err(e.getMessage());
             return null;
         }
     }
@@ -79,8 +106,9 @@ public class ConnexionBDD {
      * référence est mauvaise, et/ou le prix négatif.
      **/
     public boolean changePrix(String ref, float nouveauPrix) {
-        if (nouveauPrix < 0)
+        if (nouveauPrix < 0) {
             return false;
+        }
 
         try {
             PreparedStatement ps = co.prepareStatement("UPDATE catalogue SET prix=? WHERE ref=?;");
@@ -89,6 +117,7 @@ public class ConnexionBDD {
             return (ps.executeUpdate() > 0);
 
         } catch (SQLException e) {
+            p_err(e.getMessage());
             return false;
         }
     }
@@ -101,7 +130,7 @@ public class ConnexionBDD {
      * la nouvelle quantité est négative)
      **/
     public boolean changerQuantiteProduit(String ref, int nouvelleQuantite) {
-        
+
         if (nouvelleQuantite < 0) {
             return false;
         }
@@ -115,6 +144,7 @@ public class ConnexionBDD {
             return (result == 1);
 
         } catch (SQLException e) {
+p_err(e.getMessage());
             return false;
         }
     }
@@ -144,7 +174,9 @@ public class ConnexionBDD {
 
             return (result == 1);
         }
-        catch (SQLException e) {}
+        catch (SQLException e) {
+            p_err(e.getMessage());
+        }
 
         return false;
     }
@@ -177,7 +209,9 @@ public class ConnexionBDD {
 
             return (result == 1);
         }
-        catch (SQLException e) {}
+        catch (SQLException e) {
+            p_err(e.getMessage());
+        }
 
         return false;
     }
@@ -216,7 +250,7 @@ public class ConnexionBDD {
         q += " ORDER BY nom";
 
         ResultSet rs = null;
-        
+
         try {
             ps = co.prepareStatement(q+";");
             if (!type.equals("tous")) {
@@ -224,6 +258,7 @@ public class ConnexionBDD {
             }
             rs = ps.executeQuery();
         } catch (SQLException e) {
+p_err(e.getMessage());
             return null;
         }
 
@@ -242,6 +277,7 @@ public class ConnexionBDD {
                 liste.add(hm);
             }
         } catch (SQLException e) {
+p_err(e.getMessage());
             return null;
         }
 
@@ -303,11 +339,12 @@ public class ConnexionBDD {
 
         ResultSet rs = null;
         ResultSet rs2 = null;
-        
+
         try {
             ps = co.prepareStatement(q);
             rs = ps.executeQuery();
         } catch (SQLException e) {
+p_err(e.getMessage());
             return null;
         }
 
@@ -353,6 +390,7 @@ public class ConnexionBDD {
                 liste.add(hm);
             }
         } catch (SQLException e) {
+p_err(e.getMessage());
             return null;
         }
 
@@ -394,7 +432,7 @@ public class ConnexionBDD {
         }
 
         ResultSet rs = null;
-        
+
         try {
             ps = co.prepareStatement(q+";");
             if (quantiteMin >= 0) {
@@ -402,6 +440,7 @@ public class ConnexionBDD {
             }
             rs = ps.executeQuery();
         } catch (SQLException e) {
+p_err(e.getMessage());
             return null;
         }
 
@@ -422,6 +461,7 @@ public class ConnexionBDD {
                 liste.add(hm);
             }
         } catch (SQLException e) {
+p_err(e.getMessage());
             return null;
         }
 
@@ -451,11 +491,13 @@ public class ConnexionBDD {
             }
             return liste;
         }
-        catch (SQLException e) {}
+        catch (SQLException e) {
+            p_err(e.getMessage());
+        }
 
         return null;
     }
-    
+
     /**
      * Retourne une liste de commandes que le client a
      * fait.
@@ -482,7 +524,9 @@ public class ConnexionBDD {
             }
             return liste;
         }
-        catch (SQLException e) {}
+        catch (SQLException e) {
+            p_err(e.getMessage());
+        }
         return null;
     }
 
@@ -509,7 +553,9 @@ public class ConnexionBDD {
             }
             return liste;
         }
-        catch (SQLException e) {}
+        catch (SQLException e) {
+            p_err(e.getMessage());
+        }
         return null;
     }
 
@@ -546,6 +592,7 @@ public class ConnexionBDD {
             return hm;
 
         } catch (SQLException e) {
+p_err(e.getMessage());
             return null;
         }
     }
@@ -601,7 +648,9 @@ public class ConnexionBDD {
 
             return c;
         }
-        catch (SQLException e) {}
+        catch (SQLException e) {
+            p_err(e.getMessage());
+        }
         return null;
     }
 
@@ -636,7 +685,9 @@ public class ConnexionBDD {
             } while (rs.next());
             return hm;
         }
-        catch (SQLException e) {}
+        catch (SQLException e) {
+            p_err(e.getMessage());
+        }
         return null;
     }
 
@@ -705,7 +756,9 @@ public class ConnexionBDD {
 
             return retour;
         }
-        catch (SQLException e) {}
+        catch (SQLException e) {
+            p_err(e.getMessage());
+        }
 
         return null;
     }
@@ -726,7 +779,7 @@ public class ConnexionBDD {
      * ajout dans les tables "client" ou "douane".
      **/
     public boolean nouvellePersonne(String prenom, String nom,
-                                      String login, String mdp, String type) {
+            String login, String mdp, String type) {
 
         if (!typePersonnes.contains(type)) {
             return false;
@@ -745,6 +798,7 @@ public class ConnexionBDD {
             return (result > 0);
         }
         catch (SQLException e) {
+p_err(e.getMessage());
             return false;
         }
     }
@@ -759,12 +813,12 @@ public class ConnexionBDD {
      * @return l'identifiant de la commande, ou -1 si il y a eu une erreur
      **/
     public int nouvelleCommande(String client, Calendar date_prevue,
-                                        HashMap<String, Integer> produits) {
+            HashMap<String, Integer> produits) {
 
         return nouvelleCommande(client, Calendar.getInstance(),
-                                    date_prevue, produits);
+                date_prevue, produits);
     }
-    
+
     /**
      * Crée une nouvelle commande
      * @param client login du client
@@ -775,7 +829,7 @@ public class ConnexionBDD {
      * @return l'identifiant de la commande, ou -1 si il y a eu une erreur
      **/
     public int nouvelleCommande(String client, Calendar date_commande,
-                    Calendar date_prevue, HashMap<String, Integer> produits) {
+            Calendar date_prevue, HashMap<String, Integer> produits) {
 
         if (produits.size() == 0) {
             return -1;
@@ -793,12 +847,12 @@ public class ConnexionBDD {
         }
 
         /*
-         Frais de commande:
-            a = nombre d'heures entre la date de commande et la date prévue
-            frais = max( 100, 2*e^(11-log10(1000*a)) )
-            (en gros, =100 pour une date éloignée, >100 pour une date plus
-            proche)
-         */
+           Frais de commande:
+           a = nombre d'heures entre la date de commande et la date prévue
+           frais = max( 100, 2*e^(11-log10(1000*a)) )
+           (en gros, =100 pour une date éloignée, >100 pour une date plus
+           proche)
+           */
         long a = (dc-dp)/3600;
         float frais = (float)(Math.max(100, 2*Math.exp(12-Math.log10(a))));
 
@@ -827,7 +881,7 @@ public class ConnexionBDD {
             }
 
             int reserve, i, quantite, id_cmd = rs.getInt(1);
-            
+
             String checkCatalogue = "SELECT quantite_restante FROM catalogue";
             checkCatalogue += " WHERE ref=? LIMIT 1;";
             PreparedStatement ps2;
@@ -861,10 +915,10 @@ public class ConnexionBDD {
                 ps.setString(i+1, ref);
 
                 if (   (quantite <= 0)
-                    || (reserve < quantite)
-                    || (!changerQuantiteProduit(ref, reserve-quantite))) {
+                        || (reserve < quantite)
+                        || (!changerQuantiteProduit(ref, reserve-quantite))) {
                     return -1;
-                }
+                        }
 
                 ps.setInt(i+2, quantite);
 
@@ -877,7 +931,9 @@ public class ConnexionBDD {
                 return id_cmd;
             }
         }
-        catch (SQLException e) {}
+        catch (SQLException e) {
+            p_err(e.getMessage());
+        }
         return -1;
     }
 
@@ -899,7 +955,7 @@ public class ConnexionBDD {
      * @return identifiant du produit, ou -1 s'il y a eu un problème
      **/
     public int nouveauColis(Calendar date_emballage, int id_commande,
-                                        HashMap<String,Integer> produits) {
+            HashMap<String,Integer> produits) {
 
         if (id_commande <= 0 || produits == null || produits.isEmpty()) {
             return -1;
@@ -957,7 +1013,9 @@ public class ConnexionBDD {
 
             return id_colis;
         }
-        catch (SQLException e) {}
+        catch (SQLException e) {
+            p_err(e.getMessage());
+        }
 
         return -1;
     }
@@ -1002,7 +1060,9 @@ public class ConnexionBDD {
 
             return (result > 0) ? id_palette : -1;
         }
-        catch (SQLException e) {}
+        catch (SQLException e) {
+            p_err(e.getMessage());
+        }
         return -1;
     }
 
@@ -1014,7 +1074,7 @@ public class ConnexionBDD {
      * eu un problème
      **/
     public int nouveauContainer(LinkedList<Integer> id_palettes,
-                                    String login_emballeur) {
+            String login_emballeur) {
         return nouveauContainer(id_palettes, login_emballeur, null);
     }
 
@@ -1027,8 +1087,8 @@ public class ConnexionBDD {
      * eu un problème
      **/
     public int nouveauContainer(LinkedList<Integer> id_palettes,
-                                    String login_emballeur,
-                                    String login_transporteur) {
+            String login_emballeur,
+            String login_transporteur) {
         return -1;
     }
 
@@ -1053,6 +1113,7 @@ public class ConnexionBDD {
             return (result > 0);
         }
         catch (SQLException e) {
+p_err(e.getMessage());
             return false;
         }
     }
@@ -1079,7 +1140,9 @@ public class ConnexionBDD {
 
             return (result == 1);
         }
-        catch (SQLException e) {}
+        catch (SQLException e) {
+            p_err(e.getMessage());
+        }
 
         return false;
     }
@@ -1106,5 +1169,23 @@ public class ConnexionBDD {
         // la suppression est faite par un trigger
 
         return true;
+    }
+
+    // === Debug/Affichage === //
+
+    /**
+     * Affiche sur STDERR si l'option <code>err_print</code> a été intialisée
+     * à <code>true</code> lors de la création de l'objet
+     **/
+    private void p_err(Object... objs) {
+        if (objs == null) {
+            return;
+        }
+        if (this.err_print) {
+            for (int i=0; i<objs.length; i++) {
+                System.err.print(objs[i]);
+            }
+            System.err.println("");
+        }
     }
 }
