@@ -99,7 +99,7 @@ Améliorations
 À cause des projets dans les autres matières et du peu de temps accordé pour
 élaborer ce projet, nous n'avons pas pu le terminer entièrement; même s'il est
 fonctionnel, il manque quelques fonctionnalités que nous n'avons pas pu
-implémenter.
+implémenter, comme l'interface pour la douane.
 
 Organisation
 ============
