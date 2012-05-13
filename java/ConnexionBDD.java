@@ -736,13 +736,24 @@ p_err(e.getMessage());
      * @param id l'identifiant de la commande
      **/
     public HashMap<String,Object> infosCommande(int id) {
+        return infosCommande(id, false);
+    }
+
+    /**
+     * Retourne des informations sur la commande (date de commande, date
+     * de livraison prévue, produits, colis concernés, login du client)
+     * @param id l'identifiant de la commande
+     * @param pretty <code>true</code> si le retour doit être préparé
+     * pour l'affichage
+     **/
+    public HashMap<String,Object> infosCommande(int id, boolean pretty) {
 
         if (id <= 0) {
             return null;
         }
 
         String q = "SELECT id_client,date_livree,date_commande,date_prevue,frais";
-        q += " FROM commande WHERE id=? LIMIT 1;";
+        q += ",prix FROM commande WHERE id=? LIMIT 1;";
 
         try {
             PreparedStatement ps = co.prepareStatement(q);
@@ -757,10 +768,24 @@ p_err(e.getMessage());
             HashMap<String,Object> retour = new HashMap<String,Object>();
 
             retour.put("id", id);
-            retour.put("date de commande", rs.getDate("date_commande"));
-            retour.put("date de livraison prévue", rs.getDate("date_prevue"));
-            retour.put("date de livraison", rs.getDate("date_livree"));
+            if (!pretty) {
+                retour.put("date de commande", rs.getDate("date_commande"));
+                retour.put("date de livraison prévue", rs.getDate("date_prevue"));
+                retour.put("date de livraison", rs.getDate("date_livree"));
+            } else {
+                retour.put("date de commande", rs.getString("date_commande"));
+                
+                String date_prevue = rs.getString("date_prevue");
+                String date_livraison = rs.getString("date_livree");
+
+                if (date_livraison.equals("null")) {
+                    retour.put("date de livraison prévue", date_prevue);
+                } else {
+                    retour.put("date de livraison", date_livraison);
+                }
+            }
             retour.put("frais", rs.getFloat("frais"));
+            retour.put("prix", rs.getFloat("prix"));
             retour.put("login client", rs.getString("id_client"));
 
             return retour;
