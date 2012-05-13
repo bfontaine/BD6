@@ -515,17 +515,20 @@ p_err(e.getMessage());
 
         String q = "SELECT id FROM commande WHERE id_client=?";
         LinkedList<HashMap<String,Object>> liste
-            = new LinkedList<HashMap<String,Object>>();
+                = new LinkedList<HashMap<String,Object>>();
         try {
             PreparedStatement ps = co.prepareStatement(q);
             ps.setString(1, login);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
+            if (!rs.next()) {
+                return null;
+            }
+            do {
                 HashMap<String,Object> cmd = infosCommande(rs.getInt("id"));
                 if (cmd != null) {
                     liste.push(cmd);
                 }
-            }
+            } while (rs.next());
             return liste;
         }
         catch (SQLException e) {
