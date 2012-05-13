@@ -11,6 +11,9 @@ import java.util.Calendar;
 public class ConnexionBDD {
     private Connection co; //la connexion à la base
 
+    /**
+     * Types autorisés pour les personnes
+     **/
     private static HashSet<String> typePersonnes = new HashSet<String>();
 
     static {
@@ -672,7 +675,7 @@ public class ConnexionBDD {
             } while (rs.next());
 
             // colis associés à cette commande
-            q = "SELECT id,date_emballage,date_expedie,date_livraison,etat FROM colis";
+            q = "SELECT id,date_emballage,date_expedie,date_livraison,etat,qualifiant FROM colis";
             q += " WHERE id_commande=?;";
             ps = co.prepareStatement(q);
             ps.setInt(1, id);
@@ -689,6 +692,7 @@ public class ConnexionBDD {
                 c.put("date d'expédition", rs.getDate("date_expedie"));
                 c.put("date de livraison", rs.getDate("date_livraison"));
                 c.put("état", rs.getString("etat"));
+                c.put("qualifiant", rs.getString("qualifiant"));
                 c.put("id", rs.getString("id"));
 
                 colis.push(c);
