@@ -17,8 +17,6 @@ public class Interface_texte{
      * Imprime le menu de connection
      **/
     public static void menuConnexion(){
-
-        System.out.print("\033c"); //nettoyage de l'ecran
         String type;
         boolean mdp_incorrect = false; 
 
@@ -295,10 +293,9 @@ public class Interface_texte{
 
     public static void choix_transporteur(int choix){
         if(choix == 2){
-             System.out.print("\033c"); //nettoyage de l'ecran
-            System.out.println("Changer situation d'une paletter");
+            System.out.print("\033c"); //nettoyage de l'ecran
+            System.out.println("Changer situation d'une palette");
             System.out.println("-------------------------------------------------------------");
-            System.out.print("Identification de la palette: ");
             int palette = priseEntier("Identification de la palette");
             if(co.livrerPalette(palette))
                 System.out.println("Livraison palette "+palette+" effectuer");
@@ -335,10 +332,59 @@ public class Interface_texte{
 
         }
         else if(choix == 1){
+            System.out.print("\033c"); //nettoyage de l'ecran
+            System.out.println("Ajouter une colis : ");
+            System.out.println("-------------------------------------------------------------");
+            int id_commande;
+            HashMap<String,Object> h;
+            do{
+                id_commande = priseEntier("Identification de la commande : ");
+                h = co.infosCommande(id_commande);
+                if(h == null)
+                    System.out.println("Commande non reconnu");
+            }while(h == null);
+
+            int nombre_produit = priseEntier("Nombre de produit : ");
+            HashMap<String,Integer> produit_colis = new HashMap<String,Integer>();
+            for(int i = 0 ; i < nombre_produit; i++){
+                int quantite;
+                String produit;
+                do{
+                    System.out.print("Réference du produit "+(i+1)+" :");
+                    produit = in.next();
+                    quantite = priseEntier("Quantite : ");
+                }while(!produitsExiste(produit,quantite));
+                    produit_colis.put(produit,quantite);
+            }
+            if(co.nouveauColis(id_commande,produit_colis) > 0)
+                System.out.println("Ajout accepter");
+            else
+                System.out.println("Ajouter refuséé ");
+            Pause(1000);
 
         }
         else if(choix == 2){
-
+            System.out.print("\033c"); //nettoyage de l'ecran
+            System.out.println("Ajouter une palette : ");
+            System.out.println("-------------------------------------------------------------");
+            int nombre_colis = priseEntier("Nombre de colis : ");
+            LinkedList list = new LinkedList();
+            for(int i = 0 ; i < nombre_colis; i++){
+                int colis;
+                HashMap<String,Object> hb;
+                do{
+                    colis = priseEntier("Identifiant du colis "+(i+1)+": ");
+                    hb = co.infosColis(colis);
+                    if(hb == null)
+                        System.out.println("Colis non reconnu");
+                }while(hb == null);
+                list.push(colis);
+            }
+            if(co.nouvellePalette(list) > 0)
+                System.out.println("Ajout accepter");
+            else
+                System.out.println("Ajouter refuséé ");
+            Pause(1000);
         }
 
     }
@@ -450,9 +496,9 @@ public class Interface_texte{
                 HashMap<String,Object> hb = liste.get(total);
                 Object[] so = hb.keySet().toArray();
                 for(int i =0 ; i< so.length;i++){
-                    System.out.print(so[i].toString()+" ° ");
+                    //System.out.print(so[i].toString()+" ° ");
                 }
-                System.out.println();
+                //System.out.println();
                 for(int i = 0; i < champ.length; i++){
                     String mot;
                     if(hb.get(champ[i]) != null)
