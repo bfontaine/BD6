@@ -555,7 +555,6 @@ public class ConnexionBDD {
             }
 
             HashMap<String,Object> c = new HashMap<String,Object>();
-            HashMap<String,Integer> produits = new HashMap<String,Integer>();
 
             c.put("date d'emballage", rs.getDate("date_emballage"));
             c.put("date d'expédition", rs.getDate("date_expedie"));
@@ -564,7 +563,6 @@ public class ConnexionBDD {
             c.put("qualifiant", rs.getString("qualifiant"));
             c.put("id commande", rs.getInt("id_commande"));
             c.put("id", id);
-            c.put("produits", produits);
 
             q = "SELECT ref_produit,quantite FROM colis_produits WHERE id_colis=?";
             ps = co.prepareStatement(q);
@@ -575,8 +573,14 @@ public class ConnexionBDD {
                 return null;
             }
 
+            c.put("quantité contenue", 0);
+
             do {
-                produits.put(rs.getString("ref_produit"), rs.getInt("quantite"));
+                if (!c.containsKey("référence produit")) {
+                    c.put("référence produit", rs.getString("ref_produit"));
+                }
+                c.put("quantité contenue",
+                        ((Integer)c.get("quantité contenue")).intValue()+1);
             } while (rs.next());
 
             return c;
@@ -676,57 +680,12 @@ public class ConnexionBDD {
             }
 
             HashMap<String,Object> retour = new HashMap<String,Object>();
-            HashMap<String,Integer> produits  = new HashMap<String,Integer>(); 
-            LinkedList<HashMap<String,Object>> colis
-                = new LinkedList<HashMap<String,Object>>();
 
-            // infos sur la commande
             retour.put("id", id);
             retour.put("date de commande", rs.getDate("date_commande"));
             retour.put("date de livraison prévue", rs.getDate("date_prevue"));
             retour.put("frais", rs.getFloat("frais"));
-            retour.put("produits", produits);
-            retour.put("colis", colis);
             retour.put("login client", rs.getString("id_client"));
-
-            // produits de la commande
-            q = "SELECT ref_produit,quantite FROM commande_produits WHERE id_commande=?";
-            q+= " LIMIT 1;";
-            ps = co.prepareStatement(q);
-            ps.setInt(1, id);
-            rs = ps.executeQuery();
-
-            if (!rs.next()) {
-                return null;
-            }
-
-            do {
-                produits.put(rs.getString("ref_produit"), rs.getInt("quantite"));
-            } while (rs.next());
-
-            // colis associés à cette commande
-            q = "SELECT id,date_emballage,date_expedie,date_livraison,etat,qualifiant FROM colis";
-            q += " WHERE id_commande=?;";
-            ps = co.prepareStatement(q);
-            ps.setInt(1, id);
-            rs = ps.executeQuery();
-
-            if (!rs.next()) { // pas de colis
-                return retour;
-            }
-
-            do {
-                HashMap<String,Object> c = new HashMap<String,Object>();
-
-                c.put("date d'emballage", rs.getDate("date_emballage"));
-                c.put("date d'expédition", rs.getDate("date_expedie"));
-                c.put("date de livraison", rs.getDate("date_livraison"));
-                c.put("état", rs.getString("etat"));
-                c.put("qualifiant", rs.getString("qualifiant"));
-                c.put("id", rs.getString("id"));
-
-                colis.push(c);
-            } while (rs.next());
 
             return retour;
         }

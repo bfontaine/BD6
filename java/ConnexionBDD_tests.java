@@ -357,7 +357,6 @@ public class ConnexionBDD_tests {
     }
 
     @Test
-    @SuppressWarnings("unchecked") // cast Object->HashMap = warning
     public void testInfosCommandeOk() {
 
         HashMap<String,Integer> produits = new HashMap<String,Integer>();
@@ -379,9 +378,6 @@ public class ConnexionBDD_tests {
         assertNotNull(hm);
         assertFalse(hm.isEmpty());
 
-        int qte_2 = ((HashMap<String,Integer>)hm.get("produits")).get(refOk);
-
-        assertEquals(qte, qte_2);
         assertEquals(loginOk, hm.get("login client"));
     }
 
@@ -445,7 +441,6 @@ public class ConnexionBDD_tests {
     }
 
     @Test
-    @SuppressWarnings("unchecked") // cast Object->HashMap = warning
     public void testInfosColisOk() {
 
         HashMap<String,Integer> hm = new HashMap<String,Integer>(); 
@@ -461,8 +456,6 @@ public class ConnexionBDD_tests {
 
         assertEquals(id, ((Integer)colis.get("id")).intValue());
 
-        assertEquals(hm, (HashMap<String,Integer>)colis.get("produits"));
-
         assertTrue(colis.containsKey("date d'emballage"));
         assertTrue(colis.containsKey("date d'expédition"));
         assertTrue(colis.containsKey("date de livraison"));
@@ -470,7 +463,8 @@ public class ConnexionBDD_tests {
         assertTrue(colis.containsKey("qualifiant"));
         assertTrue(colis.containsKey("id commande"));
         assertTrue(colis.containsKey("id"));
-        assertTrue(colis.containsKey("produits"));
+        assertTrue(colis.containsKey("référence produit"));
+        assertTrue(colis.containsKey("quantité contenue"));
     }
 
     @Test
