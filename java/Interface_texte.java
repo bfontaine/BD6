@@ -459,13 +459,8 @@ public class Interface_texte{
     }
 
     public static void choix_douane(int choix){
-        if(choix == 2){
-
-        }
-        else if(choix == 1){
-
-        }
-
+        System.out.println("Pas implémenter");
+        Pause(2000);
     }
 
     public static boolean produitsExiste(String ref,int quantite){
@@ -485,7 +480,7 @@ public class Interface_texte{
 
     public static void affichage_less (LinkedList<HashMap<String,Object>> liste, String[] champ,int[] taille, String req){
         int choix = -1;
-        int ligne = 0;
+        int ligne = -1;
         int total = 0;
         while(choix != 1){
             System.out.print("\033c"); //nettoyage de l'ecran
@@ -502,6 +497,10 @@ public class Interface_texte{
             System.out.println();
             //affiche le contenu du LinkedListe
             while((total < liste.size()) && (!(ligne% 15 == 0 ))){
+                if (ligne == -1) {
+                    ligne = 0;
+                }
+
                 HashMap<String,Object> hb = liste.get(total);
                 for(int i = 0; i < champ.length; i++){
                     String mot;
@@ -516,8 +515,8 @@ public class Interface_texte{
                 }
                 System.out.println();
 
-                ligne++;
                 total++;
+                ligne++;
 
             }
             if(total < liste.size()){
