@@ -158,7 +158,7 @@ CREATE TABLE container_palettes(
                 FOREIGN KEY(id_palette) REFERENCES palette(id) ON DELETE CASCADE
 );
 
--- triggers
+-- fonctions
 
 /*
   Met à jour le qualifiant du colis en fonction des produits qu'on y insère:
@@ -191,9 +191,6 @@ BEGIN
 END
 $update_qualif_colis$ LANGUAGE plpgsql;
 
-CREATE TRIGGER update_qualif_colis AFTER INSERT OR UPDATE ON colis_produits
-  FOR EACH ROW EXECUTE PROCEDURE update_qualif_colis();
-
 /*
 Augmente le prix d'une commande en fonction des ajouts dans commande_produits
 */
@@ -206,9 +203,6 @@ BEGIN
   RETURN NEW;
 END
 $update_prix_commande_up$ LANGUAGE plpgsql;
-
-CREATE TRIGGER update_prix_commande_up AFTER INSERT ON commande_produits
-  FOR EACH ROW EXECUTE PROCEDURE update_prix_commande_up();
 
 /*
 Diminue le prix d'une commande en fonction des suppressions dans commande_produits
@@ -230,9 +224,6 @@ BEGIN
 END
 $update_prix_commande_down$ LANGUAGE plpgsql;
 
-CREATE TRIGGER update_prix_commande_down AFTER DELETE ON commande_produits
-  FOR EACH ROW EXECUTE PROCEDURE update_prix_commande_down();
-
 /*
 Incrémente la quantité restante dans le catalogue quand on supprime une ligne
 dans commande_produits.
@@ -243,9 +234,6 @@ BEGIN
   RETURN OLD;
 END
 $update_qte_catalogue_up$ LANGUAGE plpgsql;
-
-CREATE TRIGGER update_qte_catalogue_up AFTER DELETE ON commande_produits
-  FOR EACH ROW EXECUTE PROCEDURE update_qte_catalogue_up();
 
 -- TODO si possible: idem quand on ajoute une ligne (supprimer l'équivalent dans Java)
 
@@ -263,9 +251,6 @@ BEGIN
 END
 $del_palette_vide$ LANGUAGE plpgsql;
 
-CREATE TRIGGER del_palette_vide AFTER DELETE ON palette_colis
-  FOR EACH ROW EXECUTE PROCEDURE del_palette_vide();
-
 /*
 Supprime un colis quand il n'y a plus de produits dedans
 */
@@ -279,9 +264,6 @@ BEGIN
   RETURN OLD;
 END
 $del_colis_vide$ LANGUAGE plpgsql;
-
-CREATE TRIGGER del_colis_vide AFTER DELETE ON colis_produits
-  FOR EACH ROW EXECUTE PROCEDURE del_colis_vide();
 
 /*
 Quand un colis est marqué 'livre' et que tous les autres correspondant à la même commande
@@ -300,6 +282,61 @@ BEGIN
 END
 $livre_colis$ LANGUAGE plpgsql;
 
+/*
+Lors de l'ajout d'un colis sur une palette, lève une exception si le colis
+est déjà enregistré sur une autre palette.
+*/
+CREATE FUNCTION check_colis_palette() RETURNS trigger AS $check_colis_palette$
+DECLARE
+  deja INTEGER := (SELECT COUNT(*) FROM palette_colis WHERE id_colis=NEW.id_colis AND id_palette<>NEW.id_palette);
+BEGIN
+  IF deja > 0 THEN
+    RAISE EXCEPTION 'Le colis est déjà enregistré sur une autre palette';
+  END IF;
+  RETURN NEW;
+END
+$check_colis_palette$ LANGUAGE plpgsql;
+
+/*
+Lors de l'ajout d'une palette sur un container, lève une exception si la
+palette est déjà enregistrée sur un autre container.
+*/
+CREATE FUNCTION check_palette_container() RETURNS trigger AS $check_palette_container$
+DECLARE
+  deja INTEGER := (SELECT COUNT(*) FROM container_palettes WHERE id_palette=NEW.id_palette AND id_container<>NEW.id_container);
+BEGIN
+  IF deja > 0 THEN
+    RAISE EXCEPTION 'La palette est déjà enregistrée sur un autre container';
+  END IF;
+  RETURN NEW;
+END
+$check_palette_container$ LANGUAGE plpgsql;
+
+-- triggers
+
+CREATE TRIGGER update_qualif_colis AFTER INSERT OR UPDATE ON colis_produits
+  FOR EACH ROW EXECUTE PROCEDURE update_qualif_colis();
+
+CREATE TRIGGER update_prix_commande_up AFTER INSERT ON commande_produits
+  FOR EACH ROW EXECUTE PROCEDURE update_prix_commande_up();
+
+CREATE TRIGGER update_prix_commande_down AFTER DELETE ON commande_produits
+  FOR EACH ROW EXECUTE PROCEDURE update_prix_commande_down();
+
+CREATE TRIGGER update_qte_catalogue_up AFTER DELETE ON commande_produits
+  FOR EACH ROW EXECUTE PROCEDURE update_qte_catalogue_up();
+
+CREATE TRIGGER del_palette_vide AFTER DELETE ON palette_colis
+  FOR EACH ROW EXECUTE PROCEDURE del_palette_vide();
+
+CREATE TRIGGER del_colis_vide AFTER DELETE ON colis_produits
+  FOR EACH ROW EXECUTE PROCEDURE del_colis_vide();
+
 CREATE TRIGGER livre_colis AFTER UPDATE ON colis
   FOR EACH ROW EXECUTE PROCEDURE livre_colis();
 
+CREATE TRIGGER check_colis_palette BEFORE UPDATE ON palette_colis
+  FOR EACH ROW EXECUTE PROCEDURE check_colis_palette();
+
+CREATE TRIGGER check_palette_container BEFORE UPDATE ON container_palettes
+  FOR EACH ROW EXECUTE PROCEDURE check_palette_container();
