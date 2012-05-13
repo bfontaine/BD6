@@ -75,7 +75,7 @@ public class ConnexionBDD {
      * Change le prix d'un produit du catalogue
      * @param ref référence du produit
      * @param nouveauPrix nouveau prix du produit
-     * @return `true` si tout s'est bien passé, `false` si la
+     * @return <code>true</code> si tout s'est bien passé, <code>false</code> si la
      * référence est mauvaise, et/ou le prix négatif.
      **/
     public boolean changePrix(String ref, float nouveauPrix) {
@@ -123,7 +123,7 @@ public class ConnexionBDD {
      * Change le login d'un client
      * @param ancienLogin l'ancien login
      * @param nouveauLogin le nouveau login
-     * @return `true` si tout s'est bien passé, `false` sinon
+     * @return <code>true</code> si tout s'est bien passé, <code>false</code> sinon
      **/
     public boolean changerLogin(String ancienLogin, String nouveauLogin) {
 
@@ -154,7 +154,7 @@ public class ConnexionBDD {
      * @param login le login du client
      * @param ancienMdp l'ancien mot de passe
      * @param nouveauMdp le nouveau mot de passe
-     * @return `true` si tout s'est bien passé, `false` sinon
+     * @return <code>true</code> si tout s'est bien passé, <code>false</code> sinon
      **/
     public boolean changerMdp(String login, String ancienMdp, String nouveauMdp) {
 
@@ -186,7 +186,7 @@ public class ConnexionBDD {
 
     /**
      * Liste tous les employés
-     * @return une liste de `HashMap` avec une correspondance entre nom de
+     * @return une liste de <code>HashMap</code> avec une correspondance entre nom de
      * colonnes et valeurs
      **/
     public LinkedList<HashMap<String,Object>> listeEmployes() {
@@ -196,7 +196,7 @@ public class ConnexionBDD {
     /**
      * Liste les employés selon leur type
      * @param type le type des employés ("tous", "transporteur", "emballeur")
-     * @return une liste de `HashMap` avec une correspondance entre nom de
+     * @return une liste de <code>HashMap</code> avec une correspondance entre nom de
      * colonnes et valeurs
      **/
     public LinkedList<HashMap<String,Object>> listeEmployes(String type) {
@@ -250,7 +250,7 @@ public class ConnexionBDD {
 
     /**
      * Liste les clients dans l'ordre de leurs dépenses
-     * @return une liste de `HashMap` avec une correspondance entre nom de
+     * @return une liste de <code>HashMap</code> avec une correspondance entre nom de
      * colonnes et valeurs
      **/
     public LinkedList<HashMap<String,Object>> listeClientsPlusDepensies() {
@@ -279,7 +279,7 @@ public class ConnexionBDD {
 
     /**
      * Liste les clients
-     * @return une liste de `HashMap` avec une correspondance entre nom de
+     * @return une liste de <code>HashMap</code> avec une correspondance entre nom de
      * colonnes et valeurs
      **/
     public LinkedList<HashMap<String,Object>> listeClients() {
@@ -291,7 +291,7 @@ public class ConnexionBDD {
      * @param etendue précise si la liste doit être étendue, par exemple en ajoutant
      * le nombre de commandes faites par ce client, le nombre de produits achetés,
      * le total dépensé, etc.
-     * @return une liste de `HashMap` avec une correspondance entre nom de
+     * @return une liste de <code>HashMap</code> avec une correspondance entre nom de
      * colonnes et valeurs
      **/
     public LinkedList<HashMap<String,Object>> listeClients(boolean etendue) {
@@ -372,7 +372,7 @@ public class ConnexionBDD {
 
     /**
      * Liste les produits
-     * @return une liste de `HashMap` avec une correspondance entre nom de
+     * @return une liste de <code>HashMap</code> avec une correspondance entre nom de
      * colonnes et valeurs
      **/
     public LinkedList<HashMap<String,Object>> listeProduits() {
@@ -381,7 +381,7 @@ public class ConnexionBDD {
 
     /**
      * Liste les produits disponibles
-     * @return une liste de `HashMap` avec une correspondance entre nom de
+     * @return une liste de <code>HashMap</code> avec une correspondance entre nom de
      * colonnes et valeurs
      **/
     public LinkedList<HashMap<String,Object>> listeProduitsRestants() {
@@ -391,7 +391,7 @@ public class ConnexionBDD {
     /**
      * Liste les produits
      * @param quantiteMin quantité minimale des produits (ignorée si négative)
-     * @return une liste de `HashMap` avec une correspondance entre nom de
+     * @return une liste de <code>HashMap</code> avec une correspondance entre nom de
      * colonnes et valeurs
      **/
     public LinkedList<HashMap<String,Object>> listeProduits(int quantiteMin) {
@@ -464,6 +464,36 @@ public class ConnexionBDD {
         }
         catch (SQLException e) {}
 
+        return null;
+    }
+    
+    /**
+     * Retourne une liste de commandes que le client a
+     * fait.
+     * @param login login du client
+     * @return
+     **/
+    public LinkedList<HashMap<String,Object>> listeCommandesClient(String login) {
+        if (login == null || login.length() == 0) {
+            return null;
+        }
+
+        String q = "SELECT id FROM commande WHERE id_client=?";
+        LinkedList<HashMap<String,Object>> liste
+            = new LinkedList<HashMap<String,Object>>();
+        try {
+            PreparedStatement ps = co.prepareStatement(q);
+            ps.setString(1, login);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                HashMap<String,Object> cmd = infosCommande(rs.getInt("id"));
+                if (cmd != null) {
+                    liste.push(cmd);
+                }
+            }
+            return liste;
+        }
+        catch (SQLException e) {}
         return null;
     }
 
