@@ -25,11 +25,11 @@ public class Interface_texte{
             System.out.println("Connexion Projet BDD :");
             System.out.println("-------------------------------------------------------------");
             if(mdp_incorrect)
-                System.out.println("Login ou Password incorrecte");
+                System.out.println("Login ou Password incorrect");
 
             System.out.print("Utilisateur : ");
             Login = in.next();
-            String password = PasswordField.readPassword(" Password : ");  
+            String password = PasswordField.readPassword("Mot de passe : ");  
 
             type = co.connecteUtilisateur(Login,password);
             if(type == null)
@@ -92,7 +92,7 @@ public class Interface_texte{
         System.out.println("Veuillez entrer votre choix :");
         System.out.println("-------------------------------------------------------------");
         System.out.println("0 - Passer une commande");
-        System.out.println("1 - Situation colis"); 
+        System.out.println("1 - Situations des commandes"); 
         System.out.println("2 - Lister les produits disponibles");
         System.out.println("3 - Changer son login/mdp");
         System.out.println("4 - quitter");
@@ -112,10 +112,10 @@ public class Interface_texte{
 
         System.out.println("Veuillez entrer votre choix :");
         System.out.println("-------------------------------------------------------------");
-        System.out.println("0 - Accès à la liste des employés/clients");
+        System.out.println("0 - Liste des employés/clients");
         System.out.println("1 - Changer le prix des produits"); 
         System.out.println("2 - Voir les produits les plus vendus");
-        System.out.println("3 - Voir les clients les plus depensiés");
+        System.out.println("3 - Voir les clients les plus dépensiés");
         System.out.println("4 - Voir les employés les moins actifs");
         System.out.println("5 - quitter");
         System.out.println("-------------------------------------------------------------");
@@ -213,7 +213,7 @@ public class Interface_texte{
     public static void choix_client(int choix){
         if(choix == 0){
             System.out.print("\033c"); //nettoyage de l'ecran
-            System.out.println("Insertion d'un commande :");
+            System.out.println("Insertion d'une commande :");
             System.out.println("-------------------------------------------------------------");
             int total_colis = priseEntier("Nombre de produits : ");
             HashMap<String,Integer> hb = new HashMap<String,Integer>();
@@ -221,9 +221,9 @@ public class Interface_texte{
                 int quantite;
                 String produit;
                 do{
-                    System.out.print("Réference du produit "+(i+1)+" :");
+                    System.out.print("Référence du produit "+(i+1)+" :");
                     produit = in.next();
-                    quantite = priseEntier("Quantite : ");
+                    quantite = priseEntier("Quantité : ");
                 }while(!produitsExiste(produit,quantite));
                     hb.put(produit,quantite);
             }
@@ -232,14 +232,14 @@ public class Interface_texte{
             System.out.println("-------------------------------------------------------------");
             int year = priseEntier("Année : ");
             int mois = priseEntier("Mois : ");
-            int jour = priseEntier("Jours : ");
+            int jour = priseEntier("Jour : ");
             Calendar date = Calendar.getInstance();
             date.set(year,mois,jour);
             int id_commande = co.nouvelleCommande(Login,date,hb); 
             if(id_commande > 0)
-                System.out.println("Commande valide");
+                System.out.println("Commande validée");
             else
-                System.out.println("Commande echoué");
+                System.out.println("Commande echouée");
             Pause(1000);
         }
         else if(choix == 1){
@@ -252,7 +252,7 @@ public class Interface_texte{
                 id_commande = priseEntier("Identification de la commande : ");
                 h = co.infosCommande(id_commande);
                 if(h == null)
-                    System.out.println("Commande non reconnu");
+                    System.out.println("Commande non reconnue");
             }while(h == null);
             int [] taille_commande = {5,20,21,10,22,22,22};
             String [] champ_commande = {"id","id commande","référence produit","qualifiant","date d'emballage","date d'expédition","date de livraison"};
@@ -262,29 +262,29 @@ public class Interface_texte{
             int [] taille = {16,78,10,7,5,17};
             String[] champ = {"référence","description","qualifiant","prix","poids","quantité restante"};
 
-            affichage_less(co.listeProduitsRestants(),champ,taille,"Liste des Produit disponible :");
+            affichage_less(co.listeProduitsRestants(),champ,taille,"Liste des produits disponibles :");
         }
         else if(choix == 3){
             System.out.print("\033c"); //nettoyage de l'ecran
-            System.out.println("Changement de password :");
+            System.out.println("Changement de mot de passe :");
             System.out.println("-------------------------------------------------------------");
             System.out.println("Authentification:");
-            String mdp = PasswordField.readPassword("Password : ");  
+            String mdp = PasswordField.readPassword("Mot de passe : ");  
             String t = co.connecteUtilisateur(Login,mdp);
             System.out.println(Login+" "+mdp+" "+t);
             if(t != null)
-                System.out.println("Authentification: validé");
+                System.out.println("Authentification: validée");
             else{
-                System.out.println("Authentification: rejeté");
+                System.out.println("Authentification: rejetée");
                 Pause(1000);
                 return ;
             }
             System.out.println("-------------------------------------------------------------");
             System.out.print("Nouveau login :");
             String new_login = in.next();
-            String new_password = PasswordField.readPassword("Nouveaux Password : ");  
+            String new_password = PasswordField.readPassword("Nouveaux mot de passe : ");  
             if(co.changerLogin(Login,new_login)){
-                System.out.print("Changement Login effectuer");
+                System.out.print("Changement Login effectué");
                 Login = new_login;
             }
             else{
@@ -292,9 +292,9 @@ public class Interface_texte{
 
             }
             if(co.changerMdp(Login,mdp,new_password))
-                System.out.print("Changement Password effectuer:");
+                System.out.print("Changement mot de passe effectué:");
             else{
-                System.out.print("Erreur lors du changement de password");
+                System.out.print("Erreur lors du changement de mot de passe");
             }
             Pause(1000);
         }
@@ -303,13 +303,13 @@ public class Interface_texte{
     public static void choix_transporteur(int choix){
         if(choix == 2){
             System.out.print("\033c"); //nettoyage de l'ecran
-            System.out.println("Changer situation d'une palette");
+            System.out.println("Changer la situation d'une palette");
             System.out.println("-------------------------------------------------------------");
             int palette = priseEntier("Identification de la palette");
             if(co.livrerPalette(palette))
-                System.out.println("Livraison palette "+palette+" effectuer");
+                System.out.println("Livraison palette "+palette+" effectuée");
             else{
-                System.out.println("Palette non reconnu");
+                System.out.println("Palette non reconnue");
             }
             Pause(1000);
 
@@ -368,7 +368,7 @@ public class Interface_texte{
         }
         else if(choix == 1){
             System.out.print("\033c"); //nettoyage de l'ecran
-            System.out.println("Ajouter une colis : ");
+            System.out.println("Ajouter un colis : ");
             System.out.println("-------------------------------------------------------------");
             int id_commande;
             HashMap<String,Object> h;
@@ -376,10 +376,10 @@ public class Interface_texte{
                 id_commande = priseEntier("Identification de la commande : ");
                 h = co.infosCommande(id_commande);
                 if(h == null)
-                    System.out.println("Commande non reconnu");
+                    System.out.println("Commande non reconnue");
             }while(h == null);
 
-            int nombre_produit = priseEntier("Nombre de produit : ");
+            int nombre_produit = priseEntier("Nombre de produits : ");
             HashMap<String,Integer> produit_colis = new HashMap<String,Integer>();
             for(int i = 0 ; i < nombre_produit; i++){
                 int quantite;
@@ -387,14 +387,14 @@ public class Interface_texte{
                 do{
                     System.out.print("Réference du produit "+(i+1)+" :");
                     produit = in.next();
-                    quantite = priseEntier("Quantite : ");
+                    quantite = priseEntier("Quantité : ");
                 }while(!produitsExiste(produit,quantite));
                     produit_colis.put(produit,quantite);
             }
             if(co.nouveauColis(id_commande,produit_colis) > 0)
-                System.out.println("Ajout accepter");
+                System.out.println("Ajout accepté");
             else
-                System.out.println("Ajouter refuséé ");
+                System.out.println("Ajout refusé");
             Pause(1000);
 
         }
@@ -416,9 +416,9 @@ public class Interface_texte{
                 list.push(colis);
             }
             if(co.nouvellePalette(list) > 0)
-                System.out.println("Ajout accepter");
+                System.out.println("Ajout accepté");
             else
-                System.out.println("Ajouter refuséé ");
+                System.out.println("Ajouter refusé");
             Pause(1000);
         }
 
@@ -430,7 +430,7 @@ public class Interface_texte{
             do{
                 System.out.println("Choix du type"); 
                 System.out.println(" 0 - client"); 
-                System.out.println(" 1 - employer"); 
+                System.out.println(" 1 - employé");
                 pers= priseEntier("Choix : ");
             }while((pers < 0)&&(pers > 1));
             if(pers == 1){
@@ -458,9 +458,9 @@ public class Interface_texte{
             System.out.print("Nouveau prix du produit : ");
             float new_prix = in.nextFloat();
             if(co.changePrix(prod,new_prix))
-                System.out.println("Modification effectuer");
+                System.out.println("Modification effectuée");
             else{
-                System.out.println("Modification echouer");
+                System.out.println("Modification echouée");
             }
             Pause(1000);
 
@@ -485,7 +485,7 @@ public class Interface_texte{
     }
 
     public static void choix_douane(int choix){
-        System.out.println("Pas implémenter");
+        System.out.println("Pas implémenté");
         Pause(2000);
     }
 
