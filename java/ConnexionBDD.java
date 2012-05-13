@@ -741,7 +741,7 @@ p_err(e.getMessage());
             return null;
         }
 
-        String q = "SELECT id_client,date_commande,date_prevue,frais";
+        String q = "SELECT id_client,date_livree,date_commande,date_prevue,frais";
         q += " FROM commande WHERE id=? LIMIT 1;";
 
         try {
@@ -759,6 +759,7 @@ p_err(e.getMessage());
             retour.put("id", id);
             retour.put("date de commande", rs.getDate("date_commande"));
             retour.put("date de livraison prévue", rs.getDate("date_prevue"));
+            retour.put("date de livraison", rs.getDate("date_livree"));
             retour.put("frais", rs.getFloat("frais"));
             retour.put("login client", rs.getString("id_client"));
 
