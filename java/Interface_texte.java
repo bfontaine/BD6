@@ -245,7 +245,7 @@ public class Interface_texte{
         else if(choix == 1){
             int [] taille = {5,15,15,15,10};
             String[] champ = {"id","date de commande","date de livraison prévue","date de livraison","frais"};
-            affichage_less(co.listeCommandesClient(Login),champ,taille,"Information des commandes "+Login+" :");
+            affichage_less(co.listeCommandesClient(Login,true),champ,taille,"Information des commandes "+Login+" :");
             int id_commande;
             HashMap<String,Object> h;
             do{
@@ -338,7 +338,33 @@ public class Interface_texte{
 
     public static void choix_emballeur(int choix){
         if(choix == 0){
+            System.out.print("\033c"); //nettoyage de l'ecran
+            System.out.println("Connaître la liste des commandes d'un client : ");
+            System.out.println("-------------------------------------------------------------");
+            String login;
+            HashMap<String,String> b ;
+            do{
+                System.out.print("Identifiant du client : ");
+                login = in.next();
+                b = co.infosPersonne(login);
+                if(b == null)
+                    System.out.println("Client pas reconnu");
 
+            }while(b == null);
+            int [] taille = {5,15,15,15,10};
+            String[] champ = {"id","date de commande","date de livraison prévue","date de livraison","frais"};
+            affichage_less(co.listeCommandesClient(login,true),champ,taille,"Information des commandes de"+login+" :");
+            int id_commande;
+            HashMap<String,Object> h;
+            do{
+                id_commande = priseEntier("Identification de la commande : ");
+                h = co.infosCommande(id_commande);
+                if(h == null)
+                    System.out.println("Commande non reconnue");
+            }while(h == null);
+            int [] taille_com  = {10,10,10,20,20,20};
+            String[] champ_com = {"référence","qualifiant","poids","quantité par carton","cartons par palette","quantité demandée"};
+            affichage_less(co.listerProduitsParCommande(id_commande),champ_com,taille_com,"Information des produit de la commande "+id_commande+" :");
         }
         else if(choix == 1){
             System.out.print("\033c"); //nettoyage de l'ecran
