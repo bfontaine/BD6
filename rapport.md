@@ -1,6 +1,6 @@
 % Rapport de projet BD6
 % David Galichet; Baptiste Fontaine
-% 11 mai 2012
+% 13 mai 2012
 
 Introduction
 ------------
@@ -71,13 +71,11 @@ Fonctionnement
 Afin de tester plus facilement, nous avons choisi de tester en local avec une
 base `bd6`^[l'utilisateur et le mot de passe sont le nom de l'utilisateur
 courant]. Pour préparer la base, il suffit de se rendre dans le répertoire
-`scripts`, puis d'exécuter les commandes suivantes :
-
-    $ ./createdb.sh # crée la base de données et les tables associées
-    $ ./filldb.sh # appelle un script Python pour importer data.csv
-
-Ensuite, pour générer les commandes, il suffit de se rendre dans le répertoire
 `java`, puis d'exécuter la commande suivante :
+
+    $ make reset # supprime la BDD si elle existe, et la re-crée
+
+Ensuite, pour générer les commandes, il suffit d'exécuter la commande suivante :
 
     $ make generate
 
@@ -91,15 +89,19 @@ Interface
 Un début d'interface graphique a été écrit, mais le temps ne nous a pas permis
 de la terminer. Une interface textuelle est néanmoins fournie
 (`java/Interface_texte.java`). l'interface se lance avec trois arguments: le nom
-de la base, le nom de l'utilisateur, et son mot de passe.
+de la base, le nom de l'utilisateur, et son mot de passe. Elle demande ensuite à
+une personne de se connecter (membre de la table `personne`), puis déduit du
+login le type de la personne et affiche ensuite l'interface adaptée.
 
-Améliorations
--------------
+Améliorations possibles
+-----------------------
 
 À cause des projets dans les autres matières et du peu de temps accordé pour
 élaborer ce projet, nous n'avons pas pu le terminer entièrement; même s'il est
 fonctionnel, il manque quelques fonctionnalités que nous n'avons pas pu
-implémenter, comme l'interface pour la douane.
+implémenter, comme l'interface pour la douane, ou les containers (le
+transporteur livre directement les palettes, sans les mettre dans des
+containers).
 
 Organisation
 ============
