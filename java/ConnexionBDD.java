@@ -509,6 +509,18 @@ p_err(e.getMessage());
      * @return
      **/
     public LinkedList<HashMap<String,Object>> listeCommandesClient(String login) {
+        return listeCommandesClient(login, false);
+    }
+
+    /**
+     * Retourne une liste de commandes que le client a
+     * fait.
+     * @param login login du client
+     * @param pretty <code>true</code> si le retour doit être préparé
+     * pour l'affichage
+     * @return
+     **/
+    public LinkedList<HashMap<String,Object>> listeCommandesClient(String login, boolean pretty) {
         if (login == null || login.length() == 0) {
             return null;
         }
@@ -524,7 +536,7 @@ p_err(e.getMessage());
                 return null;
             }
             do {
-                HashMap<String,Object> cmd = infosCommande(rs.getInt("id"));
+                HashMap<String,Object> cmd = infosCommande(rs.getInt("id"), pretty);
                 if (cmd != null) {
                     liste.push(cmd);
                 }
