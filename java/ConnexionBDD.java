@@ -821,7 +821,7 @@ p_err(e.getMessage());
                 String date_prevue = rs.getString("date_prevue");
                 String date_livraison = rs.getString("date_livree");
 
-                if (date_livraison.equals("null")) {
+                if (date_livraison == null || date_livraison.equals("null")) {
                     retour.put("date de livraison prévue", date_prevue);
                 } else {
                     retour.put("date de livraison", date_livraison);
