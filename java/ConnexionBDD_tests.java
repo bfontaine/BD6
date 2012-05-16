@@ -138,7 +138,6 @@ public class ConnexionBDD_tests {
         assertNotNull(hm);
 
         assertTrue(hm.containsKey("commandes"));
-        assertTrue(hm.containsKey("produits"));
     }
 
     @Test
