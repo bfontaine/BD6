@@ -1,3 +1,5 @@
+Note: This was a student project for a databases class.
+
 Projet BD6
 ==========
 
